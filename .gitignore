@@ -1,0 +1,82 @@
+# ==================== General ====================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+
+# ==================== IDE ====================
+.idea/
+.vscode/
+*.iml
+*.xcworkspace/xcuserdata/
+*.xcuserdata/
+
+# ==================== Python ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+venv/
+.venv/
+env/
+*.egg-info/
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==================== Node.js ====================
+node_modules/
+dist/
+build/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ==================== Environment & Secrets ====================
+.env
+.env.*
+!.env.example
+
+# ==================== Android ====================
+*.apk
+*.aab
+*.dex
+*.class
+local.properties
+.gradle/
+**/build/
+!**/src/**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ==================== iOS ====================
+**/build/
+*.ipa
+*.dSYM.zip
+*.dSYM
+DerivedData/
+Pods/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+
+# ==================== Docker ====================
+docker-compose.override.yml
+
+# ==================== Database ====================
+*.db
+*.sqlite3
+
+# ==================== Project-specific ====================
+.logs/
+.pids/
+.claude/
+android build/
+OptixAndroid/
+chroma_data/
+chromadb_data/

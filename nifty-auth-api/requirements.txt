@@ -1,0 +1,60 @@
+# FastAPI and Server
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy==2.0.25
+asyncpg==0.29.0
+alembic==1.13.1
+
+# Redis
+redis==5.0.1
+
+# Authentication
+PyJWT==2.8.0
+passlib[bcrypt]==1.7.4
+
+# Validation
+pydantic==2.5.3
+pydantic-settings==2.1.0
+email-validator==2.1.0
+phonenumbers==8.13.27
+
+# HTTP Client (for social auth verification & NSE data)
+httpx==0.26.0
+
+# Scientific Computing (for Black-Scholes calculations)
+scipy==1.12.0
+numpy==1.26.3
+
+# SMS Providers
+twilio==8.12.0
+
+# Social Auth
+google-auth==2.27.0
+cryptography==41.0.7
+firebase-admin==7.1.0
+
+# Web Scraping (for IPO data)
+beautifulsoup4==4.12.3
+lxml==5.1.0
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+
+# Development
+python-dotenv==1.0.0
+
+# AI/ML - RAG and Embeddings
+openai==1.12.0
+chromadb==0.4.22
+tiktoken==0.5.2
+anthropic==0.18.1
+
+# Timezone handling
+pytz==2024.1
+
+# SQLite async (for development/testing)
+aiosqlite==0.19.0

@@ -1,0 +1,1158 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04C4FDB0A681EE32C37A7CE2 /* StrikeAnalysisSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CA39FCAB058B37CA4040BA /* StrikeAnalysisSheet.swift */; };
+		056CCFEBB05944CFD713BCFB /* OIAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC709A1BE2A75CE4F3086D6 /* OIAnalysis.swift */; };
+		074EF763BBADB51DA6200F1B /* StrategyTypeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D75F63F1B2F91B516BEA2A /* StrategyTypeSelectorView.swift */; };
+		1B77461551A1AF47D923367B /* PayoffDiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80970C6480192E11F1EB2745 /* PayoffDiagramView.swift */; };
+		1FA88255581D0F56D32510B2 /* OIZonesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F841959FF518F156F78816 /* OIZonesView.swift */; };
+		2C09AE02712E9F87227CA0E9 /* GuestDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C300D69A0F5A06AF79F0978E /* GuestDataService.swift */; };
+		2CB0275AFAF17E619E6C8F37 /* TechnicalAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5162E78134FF029B2CD9EFB0 /* TechnicalAnalysisService.swift */; };
+		333A9E9782B21F9A82775D10 /* StrategyCalculationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70396854094872119A6FD42 /* StrategyCalculationEngine.swift */; };
+		3D4A83A9E18486503F1F7960 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBF31E7D59CF744FCC2F113 /* DataProvider.swift */; };
+		3F4CAC807C71B6F205320E55 /* FullScreenIndexChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D09791022468AD9AD5583E4 /* FullScreenIndexChartView.swift */; };
+		42B30963943614A222B3BBBB /* MLOptionPredictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6905A5B6DF058F32E246490 /* MLOptionPredictor.swift */; };
+		4676015049E80C659811CD06 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F7E60D43975A1DD21C9E8F3 /* GoogleService-Info.plist */; };
+		4B7C0CBA1AFBDCBE0F451E86 /* IVSurfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC270CB1F414A74ED5CC17 /* IVSurfaceView.swift */; };
+		4E33FD7F07545E5E57B254A8 /* OptionChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8D335529096260274BB768 /* OptionChartView.swift */; };
+		503F40C8E310796D5684EC12 /* AIInsightsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E6103379EC3E5D34B8FB15 /* AIInsightsCard.swift */; };
+		5060F97CFBE85163E8B70204 /* LegsBuilderCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D67533BE59DD90D8466027 /* LegsBuilderCard.swift */; };
+		5961B51141750B830B22E71C /* FloatingChatButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2B9DB6AA342A33A83D08E2 /* FloatingChatButton.swift */; };
+		5A4EEAF1CB418DE69793FB4C /* GuestWebSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E348E5E91B4C4021303D38 /* GuestWebSocketService.swift */; };
+		5B2DDFFA2F2E906E00CB52B6 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 9D230D404CBDAA3B4C61C204 /* GoogleSignIn */; };
+		5C61CE03CAAD70653662E9B7 /* ShoonyaLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DFB0228F4AED8AC03841A10 /* ShoonyaLoginView.swift */; };
+		5C7808AC0CEC59522F9D6D3B /* PaperTradingAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9161848207908B13E35669 /* PaperTradingAPIService.swift */; };
+		5CEB78B68F40ECCB4BAC26C7 /* AngelOneAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8907BF7F03A6466FF4A573F7 /* AngelOneAPIService.swift */; };
+		666D1745B600752A0808FD12 /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E45B46DF9B6AD1B8E1C82A2 /* ChatModels.swift */; };
+		69AB36DCEFB71785F7464C7A /* AIAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F693F2633669937A357532F0 /* AIAnalysisService.swift */; };
+		6F3A898DF835F9ED213D920D /* Strategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A800D0CBB47315EE9621FA3C /* Strategy.swift */; };
+		718CD4EC4B82F90CB837B01A /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43539317B8CCC87B55C111AD /* SplashView.swift */; };
+		759714924834BCE240D7AABB /* ChatSessionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C38311B2ADF40124C3F0EE3 /* ChatSessionsListView.swift */; };
+		78B9F25E8B2B0D432ABFC5DC /* AIInsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49366C838C5B8FAD9E2B07B0 /* AIInsightsView.swift */; };
+		78C432ED4F8E81BF5DE4EC64 /* IndexChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90137259BBF99362458DE03A /* IndexChartView.swift */; };
+		796D7032009BB92080175D9E /* OIAnalysisEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2D96E3C2E509CF1AF014E8 /* OIAnalysisEngine.swift */; };
+		7CBE61463BC0E9ACD9DAFA31 /* SmartMoneyActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3623F7E3FC6E70D02D74679 /* SmartMoneyActivityView.swift */; };
+		8303573B65A97E23A3433141 /* OIAnalysisViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C8FD50CB8ADC590DF74BD4 /* OIAnalysisViewModel.swift */; };
+		852756F6D112F37FBDA0459A /* LegRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0503670894DB579EA553ECA /* LegRowView.swift */; };
+		8B68C61B2791A0A928C145C1 /* ChartsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD289F52A6A9C16865E2057 /* ChartsTabView.swift */; };
+		93DB8C1BBA1C7880D4D8C2A3 /* TradeGuardModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE5721660ECCC9EDE365CA4 /* TradeGuardModifier.swift */; };
+		95092743468BA6DB2ABE3717 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8561F62C019B640A78EEB816 /* OnboardingView.swift */; };
+		974C352698E6446E54A9CE9F /* AIAnalysisViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72EC4717D722955D0D658045 /* AIAnalysisViewModel.swift */; };
+		9873DEC07556DD6363124DE8 /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A103155B37C6838AC09A74CD /* ChatMessageView.swift */; };
+		99AF514B6E26E574865FF6F5 /* AuthModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABD4D0C222ED36FAC5CBFC0 /* AuthModels.swift */; };
+		A1000001229F000100000001 /* NiftyOptionCalculatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002229F000200000001 /* NiftyOptionCalculatorApp.swift */; };
+		A1000003229F000300000001 /* OptionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004229F000400000001 /* OptionData.swift */; };
+		A1000005229F000500000001 /* GreeksResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000006229F000600000001 /* GreeksResult.swift */; };
+		A1000007229F000700000001 /* BlackScholesEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000008229F000800000001 /* BlackScholesEngine.swift */; };
+		A1000009229F000900000001 /* NSEAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000A229F000A00000001 /* NSEAPIService.swift */; };
+		A100000B229F000B00000001 /* TargetCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000C229F000C00000001 /* TargetCalculator.swift */; };
+		A100000D229F000D00000001 /* OptionChainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A100000E229F000E00000001 /* OptionChainViewModel.swift */; };
+		A100000F229F000F00000001 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000010229F001000000001 /* MainTabView.swift */; };
+		A1000011229F001100000001 /* OptionChainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000012229F001200000001 /* OptionChainView.swift */; };
+		A1000013229F001300000001 /* CalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000014229F001400000001 /* CalculatorView.swift */; };
+		A1000015229F001500000001 /* GreeksDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000016229F001600000001 /* GreeksDisplayView.swift */; };
+		A1000017229F001700000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000018229F001800000001 /* Assets.xcassets */; };
+		A1000019229F001900000001 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A100001A229F001A00000001 /* Preview Assets.xcassets */; };
+		A23B6E142AE8D7C1EA8D648A /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD78131EFCFB7B47B88645EC /* ChatView.swift */; };
+		AA02000200020002AA020002 /* ThemePreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA01000100010001AA010001 /* ThemePreset.swift */; };
+		AA04000400040004AA040004 /* ThemeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA03000300030003AA030003 /* ThemeConfiguration.swift */; };
+		AA06000600060006AA060006 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA05000500050005AA050005 /* SettingsView.swift */; };
+		B1E5A4EAF3CA3A7863A236F0 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A14793629FCC3D408446B6B /* ChatService.swift */; };
+		B55BE998DF315BCFB1992AF3 /* UpstoxAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4578B60542F54DF2770102 /* UpstoxAPIService.swift */; };
+		B587E2C0B11F56AAE098FBE0 /* AuthAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3015D7BE141A3616E32A8B /* AuthAPIService.swift */; };
+		B5BE675DC2615CAE3BB590FF /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E71114FA3643CD01BC6224A /* ChatViewModel.swift */; };
+		BAFE44D28F74F29A32925E55 /* UpstoxLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E967C96BE6439C71B1BEF1 /* UpstoxLoginView.swift */; };
+		CDSP001001001001CDSP001 /* CandlestickPatternService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDSP002002002002CDSP002 /* CandlestickPatternService.swift */; };
+		CLD001001001001CLD001 /* ClaudeAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CLD002002002002CLD002 /* ClaudeAIService.swift */; };
+		D77FD3695A769159CC2FDD0C /* UpstoxWebSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3533A6AB1A86B7D3D643304 /* UpstoxWebSocketService.swift */; };
+		DA7EB8DDB02590DB127CF8DB /* LoginSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E62FB2E2F946D538080D3D /* LoginSheetView.swift */; };
+		DCF6D0E6D38B1BD7D15146C0 /* FeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00DA2205C39D127633CDEE6 /* FeatureTests.swift */; };
+		A1B2C3D4E5F6071829304050 /* StrategyEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6071829304051 /* StrategyEngineTests.swift */; };
+		DDA4511AEC193103E002DFE8 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19E74001AB2ADFA112B7707 /* ChartData.swift */; };
+		DE2094A74F069A8E09FDAAB0 /* AIInsight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC74DC089FD973DE67B8649 /* AIInsight.swift */; };
+		E67A17B0C24F870A4B119C07 /* DhanAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE6FC4A76898699191F8CFA /* DhanAPIService.swift */; };
+		EA82227A2A1A396501F651F9 /* ShoonyaAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A982A5B1217CB39453F6B82 /* ShoonyaAPIService.swift */; };
+		EDE2D1E14867FB2CB26BEF35 /* ZerodhaAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D91208C99B75DBA42CF8DA5 /* ZerodhaAPIService.swift */; };
+		EDU101101101101EDU101 /* EducationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDU001001001001EDU001 /* EducationContent.swift */; };
+		EDU102102102102EDU102 /* EducationTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDU002002002002EDU002 /* EducationTabView.swift */; };
+		EDU103103103103EDU103 /* LessonDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDU003003003003EDU003 /* LessonDetailView.swift */; };
+		EDU104104104104EDU104 /* GreekDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDU004004004004EDU004 /* GreekDetailView.swift */; };
+		EDU105105105105EDU105 /* StrategyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDU005005005005EDU005 /* StrategyDetailView.swift */; };
+		EDU106106106106EDU106 /* QuizTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDU006006006006EDU006 /* QuizTabView.swift */; };
+		EE586DD8FB527A29BD1BC773 /* OIAnalysisDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC672C7ACE5EB5A05CE20E43 /* OIAnalysisDashboardView.swift */; };
+		F09AA48AB38AAC218E4EF1C1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96CD2FC7FAD5F855F9124E /* Foundation.framework */; };
+		F0A1B2C3D4E5F60718293A4C /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5F60718293A4B /* AppEnvironment.swift */; };
+		F37C20E5A5815E5A91D60557 /* StrategyBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EE51E473C16FCD09B7FC87 /* StrategyBuilderView.swift */; };
+		F4BC6E3B96E5C291C2FA7AF3 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1F820B15F0C4BF37BFBB84 /* AuthManager.swift */; };
+		F6A4D56663D263D2633471D8 /* OIHeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD5A1F682423E4490F0B45F1 /* OIHeatmapView.swift */; };
+		FCCF0FBD0DE1857F4D7A509B /* StrategyBuilderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE5299334373BB2402D4F66 /* StrategyBuilderViewModel.swift */; };
+		FE0EFDBDC185EA5C96630296 /* AnalysisSummaryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210136E7743E456868E0F897 /* AnalysisSummaryCard.swift */; };
+		IPO101101101101IPO101 /* IPOModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = IPO001001001001IPO001 /* IPOModels.swift */; };
+		SA0001000100010001SA01 /* SmartAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = SA0002000200020002SA02 /* SmartAlert.swift */; };
+		SA0003000300030003SA03 /* MarketAlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = SA0004000400040004SA04 /* MarketAlertService.swift */; };
+		SA0005000500050005SA05 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = SA0006000600060006SA06 /* AlertManager.swift */; };
+		SA0007000700070007SA07 /* AlertBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SA0008000800080008SA08 /* AlertBannerView.swift */; };
+		SA0009000900090009SA09 /* AlertSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SA0010001000100010SA10 /* AlertSettingsView.swift */; };
+		SA0011001100110011SA11 /* AlertHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = SA0012001200120012SA12 /* AlertHistoryView.swift */; };
+		IPO102102102102IPO102 /* IPOService.swift in Sources */ = {isa = PBXBuildFile; fileRef = IPO002002002002IPO002 /* IPOService.swift */; };
+		IPO103103103103IPO103 /* IPOViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = IPO003003003003IPO003 /* IPOViewModel.swift */; };
+		IPO104104104104IPO104 /* IPODashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = IPO004004004004IPO004 /* IPODashboardView.swift */; };
+		LOC001001001001LOC001 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC002002002002LOC002 /* AppLanguage.swift */; };
+		LOC003003003003LOC003 /* L.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC004004004004LOC004 /* L.swift */; };
+		LOC005005005005LOC005 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC006006006006LOC006 /* LocalizationManager.swift */; };
+		LOC007007007007LOC007 /* LocalizedStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC008008008008LOC008 /* LocalizedStrings.swift */; };
+		LOC009009009009LOC009 /* EnglishStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC010010010010LOC010 /* EnglishStrings.swift */; };
+		LOC011011011011LOC011 /* HindiStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC012012012012LOC012 /* HindiStrings.swift */; };
+		LOC013013013013LOC013 /* TamilStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC014014014014LOC014 /* TamilStrings.swift */; };
+		LOC015015015015LOC015 /* TeluguStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC016016016016LOC016 /* TeluguStrings.swift */; };
+		LOC017017017017LOC017 /* KannadaStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC018018018018LOC018 /* KannadaStrings.swift */; };
+		LOC019019019019LOC019 /* MalayalamStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC020020020020LOC020 /* MalayalamStrings.swift */; };
+		LOC021021021021LOC021 /* BengaliStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC022022022022LOC022 /* BengaliStrings.swift */; };
+		LOC023023023023LOC023 /* PunjabiStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC024024024024LOC024 /* PunjabiStrings.swift */; };
+		LOC025025025025LOC025 /* OdiaStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = LOC026026026026LOC026 /* OdiaStrings.swift */; };
+		PT101101101101PT101 /* PaperTrading.swift in Sources */ = {isa = PBXBuildFile; fileRef = PT001001001001PT001 /* PaperTrading.swift */; };
+		PT102102102102PT102 /* PaperTradingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = PT002002002002PT002 /* PaperTradingEngine.swift */; };
+		PT103103103103PT103 /* PaperTradingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = PT003003003003PT003 /* PaperTradingViewModel.swift */; };
+		PT104104104104PT104 /* PaperTradeDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PT004004004004PT004 /* PaperTradeDashboardView.swift */; };
+		PT105105105105PT105 /* PaperPositionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PT005005005005PT005 /* PaperPositionsView.swift */; };
+		PT106106106106PT106 /* PaperTradeHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PT006006006006PT006 /* PaperTradeHistoryView.swift */; };
+		PT107107107107PT107 /* PaperPerformanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PT007007007007PT007 /* PaperPerformanceView.swift */; };
+		PT108108108108PT108 /* TradeExecutionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = PT008008008008PT008 /* TradeExecutionSheet.swift */; };
+		TVC001001001001TVC001 /* TradingViewChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = TVC002002002002TVC002 /* TradingViewChart.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E9D7A5BCE72FE2706FB6D3E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A100002D229F002D00000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1000029229F002900000001;
+			remoteInfo = NiftyOptionCalculator;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		02C8FD50CB8ADC590DF74BD4 /* OIAnalysisViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OIAnalysisViewModel.swift; sourceTree = "<group>"; };
+		1A14793629FCC3D408446B6B /* ChatService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		1AC709A1BE2A75CE4F3086D6 /* OIAnalysis.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OIAnalysis.swift; sourceTree = "<group>"; };
+		210136E7743E456868E0F897 /* AnalysisSummaryCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnalysisSummaryCard.swift; path = NiftyOptionCalculator/Views/Strategy/AnalysisSummaryCard.swift; sourceTree = "<group>"; };
+		21CA39FCAB058B37CA4040BA /* StrikeAnalysisSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StrikeAnalysisSheet.swift; sourceTree = "<group>"; };
+		2388553CEE70CA849CFFB2F0 /* ChartData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChartData.swift; path = Models/ChartData.swift; sourceTree = "<group>"; };
+		2A982A5B1217CB39453F6B82 /* ShoonyaAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShoonyaAPIService.swift; sourceTree = "<group>"; };
+		2D09791022468AD9AD5583E4 /* FullScreenIndexChartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FullScreenIndexChartView.swift; path = NiftyOptionCalculator/Views/Charts/FullScreenIndexChartView.swift; sourceTree = SOURCE_ROOT; };
+		2D4578B60542F54DF2770102 /* UpstoxAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpstoxAPIService.swift; sourceTree = "<group>"; };
+		3E71114FA3643CD01BC6224A /* ChatViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		41F841959FF518F156F78816 /* OIZonesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OIZonesView.swift; path = OIAnalysis/OIZonesView.swift; sourceTree = "<group>"; };
+		43539317B8CCC87B55C111AD /* SplashView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		49366C838C5B8FAD9E2B07B0 /* AIInsightsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIInsightsView.swift; sourceTree = "<group>"; };
+		4B1F820B15F0C4BF37BFBB84 /* AuthManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		4B2B9DB6AA342A33A83D08E2 /* FloatingChatButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FloatingChatButton.swift; sourceTree = "<group>"; };
+		5162E78134FF029B2CD9EFB0 /* TechnicalAnalysisService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TechnicalAnalysisService.swift; path = NiftyOptionCalculator/Services/TechnicalAnalysisService.swift; sourceTree = SOURCE_ROOT; };
+		5BE5721660ECCC9EDE365CA4 /* TradeGuardModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TradeGuardModifier.swift; sourceTree = "<group>"; };
+		5DFB0228F4AED8AC03841A10 /* ShoonyaLoginView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShoonyaLoginView.swift; sourceTree = "<group>"; };
+		5F9161848207908B13E35669 /* PaperTradingAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaperTradingAPIService.swift; sourceTree = "<group>"; };
+		6918EE070806ABA1EF33F927 /* ChartData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChartData.swift; path = NiftyOptionCalculator/Models/ChartData.swift; sourceTree = "<group>"; };
+		6F7E60D43975A1DD21C9E8F3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		72EC4717D722955D0D658045 /* AIAnalysisViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIAnalysisViewModel.swift; sourceTree = "<group>"; };
+		79D75F63F1B2F91B516BEA2A /* StrategyTypeSelectorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StrategyTypeSelectorView.swift; path = NiftyOptionCalculator/Views/Strategy/StrategyTypeSelectorView.swift; sourceTree = "<group>"; };
+		7ABD4D0C222ED36FAC5CBFC0 /* AuthModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthModels.swift; sourceTree = "<group>"; };
+		7D91208C99B75DBA42CF8DA5 /* ZerodhaAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ZerodhaAPIService.swift; sourceTree = "<group>"; };
+		80970C6480192E11F1EB2745 /* PayoffDiagramView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PayoffDiagramView.swift; path = NiftyOptionCalculator/Views/Strategy/PayoffDiagramView.swift; sourceTree = "<group>"; };
+		8561F62C019B640A78EEB816 /* OnboardingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		87E348E5E91B4C4021303D38 /* GuestWebSocketService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GuestWebSocketService.swift; sourceTree = "<group>"; };
+		8907BF7F03A6466FF4A573F7 /* AngelOneAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AngelOneAPIService.swift; sourceTree = "<group>"; };
+		89E6103379EC3E5D34B8FB15 /* AIInsightsCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIInsightsCard.swift; sourceTree = "<group>"; };
+		8B3015D7BE141A3616E32A8B /* AuthAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthAPIService.swift; sourceTree = "<group>"; };
+		8C38311B2ADF40124C3F0EE3 /* ChatSessionsListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatSessionsListView.swift; sourceTree = "<group>"; };
+		8E45B46DF9B6AD1B8E1C82A2 /* ChatModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
+		90137259BBF99362458DE03A /* IndexChartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IndexChartView.swift; path = NiftyOptionCalculator/Views/Charts/IndexChartView.swift; sourceTree = SOURCE_ROOT; };
+		94CC270CB1F414A74ED5CC17 /* IVSurfaceView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = IVSurfaceView.swift; path = OIAnalysis/IVSurfaceView.swift; sourceTree = "<group>"; };
+		98E62FB2E2F946D538080D3D /* LoginSheetView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoginSheetView.swift; sourceTree = "<group>"; };
+		9DC74DC089FD973DE67B8649 /* AIInsight.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIInsight.swift; sourceTree = "<group>"; };
+		A1000002229F000200000001 /* NiftyOptionCalculatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NiftyOptionCalculatorApp.swift; sourceTree = "<group>"; };
+		A1000004229F000400000001 /* OptionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionData.swift; sourceTree = "<group>"; };
+		A1000006229F000600000001 /* GreeksResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreeksResult.swift; sourceTree = "<group>"; };
+		A1000008229F000800000001 /* BlackScholesEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackScholesEngine.swift; sourceTree = "<group>"; };
+		A100000A229F000A00000001 /* NSEAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSEAPIService.swift; sourceTree = "<group>"; };
+		A100000C229F000C00000001 /* TargetCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetCalculator.swift; sourceTree = "<group>"; };
+		A100000E229F000E00000001 /* OptionChainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionChainViewModel.swift; sourceTree = "<group>"; };
+		A1000010229F001000000001 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		A1000012229F001200000001 /* OptionChainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionChainView.swift; sourceTree = "<group>"; };
+		A1000014229F001400000001 /* CalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorView.swift; sourceTree = "<group>"; };
+		A1000016229F001600000001 /* GreeksDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreeksDisplayView.swift; sourceTree = "<group>"; };
+		A1000018229F001800000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A100001A229F001A00000001 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A100001B229F001B00000001 /* NiftyOptionCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NiftyOptionCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A103155B37C6838AC09A74CD /* ChatMessageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatMessageView.swift; sourceTree = "<group>"; };
+		A4E967C96BE6439C71B1BEF1 /* UpstoxLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpstoxLoginView.swift; sourceTree = "<group>"; };
+		A70396854094872119A6FD42 /* StrategyCalculationEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StrategyCalculationEngine.swift; path = NiftyOptionCalculator/Services/StrategyCalculationEngine.swift; sourceTree = "<group>"; };
+		A800D0CBB47315EE9621FA3C /* Strategy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Strategy.swift; path = NiftyOptionCalculator/Models/Strategy.swift; sourceTree = "<group>"; };
+		AA01000100010001AA010001 /* ThemePreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreset.swift; sourceTree = "<group>"; };
+		AA03000300030003AA030003 /* ThemeConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeConfiguration.swift; sourceTree = "<group>"; };
+		AA05000500050005AA050005 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		AA8D335529096260274BB768 /* OptionChartView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OptionChartView.swift; path = NiftyOptionCalculator/Views/Charts/OptionChartView.swift; sourceTree = SOURCE_ROOT; };
+		ABE6FC4A76898699191F8CFA /* DhanAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DhanAPIService.swift; sourceTree = "<group>"; };
+		B3EE51E473C16FCD09B7FC87 /* StrategyBuilderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StrategyBuilderView.swift; path = NiftyOptionCalculator/Views/Strategy/StrategyBuilderView.swift; sourceTree = "<group>"; };
+		BD5A1F682423E4490F0B45F1 /* OIHeatmapView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OIHeatmapView.swift; path = OIAnalysis/OIHeatmapView.swift; sourceTree = "<group>"; };
+		C00DA2205C39D127633CDEE6 /* FeatureTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FeatureTests.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6071829304051 /* StrategyEngineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StrategyEngineTests.swift; sourceTree = "<group>"; };
+		C300D69A0F5A06AF79F0978E /* GuestDataService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GuestDataService.swift; sourceTree = "<group>"; };
+		C3623F7E3FC6E70D02D74679 /* SmartMoneyActivityView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SmartMoneyActivityView.swift; path = OIAnalysis/SmartMoneyActivityView.swift; sourceTree = "<group>"; };
+		C5D67533BE59DD90D8466027 /* LegsBuilderCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LegsBuilderCard.swift; path = NiftyOptionCalculator/Views/Strategy/LegsBuilderCard.swift; sourceTree = "<group>"; };
+		C6905A5B6DF058F32E246490 /* MLOptionPredictor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MLOptionPredictor.swift; sourceTree = "<group>"; };
+		CBE5299334373BB2402D4F66 /* StrategyBuilderViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StrategyBuilderViewModel.swift; path = NiftyOptionCalculator/ViewModels/StrategyBuilderViewModel.swift; sourceTree = "<group>"; };
+		CD78131EFCFB7B47B88645EC /* ChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		CDSP002002002002CDSP002 /* CandlestickPatternService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CandlestickPatternService.swift; path = NiftyOptionCalculator/Services/CandlestickPatternService.swift; sourceTree = SOURCE_ROOT; };
+		CLD002002002002CLD002 /* ClaudeAIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClaudeAIService.swift; sourceTree = "<group>"; };
+		D0503670894DB579EA553ECA /* LegRowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LegRowView.swift; path = NiftyOptionCalculator/Views/Strategy/LegRowView.swift; sourceTree = "<group>"; };
+		DC672C7ACE5EB5A05CE20E43 /* OIAnalysisDashboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OIAnalysisDashboardView.swift; path = OIAnalysis/OIAnalysisDashboardView.swift; sourceTree = "<group>"; };
+		E19E74001AB2ADFA112B7707 /* ChartData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChartData.swift; path = NiftyOptionCalculator/Models/ChartData.swift; sourceTree = SOURCE_ROOT; };
+		EBBF31E7D59CF744FCC2F113 /* DataProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
+		EDU001001001001EDU001 /* EducationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EducationContent.swift; sourceTree = "<group>"; };
+		EDU002002002002EDU002 /* EducationTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EducationTabView.swift; sourceTree = "<group>"; };
+		EDU003003003003EDU003 /* LessonDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonDetailView.swift; sourceTree = "<group>"; };
+		EDU004004004004EDU004 /* GreekDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreekDetailView.swift; sourceTree = "<group>"; };
+		EDU005005005005EDU005 /* StrategyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrategyDetailView.swift; sourceTree = "<group>"; };
+		EDU006006006006EDU006 /* QuizTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizTabView.swift; sourceTree = "<group>"; };
+		EE96CD2FC7FAD5F855F9124E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		F0A1B2C3D4E5F60718293A4B /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		F3533A6AB1A86B7D3D643304 /* UpstoxWebSocketService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UpstoxWebSocketService.swift; sourceTree = "<group>"; };
+		F693F2633669937A357532F0 /* AIAnalysisService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIAnalysisService.swift; sourceTree = "<group>"; };
+		F709E9F1B8187D57940B9069 /* NiftyOptionCalculatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NiftyOptionCalculatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBD289F52A6A9C16865E2057 /* ChartsTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChartsTabView.swift; path = NiftyOptionCalculator/Views/Charts/ChartsTabView.swift; sourceTree = SOURCE_ROOT; };
+		FE2D96E3C2E509CF1AF014E8 /* OIAnalysisEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OIAnalysisEngine.swift; sourceTree = "<group>"; };
+		IPO001001001001IPO001 /* IPOModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPOModels.swift; sourceTree = "<group>"; };
+		SA0002000200020002SA02 /* SmartAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartAlert.swift; sourceTree = "<group>"; };
+		SA0004000400040004SA04 /* MarketAlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketAlertService.swift; sourceTree = "<group>"; };
+		SA0006000600060006SA06 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
+		SA0008000800080008SA08 /* AlertBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertBannerView.swift; sourceTree = "<group>"; };
+		SA0010001000100010SA10 /* AlertSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSettingsView.swift; sourceTree = "<group>"; };
+		SA0012001200120012SA12 /* AlertHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertHistoryView.swift; sourceTree = "<group>"; };
+		IPO002002002002IPO002 /* IPOService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPOService.swift; sourceTree = "<group>"; };
+		IPO003003003003IPO003 /* IPOViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPOViewModel.swift; sourceTree = "<group>"; };
+		IPO004004004004IPO004 /* IPODashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPODashboardView.swift; sourceTree = "<group>"; };
+		LOC002002002002LOC002 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
+		LOC004004004004LOC004 /* L.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L.swift; sourceTree = "<group>"; };
+		LOC006006006006LOC006 /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
+		LOC008008008008LOC008 /* LocalizedStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedStrings.swift; sourceTree = "<group>"; };
+		LOC010010010010LOC010 /* EnglishStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnglishStrings.swift; sourceTree = "<group>"; };
+		LOC012012012012LOC012 /* HindiStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HindiStrings.swift; sourceTree = "<group>"; };
+		LOC014014014014LOC014 /* TamilStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TamilStrings.swift; sourceTree = "<group>"; };
+		LOC016016016016LOC016 /* TeluguStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeluguStrings.swift; sourceTree = "<group>"; };
+		LOC018018018018LOC018 /* KannadaStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KannadaStrings.swift; sourceTree = "<group>"; };
+		LOC020020020020LOC020 /* MalayalamStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MalayalamStrings.swift; sourceTree = "<group>"; };
+		LOC022022022022LOC022 /* BengaliStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BengaliStrings.swift; sourceTree = "<group>"; };
+		LOC024024024024LOC024 /* PunjabiStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PunjabiStrings.swift; sourceTree = "<group>"; };
+		LOC026026026026LOC026 /* OdiaStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OdiaStrings.swift; sourceTree = "<group>"; };
+		PT001001001001PT001 /* PaperTrading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperTrading.swift; sourceTree = "<group>"; };
+		PT002002002002PT002 /* PaperTradingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperTradingEngine.swift; sourceTree = "<group>"; };
+		PT003003003003PT003 /* PaperTradingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperTradingViewModel.swift; sourceTree = "<group>"; };
+		PT004004004004PT004 /* PaperTradeDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperTradeDashboardView.swift; sourceTree = "<group>"; };
+		PT005005005005PT005 /* PaperPositionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperPositionsView.swift; sourceTree = "<group>"; };
+		PT006006006006PT006 /* PaperTradeHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperTradeHistoryView.swift; sourceTree = "<group>"; };
+		PT007007007007PT007 /* PaperPerformanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperPerformanceView.swift; sourceTree = "<group>"; };
+		PT008008008008PT008 /* TradeExecutionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradeExecutionSheet.swift; sourceTree = "<group>"; };
+		TVC002002002002TVC002 /* TradingViewChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TradingViewChart.swift; path = NiftyOptionCalculator/Views/Charts/TradingViewChart.swift; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A100001C229F001C00000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5B2DDFFA2F2E906E00CB52B6 /* GoogleSignIn in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5702601705CFEAE3C012691 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F09AA48AB38AAC218E4EF1C1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0193DE71CF6DABA3A7B30EB8 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				CD78131EFCFB7B47B88645EC /* ChatView.swift */,
+				A103155B37C6838AC09A74CD /* ChatMessageView.swift */,
+				8C38311B2ADF40124C3F0EE3 /* ChatSessionsListView.swift */,
+				4B2B9DB6AA342A33A83D08E2 /* FloatingChatButton.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		2C8B94B460F0C6644D1C99A7 /* OIAnalysis */ = {
+			isa = PBXGroup;
+			children = (
+				BD5A1F682423E4490F0B45F1 /* OIHeatmapView.swift */,
+				41F841959FF518F156F78816 /* OIZonesView.swift */,
+				94CC270CB1F414A74ED5CC17 /* IVSurfaceView.swift */,
+				C3623F7E3FC6E70D02D74679 /* SmartMoneyActivityView.swift */,
+				DC672C7ACE5EB5A05CE20E43 /* OIAnalysisDashboardView.swift */,
+			);
+			name = OIAnalysis;
+			sourceTree = "<group>";
+		};
+		42772FD4C56088A1E4F42060 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F8C89AD71FB91E8453B66DC7 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		495E8FC45882D432E241F04B /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				98E62FB2E2F946D538080D3D /* LoginSheetView.swift */,
+				5BE5721660ECCC9EDE365CA4 /* TradeGuardModifier.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		7D7A5E2341F203A4AF02473A /* Strategy */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Strategy;
+			path = NiftyOptionCalculator/Views/Strategy;
+			sourceTree = SOURCE_ROOT;
+		};
+		85EF29B060EC369A0F8601FC /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				6918EE070806ABA1EF33F927 /* ChartData.swift */,
+				90137259BBF99362458DE03A /* IndexChartView.swift */,
+				AA8D335529096260274BB768 /* OptionChartView.swift */,
+				FBD289F52A6A9C16865E2057 /* ChartsTabView.swift */,
+				2D09791022468AD9AD5583E4 /* FullScreenIndexChartView.swift */,
+				TVC002002002002TVC002 /* TradingViewChart.swift */,
+			);
+			name = Charts;
+			sourceTree = "<group>";
+		};
+		A100001D229F001D00000001 = {
+			isa = PBXGroup;
+			children = (
+				A100001E229F001E00000001 /* NiftyOptionCalculator */,
+				A100001F229F001F00000001 /* Products */,
+				A800D0CBB47315EE9621FA3C /* Strategy.swift */,
+				A70396854094872119A6FD42 /* StrategyCalculationEngine.swift */,
+				CBE5299334373BB2402D4F66 /* StrategyBuilderViewModel.swift */,
+				B3EE51E473C16FCD09B7FC87 /* StrategyBuilderView.swift */,
+				79D75F63F1B2F91B516BEA2A /* StrategyTypeSelectorView.swift */,
+				C5D67533BE59DD90D8466027 /* LegsBuilderCard.swift */,
+				D0503670894DB579EA553ECA /* LegRowView.swift */,
+				80970C6480192E11F1EB2745 /* PayoffDiagramView.swift */,
+				210136E7743E456868E0F897 /* AnalysisSummaryCard.swift */,
+				42772FD4C56088A1E4F42060 /* Frameworks */,
+				F73EA4609861FBB5792744D3 /* NiftyOptionCalculatorTests */,
+			);
+			sourceTree = "<group>";
+		};
+		A100001E229F001E00000001 /* NiftyOptionCalculator */ = {
+			isa = PBXGroup;
+			children = (
+				A1000020229F002000000001 /* App */,
+				A1000021229F002100000001 /* Models */,
+				A1000022229F002200000001 /* Services */,
+				A1000023229F002300000001 /* ViewModels */,
+				A1000024229F002400000001 /* Views */,
+				AA07000700070007AA070007 /* Theme */,
+				LOC027027027027LOC027 /* Localization */,
+				A1000025229F002500000001 /* Resources */,
+				A1000026229F002600000001 /* Preview Content */,
+				6F7E60D43975A1DD21C9E8F3 /* GoogleService-Info.plist */,
+			);
+			path = NiftyOptionCalculator;
+			sourceTree = "<group>";
+		};
+		A100001F229F001F00000001 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A100001B229F001B00000001 /* NiftyOptionCalculator.app */,
+				F709E9F1B8187D57940B9069 /* NiftyOptionCalculatorTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1000020229F002000000001 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A1000002229F000200000001 /* NiftyOptionCalculatorApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		A1000021229F002100000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A1000004229F000400000001 /* OptionData.swift */,
+				A1000006229F000600000001 /* GreeksResult.swift */,
+				9DC74DC089FD973DE67B8649 /* AIInsight.swift */,
+				2388553CEE70CA849CFFB2F0 /* ChartData.swift */,
+				E19E74001AB2ADFA112B7707 /* ChartData.swift */,
+				1AC709A1BE2A75CE4F3086D6 /* OIAnalysis.swift */,
+				PT001001001001PT001 /* PaperTrading.swift */,
+				EDU001001001001EDU001 /* EducationContent.swift */,
+				7ABD4D0C222ED36FAC5CBFC0 /* AuthModels.swift */,
+				8E45B46DF9B6AD1B8E1C82A2 /* ChatModels.swift */,
+				IPO001001001001IPO001 /* IPOModels.swift */,
+				SA0002000200020002SA02 /* SmartAlert.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A1000022229F002200000001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				F0A1B2C3D4E5F60718293A4B /* AppEnvironment.swift */,
+				A1000008229F000800000001 /* BlackScholesEngine.swift */,
+				A100000A229F000A00000001 /* NSEAPIService.swift */,
+				A100000C229F000C00000001 /* TargetCalculator.swift */,
+				2D4578B60542F54DF2770102 /* UpstoxAPIService.swift */,
+				F3533A6AB1A86B7D3D643304 /* UpstoxWebSocketService.swift */,
+				EBBF31E7D59CF744FCC2F113 /* DataProvider.swift */,
+				7D91208C99B75DBA42CF8DA5 /* ZerodhaAPIService.swift */,
+				8907BF7F03A6466FF4A573F7 /* AngelOneAPIService.swift */,
+				ABE6FC4A76898699191F8CFA /* DhanAPIService.swift */,
+				2A982A5B1217CB39453F6B82 /* ShoonyaAPIService.swift */,
+				F693F2633669937A357532F0 /* AIAnalysisService.swift */,
+				CLD002002002002CLD002 /* ClaudeAIService.swift */,
+				C6905A5B6DF058F32E246490 /* MLOptionPredictor.swift */,
+				FE2D96E3C2E509CF1AF014E8 /* OIAnalysisEngine.swift */,
+				PT002002002002PT002 /* PaperTradingEngine.swift */,
+				5162E78134FF029B2CD9EFB0 /* TechnicalAnalysisService.swift */,
+				CDSP002002002002CDSP002 /* CandlestickPatternService.swift */,
+				8B3015D7BE141A3616E32A8B /* AuthAPIService.swift */,
+				4B1F820B15F0C4BF37BFBB84 /* AuthManager.swift */,
+				C300D69A0F5A06AF79F0978E /* GuestDataService.swift */,
+				87E348E5E91B4C4021303D38 /* GuestWebSocketService.swift */,
+				5F9161848207908B13E35669 /* PaperTradingAPIService.swift */,
+				1A14793629FCC3D408446B6B /* ChatService.swift */,
+				IPO002002002002IPO002 /* IPOService.swift */,
+				SA0004000400040004SA04 /* MarketAlertService.swift */,
+				SA0006000600060006SA06 /* AlertManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A1000023229F002300000001 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A100000E229F000E00000001 /* OptionChainViewModel.swift */,
+				72EC4717D722955D0D658045 /* AIAnalysisViewModel.swift */,
+				02C8FD50CB8ADC590DF74BD4 /* OIAnalysisViewModel.swift */,
+				PT003003003003PT003 /* PaperTradingViewModel.swift */,
+				3E71114FA3643CD01BC6224A /* ChatViewModel.swift */,
+				IPO003003003003IPO003 /* IPOViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A1000024229F002400000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A1000010229F001000000001 /* MainTabView.swift */,
+				A1000027229F002700000001 /* OptionChain */,
+				A1000028229F002800000001 /* Calculator */,
+				BB14AA16131271E99B0D2D81 /* Settings */,
+				DBC9EED86EDA59199AFE7702 /* Onboarding */,
+				D9C837635C947C8BF06D03AC /* AIInsights */,
+				85EF29B060EC369A0F8601FC /* Charts */,
+				7D7A5E2341F203A4AF02473A /* Strategy */,
+				2C8B94B460F0C6644D1C99A7 /* OIAnalysis */,
+				PT201201201201PT201 /* PaperTrading */,
+				EDU201201201201EDU201 /* Education */,
+				495E8FC45882D432E241F04B /* Auth */,
+				0193DE71CF6DABA3A7B30EB8 /* Chat */,
+				IPO201201201201IPO201 /* IPO */,
+				SA0020002000200020SA20 /* Alerts */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A1000025229F002500000001 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A1000018229F001800000001 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A1000026229F002600000001 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				A100001A229F001A00000001 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		A1000027229F002700000001 /* OptionChain */ = {
+			isa = PBXGroup;
+			children = (
+				A1000012229F001200000001 /* OptionChainView.swift */,
+			);
+			path = OptionChain;
+			sourceTree = "<group>";
+		};
+		A1000028229F002800000001 /* Calculator */ = {
+			isa = PBXGroup;
+			children = (
+				A1000014229F001400000001 /* CalculatorView.swift */,
+				A1000016229F001600000001 /* GreeksDisplayView.swift */,
+			);
+			path = Calculator;
+			sourceTree = "<group>";
+		};
+		AA07000700070007AA070007 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				AA01000100010001AA010001 /* ThemePreset.swift */,
+				AA03000300030003AA030003 /* ThemeConfiguration.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		BB14AA16131271E99B0D2D81 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A4E967C96BE6439C71B1BEF1 /* UpstoxLoginView.swift */,
+				AA05000500050005AA050005 /* SettingsView.swift */,
+				5DFB0228F4AED8AC03841A10 /* ShoonyaLoginView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		D9C837635C947C8BF06D03AC /* AIInsights */ = {
+			isa = PBXGroup;
+			children = (
+				49366C838C5B8FAD9E2B07B0 /* AIInsightsView.swift */,
+				89E6103379EC3E5D34B8FB15 /* AIInsightsCard.swift */,
+				21CA39FCAB058B37CA4040BA /* StrikeAnalysisSheet.swift */,
+			);
+			path = AIInsights;
+			sourceTree = "<group>";
+		};
+		DBC9EED86EDA59199AFE7702 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				43539317B8CCC87B55C111AD /* SplashView.swift */,
+				8561F62C019B640A78EEB816 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		EDU201201201201EDU201 /* Education */ = {
+			isa = PBXGroup;
+			children = (
+				EDU002002002002EDU002 /* EducationTabView.swift */,
+				EDU003003003003EDU003 /* LessonDetailView.swift */,
+				EDU004004004004EDU004 /* GreekDetailView.swift */,
+				EDU005005005005EDU005 /* StrategyDetailView.swift */,
+				EDU006006006006EDU006 /* QuizTabView.swift */,
+			);
+			path = Education;
+			sourceTree = "<group>";
+		};
+		F73EA4609861FBB5792744D3 /* NiftyOptionCalculatorTests */ = {
+			isa = PBXGroup;
+			children = (
+				C00DA2205C39D127633CDEE6 /* FeatureTests.swift */,
+				A1B2C3D4E5F6071829304051 /* StrategyEngineTests.swift */,
+			);
+			path = NiftyOptionCalculatorTests;
+			sourceTree = "<group>";
+		};
+		F8C89AD71FB91E8453B66DC7 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				EE96CD2FC7FAD5F855F9124E /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		IPO201201201201IPO201 /* IPO */ = {
+			isa = PBXGroup;
+			children = (
+				IPO004004004004IPO004 /* IPODashboardView.swift */,
+			);
+			path = IPO;
+			sourceTree = "<group>";
+		};
+		SA0020002000200020SA20 /* Alerts */ = {
+			isa = PBXGroup;
+			children = (
+				SA0008000800080008SA08 /* AlertBannerView.swift */,
+				SA0010001000100010SA10 /* AlertSettingsView.swift */,
+				SA0012001200120012SA12 /* AlertHistoryView.swift */,
+			);
+			path = Alerts;
+			sourceTree = "<group>";
+		};
+		LOC027027027027LOC027 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				LOC002002002002LOC002 /* AppLanguage.swift */,
+				LOC004004004004LOC004 /* L.swift */,
+				LOC006006006006LOC006 /* LocalizationManager.swift */,
+				LOC008008008008LOC008 /* LocalizedStrings.swift */,
+				LOC028028028028LOC028 /* Strings */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		LOC028028028028LOC028 /* Strings */ = {
+			isa = PBXGroup;
+			children = (
+				LOC010010010010LOC010 /* EnglishStrings.swift */,
+				LOC012012012012LOC012 /* HindiStrings.swift */,
+				LOC014014014014LOC014 /* TamilStrings.swift */,
+				LOC016016016016LOC016 /* TeluguStrings.swift */,
+				LOC018018018018LOC018 /* KannadaStrings.swift */,
+				LOC020020020020LOC020 /* MalayalamStrings.swift */,
+				LOC022022022022LOC022 /* BengaliStrings.swift */,
+				LOC024024024024LOC024 /* PunjabiStrings.swift */,
+				LOC026026026026LOC026 /* OdiaStrings.swift */,
+			);
+			path = Strings;
+			sourceTree = "<group>";
+		};
+		PT201201201201PT201 /* PaperTrading */ = {
+			isa = PBXGroup;
+			children = (
+				PT004004004004PT004 /* PaperTradeDashboardView.swift */,
+				PT005005005005PT005 /* PaperPositionsView.swift */,
+				PT006006006006PT006 /* PaperTradeHistoryView.swift */,
+				PT007007007007PT007 /* PaperPerformanceView.swift */,
+				PT008008008008PT008 /* TradeExecutionSheet.swift */,
+			);
+			path = PaperTrading;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1000029229F002900000001 /* NiftyOptionCalculator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A100002A229F002A00000001 /* Build configuration list for PBXNativeTarget "NiftyOptionCalculator" */;
+			buildPhases = (
+				A100002B229F002B00000001 /* Sources */,
+				A100001C229F001C00000001 /* Frameworks */,
+				A100002C229F002C00000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NiftyOptionCalculator;
+			packageProductDependencies = (
+				9D230D404CBDAA3B4C61C204 /* GoogleSignIn */,
+			);
+			productName = NiftyOptionCalculator;
+			productReference = A100001B229F001B00000001 /* NiftyOptionCalculator.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A8477255C644D8939431B3EE /* NiftyOptionCalculatorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70DA81232CA36CCECA6B327D /* Build configuration list for PBXNativeTarget "NiftyOptionCalculatorTests" */;
+			buildPhases = (
+				75CECF0DD2E0D7D0CA696ED4 /* Sources */,
+				F5702601705CFEAE3C012691 /* Frameworks */,
+				281F577FBF392EBFD33ED13E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				45C748E0511A5FB0934F318D /* PBXTargetDependency */,
+			);
+			name = NiftyOptionCalculatorTests;
+			productName = NiftyOptionCalculatorTests;
+			productReference = F709E9F1B8187D57940B9069 /* NiftyOptionCalculatorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A100002D229F002D00000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A1000029229F002900000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = A100002E229F002E00000001 /* Build configuration list for PBXProject "NiftyOptionCalculator" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A100001D229F001D00000001;
+			packageReferences = (
+				BCFA0ACF1DA66EDC5813BBB4 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
+			productRefGroup = A100001F229F001F00000001 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1000029229F002900000001 /* NiftyOptionCalculator */,
+				A8477255C644D8939431B3EE /* NiftyOptionCalculatorTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		281F577FBF392EBFD33ED13E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A100002C229F002C00000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000017229F001700000001 /* Assets.xcassets in Resources */,
+				A1000019229F001900000001 /* Preview Assets.xcassets in Resources */,
+				4676015049E80C659811CD06 /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		75CECF0DD2E0D7D0CA696ED4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCF6D0E6D38B1BD7D15146C0 /* FeatureTests.swift in Sources */,
+				A1B2C3D4E5F6071829304050 /* StrategyEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A100002B229F002B00000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F0A1B2C3D4E5F60718293A4C /* AppEnvironment.swift in Sources */,
+				A1000001229F000100000001 /* NiftyOptionCalculatorApp.swift in Sources */,
+				A1000003229F000300000001 /* OptionData.swift in Sources */,
+				A1000005229F000500000001 /* GreeksResult.swift in Sources */,
+				A1000007229F000700000001 /* BlackScholesEngine.swift in Sources */,
+				A1000009229F000900000001 /* NSEAPIService.swift in Sources */,
+				A100000B229F000B00000001 /* TargetCalculator.swift in Sources */,
+				A100000D229F000D00000001 /* OptionChainViewModel.swift in Sources */,
+				A100000F229F000F00000001 /* MainTabView.swift in Sources */,
+				A1000011229F001100000001 /* OptionChainView.swift in Sources */,
+				A1000013229F001300000001 /* CalculatorView.swift in Sources */,
+				A1000015229F001500000001 /* GreeksDisplayView.swift in Sources */,
+				B55BE998DF315BCFB1992AF3 /* UpstoxAPIService.swift in Sources */,
+				BAFE44D28F74F29A32925E55 /* UpstoxLoginView.swift in Sources */,
+				D77FD3695A769159CC2FDD0C /* UpstoxWebSocketService.swift in Sources */,
+				3D4A83A9E18486503F1F7960 /* DataProvider.swift in Sources */,
+				EDE2D1E14867FB2CB26BEF35 /* ZerodhaAPIService.swift in Sources */,
+				5CEB78B68F40ECCB4BAC26C7 /* AngelOneAPIService.swift in Sources */,
+				E67A17B0C24F870A4B119C07 /* DhanAPIService.swift in Sources */,
+				EA82227A2A1A396501F651F9 /* ShoonyaAPIService.swift in Sources */,
+				718CD4EC4B82F90CB837B01A /* SplashView.swift in Sources */,
+				95092743468BA6DB2ABE3717 /* OnboardingView.swift in Sources */,
+				DE2094A74F069A8E09FDAAB0 /* AIInsight.swift in Sources */,
+				69AB36DCEFB71785F7464C7A /* AIAnalysisService.swift in Sources */,
+				CLD001001001001CLD001 /* ClaudeAIService.swift in Sources */,
+				974C352698E6446E54A9CE9F /* AIAnalysisViewModel.swift in Sources */,
+				78B9F25E8B2B0D432ABFC5DC /* AIInsightsView.swift in Sources */,
+				503F40C8E310796D5684EC12 /* AIInsightsCard.swift in Sources */,
+				42B30963943614A222B3BBBB /* MLOptionPredictor.swift in Sources */,
+				04C4FDB0A681EE32C37A7CE2 /* StrikeAnalysisSheet.swift in Sources */,
+				78C432ED4F8E81BF5DE4EC64 /* IndexChartView.swift in Sources */,
+				4E33FD7F07545E5E57B254A8 /* OptionChartView.swift in Sources */,
+				8B68C61B2791A0A928C145C1 /* ChartsTabView.swift in Sources */,
+				DDA4511AEC193103E002DFE8 /* ChartData.swift in Sources */,
+				3F4CAC807C71B6F205320E55 /* FullScreenIndexChartView.swift in Sources */,
+				AA02000200020002AA020002 /* ThemePreset.swift in Sources */,
+				AA04000400040004AA040004 /* ThemeConfiguration.swift in Sources */,
+				AA06000600060006AA060006 /* SettingsView.swift in Sources */,
+				LOC001001001001LOC001 /* AppLanguage.swift in Sources */,
+				LOC003003003003LOC003 /* L.swift in Sources */,
+				LOC005005005005LOC005 /* LocalizationManager.swift in Sources */,
+				LOC007007007007LOC007 /* LocalizedStrings.swift in Sources */,
+				LOC009009009009LOC009 /* EnglishStrings.swift in Sources */,
+				LOC011011011011LOC011 /* HindiStrings.swift in Sources */,
+				LOC013013013013LOC013 /* TamilStrings.swift in Sources */,
+				LOC015015015015LOC015 /* TeluguStrings.swift in Sources */,
+				LOC017017017017LOC017 /* KannadaStrings.swift in Sources */,
+				LOC019019019019LOC019 /* MalayalamStrings.swift in Sources */,
+				LOC021021021021LOC021 /* BengaliStrings.swift in Sources */,
+				LOC023023023023LOC023 /* PunjabiStrings.swift in Sources */,
+				LOC025025025025LOC025 /* OdiaStrings.swift in Sources */,
+				6F3A898DF835F9ED213D920D /* Strategy.swift in Sources */,
+				333A9E9782B21F9A82775D10 /* StrategyCalculationEngine.swift in Sources */,
+				FCCF0FBD0DE1857F4D7A509B /* StrategyBuilderViewModel.swift in Sources */,
+				F37C20E5A5815E5A91D60557 /* StrategyBuilderView.swift in Sources */,
+				074EF763BBADB51DA6200F1B /* StrategyTypeSelectorView.swift in Sources */,
+				5060F97CFBE85163E8B70204 /* LegsBuilderCard.swift in Sources */,
+				852756F6D112F37FBDA0459A /* LegRowView.swift in Sources */,
+				1B77461551A1AF47D923367B /* PayoffDiagramView.swift in Sources */,
+				FE0EFDBDC185EA5C96630296 /* AnalysisSummaryCard.swift in Sources */,
+				056CCFEBB05944CFD713BCFB /* OIAnalysis.swift in Sources */,
+				796D7032009BB92080175D9E /* OIAnalysisEngine.swift in Sources */,
+				8303573B65A97E23A3433141 /* OIAnalysisViewModel.swift in Sources */,
+				F6A4D56663D263D2633471D8 /* OIHeatmapView.swift in Sources */,
+				1FA88255581D0F56D32510B2 /* OIZonesView.swift in Sources */,
+				4B7C0CBA1AFBDCBE0F451E86 /* IVSurfaceView.swift in Sources */,
+				7CBE61463BC0E9ACD9DAFA31 /* SmartMoneyActivityView.swift in Sources */,
+				EE586DD8FB527A29BD1BC773 /* OIAnalysisDashboardView.swift in Sources */,
+				PT101101101101PT101 /* PaperTrading.swift in Sources */,
+				PT102102102102PT102 /* PaperTradingEngine.swift in Sources */,
+				PT103103103103PT103 /* PaperTradingViewModel.swift in Sources */,
+				PT104104104104PT104 /* PaperTradeDashboardView.swift in Sources */,
+				PT105105105105PT105 /* PaperPositionsView.swift in Sources */,
+				PT106106106106PT106 /* PaperTradeHistoryView.swift in Sources */,
+				PT107107107107PT107 /* PaperPerformanceView.swift in Sources */,
+				PT108108108108PT108 /* TradeExecutionSheet.swift in Sources */,
+				2CB0275AFAF17E619E6C8F37 /* TechnicalAnalysisService.swift in Sources */,
+				CDSP001001001001CDSP001 /* CandlestickPatternService.swift in Sources */,
+				TVC001001001001TVC001 /* TradingViewChart.swift in Sources */,
+				EDU101101101101EDU101 /* EducationContent.swift in Sources */,
+				EDU102102102102EDU102 /* EducationTabView.swift in Sources */,
+				EDU103103103103EDU103 /* LessonDetailView.swift in Sources */,
+				EDU104104104104EDU104 /* GreekDetailView.swift in Sources */,
+				EDU105105105105EDU105 /* StrategyDetailView.swift in Sources */,
+				EDU106106106106EDU106 /* QuizTabView.swift in Sources */,
+				99AF514B6E26E574865FF6F5 /* AuthModels.swift in Sources */,
+				B587E2C0B11F56AAE098FBE0 /* AuthAPIService.swift in Sources */,
+				F4BC6E3B96E5C291C2FA7AF3 /* AuthManager.swift in Sources */,
+				DA7EB8DDB02590DB127CF8DB /* LoginSheetView.swift in Sources */,
+				93DB8C1BBA1C7880D4D8C2A3 /* TradeGuardModifier.swift in Sources */,
+				5C61CE03CAAD70653662E9B7 /* ShoonyaLoginView.swift in Sources */,
+				2C09AE02712E9F87227CA0E9 /* GuestDataService.swift in Sources */,
+				5A4EEAF1CB418DE69793FB4C /* GuestWebSocketService.swift in Sources */,
+				5C7808AC0CEC59522F9D6D3B /* PaperTradingAPIService.swift in Sources */,
+				A23B6E142AE8D7C1EA8D648A /* ChatView.swift in Sources */,
+				9873DEC07556DD6363124DE8 /* ChatMessageView.swift in Sources */,
+				759714924834BCE240D7AABB /* ChatSessionsListView.swift in Sources */,
+				5961B51141750B830B22E71C /* FloatingChatButton.swift in Sources */,
+				666D1745B600752A0808FD12 /* ChatModels.swift in Sources */,
+				B1E5A4EAF3CA3A7863A236F0 /* ChatService.swift in Sources */,
+				B5BE675DC2615CAE3BB590FF /* ChatViewModel.swift in Sources */,
+				IPO101101101101IPO101 /* IPOModels.swift in Sources */,
+				IPO102102102102IPO102 /* IPOService.swift in Sources */,
+				IPO103103103103IPO103 /* IPOViewModel.swift in Sources */,
+				IPO104104104104IPO104 /* IPODashboardView.swift in Sources */,
+				SA0001000100010001SA01 /* SmartAlert.swift in Sources */,
+				SA0003000300030003SA03 /* MarketAlertService.swift in Sources */,
+				SA0005000500050005SA05 /* AlertManager.swift in Sources */,
+				SA0007000700070007SA07 /* AlertBannerView.swift in Sources */,
+				SA0009000900090009SA09 /* AlertSettingsView.swift in Sources */,
+				SA0011001100110011SA11 /* AlertHistoryView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		45C748E0511A5FB0934F318D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NiftyOptionCalculator;
+			target = A1000029229F002900000001 /* NiftyOptionCalculator */;
+			targetProxy = E9D7A5BCE72FE2706FB6D3E5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		09CF2C66F6E6390DEE1CB9D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.niftyoption.calculatorTests;
+				PRODUCT_NAME = NiftyOptionCalculatorTests;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NiftyOptionCalculator.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NiftyOptionCalculator";
+			};
+			name = Debug;
+		};
+		A100002F229F002F00000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A1000030229F003000000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A1000031229F003100000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"NiftyOptionCalculator/Preview Content\"";
+				DEVELOPMENT_TEAM = 9YG7G7YB2J;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NiftyOptionCalculator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Optix;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.optix.iosapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1000032229F003200000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"NiftyOptionCalculator/Preview Content\"";
+				DEVELOPMENT_TEAM = 9YG7G7YB2J;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = NiftyOptionCalculator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Optix;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.optix.iosapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C55B09BACAB0827847147B02 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.niftyoption.calculatorTests;
+				PRODUCT_NAME = NiftyOptionCalculatorTests;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NiftyOptionCalculator.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NiftyOptionCalculator";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		70DA81232CA36CCECA6B327D /* Build configuration list for PBXNativeTarget "NiftyOptionCalculatorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C55B09BACAB0827847147B02 /* Release */,
+				09CF2C66F6E6390DEE1CB9D7 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A100002A229F002A00000001 /* Build configuration list for PBXNativeTarget "NiftyOptionCalculator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000031229F003100000001 /* Debug */,
+				A1000032229F003200000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A100002E229F002E00000001 /* Build configuration list for PBXProject "NiftyOptionCalculator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A100002F229F002F00000001 /* Debug */,
+				A1000030229F003000000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BCFA0ACF1DA66EDC5813BBB4 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9D230D404CBDAA3B4C61C204 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BCFA0ACF1DA66EDC5813BBB4 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A100002D229F002D00000001 /* Project object */;
+}

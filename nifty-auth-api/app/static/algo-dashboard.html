@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algo Trading Dashboard - Optix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0f1419;
+            color: #e7e9ea;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%);
+            padding: 20px 30px;
+            border-bottom: 1px solid #2f3542;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header h1 span {
+            background: linear-gradient(135deg, #00d4aa, #00a8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge.running {
+            background: rgba(0, 212, 170, 0.15);
+            color: #00d4aa;
+            border: 1px solid rgba(0, 212, 170, 0.3);
+        }
+
+        .status-badge.stopped {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .status-badge.paper {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .pulse {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .pulse.green {
+            background: #00d4aa;
+        }
+
+        .pulse.red {
+            background: #ff6b6b;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #1a1f2e;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #2f3542;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .card-value.positive {
+            color: #00d4aa;
+        }
+
+        .card-value.negative {
+            color: #ff6b6b;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: #8b949e;
+        }
+
+        .control-panel {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4aa, #00a8ff);
+            color: #0f1419;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            color: #0f1419;
+        }
+
+        .btn-secondary {
+            background: #2f3542;
+            color: #e7e9ea;
+            border: 1px solid #3d4450;
+        }
+
+        .signal-card {
+            background: linear-gradient(135deg, #1a2332 0%, #1a1f2e 100%);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .signal-type {
+            font-size: 48px;
+            font-weight: 800;
+            margin: 16px 0;
+        }
+
+        .signal-type.STRONG_BUY, .signal-type.BUY {
+            color: #00d4aa;
+        }
+
+        .signal-type.STRONG_SELL, .signal-type.SELL {
+            color: #ff6b6b;
+        }
+
+        .signal-type.HOLD {
+            color: #ffc107;
+        }
+
+        .signal-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #2f3542;
+        }
+
+        .signal-detail {
+            text-align: center;
+        }
+
+        .signal-detail-label {
+            font-size: 12px;
+            color: #8b949e;
+            margin-bottom: 4px;
+        }
+
+        .signal-detail-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #2f3542;
+        }
+
+        th {
+            font-size: 12px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-ce {
+            background: rgba(0, 212, 170, 0.15);
+            color: #00d4aa;
+        }
+
+        .badge-pe {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+        }
+
+        .badge-open {
+            background: rgba(0, 168, 255, 0.15);
+            color: #00a8ff;
+        }
+
+        .badge-closed {
+            background: rgba(139, 148, 158, 0.15);
+            color: #8b949e;
+        }
+
+        .pnl-positive {
+            color: #00d4aa;
+        }
+
+        .pnl-negative {
+            color: #ff6b6b;
+        }
+
+        .config-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: #8b949e;
+            text-transform: uppercase;
+        }
+
+        .form-group input, .form-group select {
+            background: #0f1419;
+            border: 1px solid #2f3542;
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #e7e9ea;
+            font-size: 14px;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #00d4aa;
+        }
+
+        .market-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            font-size: 14px;
+            color: #8b949e;
+        }
+
+        .market-info span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: #8b949e;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: #2f3542;
+            color: #e7e9ea;
+        }
+
+        .logs-container {
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+        }
+
+        .log-entry {
+            padding: 8px 12px;
+            border-bottom: 1px solid #2f3542;
+            display: flex;
+            gap: 12px;
+        }
+
+        .log-time {
+            color: #8b949e;
+            white-space: nowrap;
+        }
+
+        .log-level {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .log-level.INFO {
+            background: rgba(0, 168, 255, 0.15);
+            color: #00a8ff;
+        }
+
+        .log-level.WARNING {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .log-level.ERROR {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8b949e;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1f2e;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid #2f3542;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #8b949e;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #2f3542;
+            border-top-color: #00d4aa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 10px;
+            font-weight: 500;
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success {
+            background: rgba(0, 212, 170, 0.9);
+            color: #0f1419;
+        }
+
+        .toast.error {
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .risk-bar {
+            height: 8px;
+            background: #2f3542;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .risk-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .risk-bar-fill.safe {
+            background: linear-gradient(90deg, #00d4aa, #00a8ff);
+        }
+
+        .risk-bar-fill.warning {
+            background: linear-gradient(90deg, #ffc107, #ff9800);
+        }
+
+        .risk-bar-fill.danger {
+            background: linear-gradient(90deg, #ff6b6b, #ee5a5a);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="2">
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00d4aa"/>
+                        <stop offset="100%" stop-color="#00a8ff"/>
+                    </linearGradient>
+                </defs>
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+            </svg>
+            <span>Optix</span> Algo Trading
+        </h1>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="market-info">
+                <span id="marketTime">--:--:--</span>
+                <span id="marketStatus">Loading...</span>
+            </div>
+            <div id="engineStatus" class="status-badge stopped">
+                <div class="pulse red"></div>
+                <span>Stopped</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Control Panel -->
+        <div class="card" style="margin-bottom: 20px;">
+            <div class="card-header">
+                <span class="card-title">Control Panel</span>
+                <button class="refresh-btn" onclick="refreshAll()" title="Refresh">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6M1 20v-6h6"/>
+                        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="control-panel">
+                <button id="startBtn" class="btn btn-primary" onclick="startEngine()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                    Start Engine
+                </button>
+                <button id="stopBtn" class="btn btn-secondary" onclick="stopEngine()" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="4" width="4" height="16"/>
+                        <rect x="14" y="4" width="4" height="16"/>
+                    </svg>
+                    Stop Engine
+                </button>
+                <button class="btn btn-danger" onclick="killSwitch()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="15" y1="9" x2="9" y2="15"/>
+                        <line x1="9" y1="9" x2="15" y2="15"/>
+                    </svg>
+                    Kill Switch
+                </button>
+                <div style="display: flex; align-items: center; gap: 8px; background: #0f1419; border-radius: 10px; padding: 4px;">
+                    <select id="signalIndexSelect" style="background: transparent; border: none; padding: 8px 12px; color: #e7e9ea; font-size: 14px; font-weight: 600; cursor: pointer; outline: none;">
+                        <option value="NIFTY">NIFTY</option>
+                        <option value="BANKNIFTY">BANKNIFTY</option>
+                        <option value="FINNIFTY">FINNIFTY</option>
+                        <option value="MIDCPNIFTY">MIDCPNIFTY</option>
+                        <option value="SENSEX">SENSEX</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="generateSignal()" style="padding: 8px 16px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        Signal
+                    </button>
+                </div>
+                <button class="btn btn-warning" onclick="openManualTrade()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Manual Trade
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid">
+            <div class="card">
+                <span class="card-title">Capital</span>
+                <div id="capital" class="card-value">₹0</div>
+                <span class="card-subtitle">Available: <span id="availableCapital">₹0</span></span>
+            </div>
+            <div class="card">
+                <span class="card-title">Daily P&L</span>
+                <div id="dailyPnl" class="card-value">₹0</div>
+                <span class="card-subtitle">Trades today: <span id="dailyTrades">0</span></span>
+                <div class="risk-bar">
+                    <div id="pnlBar" class="risk-bar-fill safe" style="width: 50%;"></div>
+                </div>
+            </div>
+            <div class="card">
+                <span class="card-title">Open Positions</span>
+                <div id="openPositions" class="card-value">0 / 2</div>
+                <span class="card-subtitle">Unrealized: <span id="unrealizedPnl">₹0</span></span>
+            </div>
+            <div class="card">
+                <span class="card-title">Risk Status</span>
+                <div id="riskStatus" class="card-value" style="font-size: 24px;">Safe</div>
+                <span class="card-subtitle">Daily loss limit: <span id="dailyLossLimit">₹0</span></span>
+            </div>
+        </div>
+
+        <!-- Signal and Positions -->
+        <div class="grid">
+            <!-- Current Signal -->
+            <div class="card signal-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span class="card-title">Current Signal</span>
+                    <div id="signalTabs" style="display: flex; gap: 4px; background: #0f1419; border-radius: 8px; padding: 4px;">
+                        <button onclick="switchSignalIndex('NIFTY')" class="signal-tab active" data-index="NIFTY" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; background: #00d4aa; color: #0f1419;">NIFTY</button>
+                        <button onclick="switchSignalIndex('BANKNIFTY')" class="signal-tab" data-index="BANKNIFTY" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; background: transparent; color: #8b949e;">BANKNIFTY</button>
+                        <button onclick="switchSignalIndex('FINNIFTY')" class="signal-tab" data-index="FINNIFTY" style="padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; background: transparent; color: #8b949e;">FINNIFTY</button>
+                    </div>
+                </div>
+                <div id="signalSymbol" style="font-size: 20px; font-weight: 700; margin-top: 8px;">--</div>
+                <div id="signalType" class="signal-type">--</div>
+                <div style="font-size: 14px; color: #8b949e;">Score: <span id="signalScore">--</span></div>
+                <div class="signal-details">
+                    <div class="signal-detail">
+                        <div class="signal-detail-label">PCR</div>
+                        <div id="signalPcr" class="signal-detail-value">--</div>
+                    </div>
+                    <div class="signal-detail">
+                        <div class="signal-detail-label">Max Pain</div>
+                        <div id="signalMaxPain" class="signal-detail-value">--</div>
+                    </div>
+                    <div class="signal-detail">
+                        <div class="signal-detail-label">VIX</div>
+                        <div id="signalVix" class="signal-detail-value">--</div>
+                    </div>
+                </div>
+                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #2f3542;">
+                    <div style="font-size: 12px; color: #8b949e;">Recommendation</div>
+                    <div id="signalRecommendation" style="font-size: 16px; font-weight: 600; margin-top: 4px;">--</div>
+                </div>
+            </div>
+
+            <!-- Open Positions Table -->
+            <div class="card" style="grid-column: span 2;">
+                <div class="card-header">
+                    <span class="card-title">Open Positions</span>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Strike</th>
+                                <th>Type</th>
+                                <th>Qty</th>
+                                <th>Entry</th>
+                                <th>Current</th>
+                                <th>P&L</th>
+                                <th>SL / Target</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="positionsTable">
+                            <tr>
+                                <td colspan="9" class="empty-state">
+                                    <div class="empty-state-icon">📊</div>
+                                    No open positions
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trade History and Logs -->
+        <div class="grid">
+            <!-- Trade History -->
+            <div class="card" style="grid-column: span 2;">
+                <div class="card-header">
+                    <span class="card-title">Recent Trades</span>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Symbol</th>
+                                <th>Strike</th>
+                                <th>Type</th>
+                                <th>Action</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>P&L</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tradesTable">
+                            <tr>
+                                <td colspan="9" class="empty-state">
+                                    <div class="empty-state-icon">📜</div>
+                                    No trades yet
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Logs -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Activity Logs</span>
+                </div>
+                <div id="logsContainer" class="logs-container">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        No logs yet
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration -->
+        <div class="card" style="margin-top: 20px;">
+            <div class="card-header">
+                <span class="card-title">Strategy Configuration</span>
+                <button class="btn btn-secondary" onclick="saveConfig()">Save Changes</button>
+            </div>
+            <div class="config-form">
+                <div class="form-group">
+                    <label>Capital (₹)</label>
+                    <input type="number" id="configCapital" value="100000">
+                </div>
+                <div class="form-group">
+                    <label>Risk Per Trade (%)</label>
+                    <input type="number" id="configRisk" value="2" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label>Max Daily Loss (%)</label>
+                    <input type="number" id="configMaxLoss" value="5" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label>Max Positions</label>
+                    <input type="number" id="configMaxPositions" value="2">
+                </div>
+                <div class="form-group">
+                    <label>Stop Loss (%)</label>
+                    <input type="number" id="configSL" value="30" step="5">
+                </div>
+                <div class="form-group">
+                    <label>Target (%)</label>
+                    <input type="number" id="configTarget" value="50" step="5">
+                </div>
+                <div class="form-group">
+                    <label>Signal Threshold</label>
+                    <select id="configSignalThreshold">
+                        <option value="STRONG">Strong Signals Only</option>
+                        <option value="ALL">All Signals</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Trading Mode</label>
+                    <select id="configPaperMode">
+                        <option value="true">Paper Trading</option>
+                        <option value="false">Live Trading</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual Trade Modal -->
+    <div id="manualTradeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Manual Trade Entry</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="config-form">
+                <div class="form-group">
+                    <label>Symbol</label>
+                    <select id="tradeSymbol">
+                        <option value="NIFTY">NIFTY</option>
+                        <option value="BANKNIFTY">BANKNIFTY</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Strike Price</label>
+                    <input type="number" id="tradeStrike" placeholder="e.g., 25750">
+                </div>
+                <div class="form-group">
+                    <label>Option Type</label>
+                    <select id="tradeOptionType">
+                        <option value="CE">Call (CE)</option>
+                        <option value="PE">Put (PE)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Expiry</label>
+                    <input type="text" id="tradeExpiry" placeholder="e.g., 24-Feb-2026">
+                </div>
+                <div class="form-group">
+                    <label>Quantity (Lots)</label>
+                    <input type="number" id="tradeQuantity" value="1" min="1">
+                </div>
+            </div>
+            <div style="margin-top: 20px; display: flex; gap: 12px;">
+                <button class="btn btn-primary" onclick="submitManualTrade()" style="flex: 1;">Place Trade</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/v1/algo';
+        let refreshInterval;
+        let currentConfigId = null;
+        let signalsCache = {};
+        let currentSignalIndex = 'NIFTY';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshAll();
+            // Generate signals for all main indices on load
+            generateAllSignals();
+            refreshInterval = setInterval(refreshAll, 5000); // Refresh every 5 seconds
+        });
+
+        async function refreshAll() {
+            await Promise.all([
+                fetchStatus(),
+                fetchSignal(),
+                fetchPositions(),
+                fetchTrades(),
+                fetchLogs()
+            ]);
+        }
+
+        async function fetchStatus() {
+            try {
+                const res = await fetch(`${API_BASE}/status`);
+                const data = await res.json();
+                updateStatus(data);
+            } catch (e) {
+                console.error('Error fetching status:', e);
+            }
+        }
+
+        function updateStatus(data) {
+            // Update engine status badge
+            const statusBadge = document.getElementById('engineStatus');
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+
+            if (data.is_running) {
+                statusBadge.className = 'status-badge ' + (data.is_paper_mode ? 'paper' : 'running');
+                statusBadge.innerHTML = `<div class="pulse green"></div><span>${data.is_paper_mode ? 'Paper Mode' : 'Live'}</span>`;
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            } else {
+                statusBadge.className = 'status-badge stopped';
+                statusBadge.innerHTML = '<div class="pulse red"></div><span>Stopped</span>';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+
+            // Update market info
+            document.getElementById('marketTime').textContent = data.current_time;
+            document.getElementById('marketStatus').textContent = data.is_market_hours ? '🟢 Market Open' : '🔴 Market Closed';
+
+            // Update stats
+            document.getElementById('capital').textContent = formatCurrency(data.total_capital);
+            document.getElementById('availableCapital').textContent = formatCurrency(data.available_capital);
+
+            const dailyPnl = document.getElementById('dailyPnl');
+            dailyPnl.textContent = formatCurrency(data.daily_pnl);
+            dailyPnl.className = 'card-value ' + (data.daily_pnl >= 0 ? 'positive' : 'negative');
+            document.getElementById('dailyTrades').textContent = data.daily_trades;
+
+            document.getElementById('openPositions').textContent = `${data.open_positions} / ${data.max_positions}`;
+            document.getElementById('unrealizedPnl').textContent = formatCurrency(data.total_unrealized_pnl);
+
+            // Risk status
+            const riskStatus = document.getElementById('riskStatus');
+            if (data.daily_loss_limit_hit) {
+                riskStatus.textContent = 'LIMIT HIT';
+                riskStatus.style.color = '#ff6b6b';
+            } else if (data.daily_pnl < 0) {
+                riskStatus.textContent = 'At Risk';
+                riskStatus.style.color = '#ffc107';
+            } else {
+                riskStatus.textContent = 'Safe';
+                riskStatus.style.color = '#00d4aa';
+            }
+
+            // Config ID
+            currentConfigId = data.config_id;
+
+            // Update signal if available
+            if (data.last_signal) {
+                document.getElementById('signalSymbol').textContent = data.last_signal.symbol;
+                const signalType = document.getElementById('signalType');
+                signalType.textContent = data.last_signal.signal_type;
+                signalType.className = 'signal-type ' + data.last_signal.signal_type;
+                document.getElementById('signalScore').textContent = data.last_signal.signal_score.toFixed(3);
+            }
+        }
+
+        async function fetchSignal() {
+            try {
+                const res = await fetch(`${API_BASE}/signals/current`);
+                const data = await res.json();
+
+                if (data.signal !== null && data.symbol) {
+                    // Cache the signal
+                    signalsCache[data.symbol] = data;
+
+                    // Only display if this is the currently selected index
+                    if (data.symbol === currentSignalIndex) {
+                        displaySignal(currentSignalIndex);
+                    }
+                } else {
+                    // Display whatever is cached for current index
+                    displaySignal(currentSignalIndex);
+                }
+            } catch (e) {
+                console.error('Error fetching signal:', e);
+                // Still display cached signal on error
+                displaySignal(currentSignalIndex);
+            }
+        }
+
+        async function fetchPositions() {
+            try {
+                const res = await fetch(`${API_BASE}/positions?status=open`);
+                const positions = await res.json();
+                const tbody = document.getElementById('positionsTable');
+
+                if (positions.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="9" class="empty-state">
+                                <div class="empty-state-icon">📊</div>
+                                No open positions
+                            </td>
+                        </tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = positions.map(p => `
+                    <tr>
+                        <td><strong>${p.symbol}</strong></td>
+                        <td>${p.strike_price}</td>
+                        <td><span class="badge badge-${p.option_type.toLowerCase()}">${p.option_type}</span></td>
+                        <td>${p.quantity} lot${p.quantity > 1 ? 's' : ''}</td>
+                        <td>₹${p.entry_price.toFixed(2)}</td>
+                        <td>₹${(p.current_price || p.entry_price).toFixed(2)}</td>
+                        <td class="${p.unrealized_pnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">
+                            ${formatCurrency(p.unrealized_pnl)} (${p.unrealized_pnl_percent?.toFixed(1) || 0}%)
+                        </td>
+                        <td>₹${p.stop_loss_price.toFixed(2)} / ₹${p.target_price.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;"
+                                onclick="closePosition('${p.id}')">Close</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error('Error fetching positions:', e);
+            }
+        }
+
+        async function fetchTrades() {
+            try {
+                const res = await fetch(`${API_BASE}/trades?limit=10`);
+                const trades = await res.json();
+                const tbody = document.getElementById('tradesTable');
+
+                if (trades.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="9" class="empty-state">
+                                <div class="empty-state-icon">📜</div>
+                                No trades yet
+                            </td>
+                        </tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = trades.map(t => `
+                    <tr>
+                        <td>${new Date(t.executed_at || t.created_at).toLocaleTimeString()}</td>
+                        <td><strong>${t.symbol}</strong></td>
+                        <td>${t.strike_price}</td>
+                        <td><span class="badge badge-${t.option_type.toLowerCase()}">${t.option_type}</span></td>
+                        <td>${t.trade_type.toUpperCase()}</td>
+                        <td>${t.quantity}</td>
+                        <td>₹${(t.executed_price || t.order_price).toFixed(2)}</td>
+                        <td class="${(t.pnl || 0) >= 0 ? 'pnl-positive' : 'pnl-negative'}">
+                            ${t.pnl ? formatCurrency(t.pnl) : '--'}
+                        </td>
+                        <td><span class="badge badge-${t.order_status === 'executed' ? 'open' : 'closed'}">${t.order_status}</span></td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error('Error fetching trades:', e);
+            }
+        }
+
+        async function fetchLogs() {
+            try {
+                const res = await fetch(`${API_BASE}/logs?limit=20`);
+                const logs = await res.json();
+                const container = document.getElementById('logsContainer');
+
+                if (logs.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📝</div>
+                            No logs yet
+                        </div>`;
+                    return;
+                }
+
+                container.innerHTML = logs.map(l => `
+                    <div class="log-entry">
+                        <span class="log-time">${new Date(l.created_at).toLocaleTimeString()}</span>
+                        <span class="log-level ${l.level}">${l.level}</span>
+                        <span>${l.message}</span>
+                    </div>
+                `).join('');
+            } catch (e) {
+                console.error('Error fetching logs:', e);
+            }
+        }
+
+        async function startEngine() {
+            try {
+                const paperMode = document.getElementById('configPaperMode').value === 'true';
+                const res = await fetch(`${API_BASE}/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        config_id: currentConfigId,
+                        paper_mode: paperMode
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Engine started successfully', 'success');
+                    refreshAll();
+                } else {
+                    showToast(data.detail || 'Failed to start engine', 'error');
+                }
+            } catch (e) {
+                showToast('Error starting engine', 'error');
+            }
+        }
+
+        async function stopEngine() {
+            try {
+                const res = await fetch(`${API_BASE}/stop`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ close_all_positions: false, reason: 'Manual stop' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Engine stopped', 'success');
+                    refreshAll();
+                } else {
+                    showToast(data.detail || 'Failed to stop engine', 'error');
+                }
+            } catch (e) {
+                showToast('Error stopping engine', 'error');
+            }
+        }
+
+        async function killSwitch() {
+            if (!confirm('This will STOP the engine and CLOSE ALL positions. Are you sure?')) {
+                return;
+            }
+            try {
+                const res = await fetch(`${API_BASE}/kill-switch`, { method: 'POST' });
+                const data = await res.json();
+                showToast('Kill switch activated - all positions closed', 'success');
+                refreshAll();
+            } catch (e) {
+                showToast('Error activating kill switch', 'error');
+            }
+        }
+
+        async function generateSignal() {
+            try {
+                const symbol = document.getElementById('signalIndexSelect').value;
+                const res = await fetch(`${API_BASE}/signals/generate?symbol=${symbol}`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    signalsCache[symbol] = data.signal;
+                    currentSignalIndex = symbol;
+
+                    // Update tabs
+                    document.querySelectorAll('.signal-tab').forEach(tab => {
+                        if (tab.dataset.index === symbol) {
+                            tab.style.background = '#00d4aa';
+                            tab.style.color = '#0f1419';
+                        } else {
+                            tab.style.background = 'transparent';
+                            tab.style.color = '#8b949e';
+                        }
+                    });
+
+                    displaySignal(symbol);
+                    showToast(`${symbol}: ${data.signal.signal_type} (${data.signal.signal_score.toFixed(2)})`, 'success');
+                } else {
+                    showToast('Failed to generate signal', 'error');
+                }
+            } catch (e) {
+                showToast('Error generating signal', 'error');
+            }
+        }
+
+        async function generateAllSignals() {
+            const indices = ['NIFTY', 'BANKNIFTY', 'FINNIFTY'];
+            const promises = indices.map(async (symbol) => {
+                try {
+                    const res = await fetch(`${API_BASE}/signals/generate?symbol=${symbol}`, { method: 'POST' });
+                    const data = await res.json();
+                    if (data.success) {
+                        signalsCache[symbol] = data.signal;
+                        updateTabIndicator(symbol, data.signal.signal_type);
+                    }
+                } catch (e) {
+                    console.error(`Error generating signal for ${symbol}:`, e);
+                }
+            });
+            await Promise.all(promises);
+            displaySignal(currentSignalIndex);
+        }
+
+        function updateTabIndicator(index, signalType) {
+            const tab = document.querySelector(`.signal-tab[data-index="${index}"]`);
+            if (!tab) return;
+
+            // Add a colored dot indicator based on signal type
+            let indicatorColor = '#8b949e'; // default grey
+            if (signalType === 'STRONG_BUY' || signalType === 'BUY') {
+                indicatorColor = '#00d4aa';
+            } else if (signalType === 'STRONG_SELL' || signalType === 'SELL') {
+                indicatorColor = '#ff6b6b';
+            } else if (signalType === 'HOLD') {
+                indicatorColor = '#ffc107';
+            }
+
+            // Remove existing indicator
+            const existingDot = tab.querySelector('.signal-dot');
+            if (existingDot) existingDot.remove();
+
+            // Add new indicator
+            const dot = document.createElement('span');
+            dot.className = 'signal-dot';
+            dot.style.cssText = `width: 6px; height: 6px; border-radius: 50%; background: ${indicatorColor}; display: inline-block; margin-left: 4px;`;
+            tab.appendChild(dot);
+        }
+
+        function switchSignalIndex(index) {
+            currentSignalIndex = index;
+
+            // Update tab styles
+            document.querySelectorAll('.signal-tab').forEach(tab => {
+                if (tab.dataset.index === index) {
+                    tab.style.background = '#00d4aa';
+                    tab.style.color = '#0f1419';
+                } else {
+                    tab.style.background = 'transparent';
+                    tab.style.color = '#8b949e';
+                }
+            });
+
+            // Update signal selector dropdown
+            document.getElementById('signalIndexSelect').value = index;
+
+            // Display cached signal or generate new one
+            if (signalsCache[index]) {
+                displaySignal(index);
+            } else {
+                generateSignalForIndex(index);
+            }
+        }
+
+        async function generateSignalForIndex(index) {
+            try {
+                const res = await fetch(`${API_BASE}/signals/generate?symbol=${index}`, { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    signalsCache[index] = data.signal;
+                    displaySignal(index);
+                }
+            } catch (e) {
+                console.error(`Error generating signal for ${index}:`, e);
+            }
+        }
+
+        function displaySignal(index) {
+            const signal = signalsCache[index];
+            if (!signal) {
+                document.getElementById('signalSymbol').textContent = index;
+                document.getElementById('signalType').textContent = '--';
+                document.getElementById('signalType').className = 'signal-type';
+                document.getElementById('signalScore').textContent = '--';
+                document.getElementById('signalPcr').textContent = '--';
+                document.getElementById('signalMaxPain').textContent = '--';
+                document.getElementById('signalVix').textContent = '--';
+                document.getElementById('signalRecommendation').textContent = 'Click "Signal" to generate';
+                return;
+            }
+
+            document.getElementById('signalSymbol').textContent = signal.symbol;
+            const signalType = document.getElementById('signalType');
+            signalType.textContent = signal.signal_type;
+            signalType.className = 'signal-type ' + signal.signal_type;
+            document.getElementById('signalScore').textContent = signal.signal_score.toFixed(3);
+            document.getElementById('signalPcr').textContent = signal.pcr.toFixed(2);
+            document.getElementById('signalMaxPain').textContent = signal.max_pain.toLocaleString();
+            document.getElementById('signalVix').textContent = signal.vix ? signal.vix.toFixed(2) : '--';
+            document.getElementById('signalRecommendation').textContent =
+                `${signal.recommended_strike} ${signal.recommended_option_type} (${signal.recommended_expiry})`;
+        }
+
+        async function closePosition(positionId) {
+            if (!confirm('Close this position?')) return;
+            try {
+                const res = await fetch(`${API_BASE}/positions/close/${positionId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ position_id: positionId, reason: 'manual' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Position closed', 'success');
+                    refreshAll();
+                } else {
+                    showToast(data.detail || 'Failed to close position', 'error');
+                }
+            } catch (e) {
+                showToast('Error closing position', 'error');
+            }
+        }
+
+        function openManualTrade() {
+            document.getElementById('manualTradeModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('manualTradeModal').classList.remove('active');
+        }
+
+        async function submitManualTrade() {
+            const trade = {
+                symbol: document.getElementById('tradeSymbol').value,
+                strike_price: parseFloat(document.getElementById('tradeStrike').value),
+                option_type: document.getElementById('tradeOptionType').value,
+                expiry_date: document.getElementById('tradeExpiry').value,
+                quantity: parseInt(document.getElementById('tradeQuantity').value),
+                paper_mode: true
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/manual/entry`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(trade)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Trade placed @ ₹${data.entry_price}`, 'success');
+                    closeModal();
+                    refreshAll();
+                } else {
+                    showToast(data.detail || 'Failed to place trade', 'error');
+                }
+            } catch (e) {
+                showToast('Error placing trade', 'error');
+            }
+        }
+
+        async function saveConfig() {
+            const config = {
+                capital: parseFloat(document.getElementById('configCapital').value),
+                risk_per_trade: parseFloat(document.getElementById('configRisk').value) / 100,
+                max_daily_loss: parseFloat(document.getElementById('configMaxLoss').value) / 100,
+                max_positions: parseInt(document.getElementById('configMaxPositions').value),
+                stop_loss_pct: parseFloat(document.getElementById('configSL').value) / 100,
+                target_pct: parseFloat(document.getElementById('configTarget').value) / 100,
+                signal_threshold: document.getElementById('configSignalThreshold').value,
+                is_paper_mode: document.getElementById('configPaperMode').value === 'true'
+            };
+
+            try {
+                let res;
+                if (currentConfigId) {
+                    res = await fetch(`${API_BASE}/configs/${currentConfigId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(config)
+                    });
+                } else {
+                    config.name = 'Dashboard Config';
+                    res = await fetch(`${API_BASE}/configs`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(config)
+                    });
+                }
+                const data = await res.json();
+                currentConfigId = data.id;
+                showToast('Configuration saved', 'success');
+            } catch (e) {
+                showToast('Error saving configuration', 'error');
+            }
+        }
+
+        function formatCurrency(value) {
+            const absValue = Math.abs(value || 0);
+            const prefix = (value || 0) < 0 ? '-' : '';
+            if (absValue >= 100000) {
+                return prefix + '₹' + (absValue / 100000).toFixed(2) + 'L';
+            }
+            return prefix + '₹' + absValue.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>

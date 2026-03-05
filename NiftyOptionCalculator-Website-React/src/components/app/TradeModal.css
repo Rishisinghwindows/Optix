@@ -1,0 +1,818 @@
+.trade-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.trade-modal {
+  background: linear-gradient(180deg, #1e1e2e 0%, #181825 100%);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.trade-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trade-option-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trade-index-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.trade-index-badge.nifty {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(34, 211, 238, 0.1));
+  color: #22d3ee;
+}
+
+.trade-index-badge.banknifty {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(167, 139, 250, 0.1));
+  color: #a78bfa;
+}
+
+.trade-index-badge.finnifty {
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.2), rgba(52, 211, 153, 0.1));
+  color: #34d399;
+}
+
+.trade-strike {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.trade-type-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.trade-type-badge.call {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.trade-type-badge.put {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.trade-modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #888;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.trade-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.trade-price-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.current-price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.price-label {
+  font-size: 12px;
+  color: #888;
+}
+
+.price-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.price-change {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.price-change.positive {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.price-change.negative {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.trade-direction-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 20px;
+}
+
+.direction-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.direction-btn.buy {
+  background: rgba(34, 197, 94, 0.1);
+  color: #888;
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.direction-btn.buy.active {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border-color: #22c55e;
+}
+
+.direction-btn.sell {
+  background: rgba(239, 68, 68, 0.1);
+  color: #888;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.direction-btn.sell.active {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.direction-icon {
+  font-size: 18px;
+}
+
+.trade-quantity {
+  padding: 0 20px 20px;
+}
+
+.trade-quantity label {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.qty-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qty-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.qty-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity-controls input {
+  flex: 1;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.quantity-controls input:focus {
+  outline: none;
+  border-color: #22d3ee;
+}
+
+.lot-info {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.trade-summary {
+  background: rgba(0, 0, 0, 0.2);
+  margin: 0 20px;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #888;
+}
+
+.summary-row span:last-child {
+  color: #fff;
+  font-weight: 500;
+}
+
+.summary-row.total {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 8px;
+  padding-top: 12px;
+  font-size: 16px;
+}
+
+.summary-row.total span:last-child {
+  font-size: 18px;
+  font-weight: 700;
+  color: #22d3ee;
+}
+
+.summary-row.margin {
+  font-size: 12px;
+}
+
+.summary-row.balance span:last-child.sufficient {
+  color: #22c55e;
+}
+
+.summary-row.balance span:last-child.insufficient {
+  color: #ef4444;
+}
+
+.trade-error {
+  margin: 16px 20px;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #ef4444;
+  font-size: 13px;
+}
+
+.login-prompt-inline {
+  margin: 16px 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(167, 139, 250, 0.1));
+  border-radius: 12px;
+  text-align: center;
+  color: #22d3ee;
+  font-size: 14px;
+}
+
+.trade-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: calc(100% - 40px);
+  margin: 20px;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.trade-submit-btn.buy {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+}
+
+.trade-submit-btn.buy:hover:not(:disabled) {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  transform: translateY(-1px);
+}
+
+.trade-submit-btn.sell {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+}
+
+.trade-submit-btn.sell:hover:not(:disabled) {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-1px);
+}
+
+.trade-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.trade-expiry-info {
+  text-align: center;
+  padding-bottom: 20px;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Advanced Toggle Button */
+.advanced-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 40px);
+  margin: 0 20px 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #888;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.advanced-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #aaa;
+}
+
+.toggle-badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  background: rgba(34, 211, 238, 0.15);
+  color: #22d3ee;
+  border-radius: 4px;
+}
+
+/* Price Calculator Section */
+.price-calculator-section {
+  margin: 0 20px 16px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Price Input Groups */
+.price-input-group {
+  margin-bottom: 16px;
+}
+
+.price-input-group:last-of-type {
+  margin-bottom: 0;
+}
+
+.price-input-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.price-input-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.price-input-icon.target {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.price-input-icon.stoploss {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.price-input-label {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.label-title {
+  font-size: 13px;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.label-subtitle {
+  font-size: 11px;
+  color: #666;
+}
+
+.price-input {
+  width: 100px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+  cursor: text;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  text-align: right;
+}
+
+.price-input:focus {
+  outline: none;
+  border-color: #22d3ee;
+}
+
+/* Quick Adjust Buttons */
+.quick-adjust-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quick-label {
+  font-size: 11px;
+  color: #666;
+  margin-right: 4px;
+}
+
+.quick-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quick-btn.target {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.quick-btn.target:hover {
+  background: rgba(34, 197, 94, 0.25);
+}
+
+.quick-btn.stoploss {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.quick-btn.stoploss:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+/* Projections Section */
+.projections-section {
+  margin-top: 20px;
+}
+
+.projections-divider {
+  text-align: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.projections-divider::before,
+.projections-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 25%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.projections-divider::before {
+  left: 0;
+}
+
+.projections-divider::after {
+  right: 0;
+}
+
+.projections-divider span {
+  font-size: 10px;
+  color: #666;
+  letter-spacing: 1px;
+  padding: 0 12px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Projection Cards */
+.projection-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.projection-card.target {
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.projection-card.stoploss {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.projection-icon {
+  font-size: 20px;
+}
+
+.projection-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.projection-title {
+  font-size: 13px;
+  color: #ccc;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.projection-input {
+  width: 60px;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  cursor: text;
+}
+
+.projection-input:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.projection-input:focus {
+  outline: none;
+  border-color: #22d3ee;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.projection-input.target:focus {
+  border-color: #22c55e;
+}
+
+.projection-input.stoploss:focus {
+  border-color: #ef4444;
+}
+
+/* Editable Option Price in Projection Cards */
+.projection-price-input {
+  width: 90px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: right;
+  cursor: text;
+}
+
+.projection-price-input::before {
+  content: '₹';
+}
+
+.projection-price-input:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.projection-price-input:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.projection-price-input.target {
+  color: #fff;
+}
+
+.projection-price-input.target:focus {
+  border-color: #22c55e;
+}
+
+.projection-price-input.stoploss {
+  color: #ef4444;
+}
+
+.projection-price-input.stoploss:focus {
+  border-color: #ef4444;
+}
+
+.projection-subtitle {
+  font-size: 11px;
+  color: #666;
+}
+
+.projection-values {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.projection-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.projection-price.loss {
+  color: #ef4444;
+}
+
+.projection-change {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.projection-change.profit {
+  color: #22c55e;
+}
+
+.projection-change.loss {
+  color: #ef4444;
+}
+
+/* P&L Summary */
+.pnl-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pnl-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.pnl-item.profit {
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.pnl-item.loss {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.pnl-item span:first-child {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pnl-value {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.pnl-item.profit .pnl-value {
+  color: #22c55e;
+}
+
+.pnl-item.loss .pnl-value {
+  color: #ef4444;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .trade-modal {
+    max-width: 100%;
+    margin: 10px;
+    border-radius: 16px;
+  }
+
+  .price-value {
+    font-size: 24px;
+  }
+
+  .direction-btn {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .price-input-header {
+    flex-wrap: wrap;
+  }
+
+  .price-input {
+    width: 80px;
+    font-size: 14px;
+  }
+
+  .quick-adjust-buttons {
+    margin-top: 8px;
+  }
+
+  .projection-card {
+    padding: 10px;
+  }
+
+  .projection-price {
+    font-size: 14px;
+  }
+
+  .pnl-summary {
+    grid-template-columns: 1fr;
+  }
+}

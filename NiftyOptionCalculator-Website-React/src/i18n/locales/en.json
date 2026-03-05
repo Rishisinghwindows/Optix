@@ -1,0 +1,729 @@
+{
+  "common": {
+    "appName": "Optix",
+    "tagline": "Professional Options Trading Platform",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "retry": "Retry",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "and": "and",
+    "free": "Free",
+    "pro": "Pro"
+  },
+
+  "nav": {
+    "webApp": "Web App",
+    "features": "Features",
+    "learn": "Learn",
+    "screenshots": "Screenshots",
+    "pricing": "Pricing",
+    "download": "Download",
+    "launchApp": "Launch Web App",
+    "login": "Login",
+    "logout": "Logout",
+    "portfolio": "Portfolio",
+    "settings": "Settings"
+  },
+
+  "hero": {
+    "badge": "AI-Powered Trading Platform",
+    "title": "Trade Smarter with AI",
+    "titleHighlight": "& Maximize Your Profits",
+    "subtitle": "Unlock profitable trades with AI-powered insights, real-time options analytics, Black-Scholes pricing, Greeks visualization, and intelligent paper trading. Our AI analyzes thousands of options in seconds to help you make smarter decisions - built specifically for NSE & BSE derivatives.",
+    "cta": "Launch Web App",
+    "iosComingSoon": "iOS Coming Soon",
+    "androidComingSoon": "Android Coming Soon",
+    "stats": {
+      "indices": "5+",
+      "indicesLabel": "Indices Supported",
+      "paperTrading": "₹10L",
+      "paperTradingLabel": "Paper Trading",
+      "strategies": "10+",
+      "strategiesLabel": "Option Strategies",
+      "ipo": "Live",
+      "ipoLabel": "IPO GMP Tracker"
+    }
+  },
+
+  "features": {
+    "title": "Everything You Need for Options Trading",
+    "subtitle": "Professional-grade tools designed for the Indian derivatives market",
+    "items": {
+      "optionChain": {
+        "title": "Live Option Chain",
+        "description": "Real-time option chain data with OI analysis, PCR, and Max Pain for NIFTY, BANKNIFTY, FINNIFTY, SENSEX, and MIDCPNIFTY."
+      },
+      "calculator": {
+        "title": "Black-Scholes Calculator",
+        "description": "Calculate theoretical option prices using the industry-standard Black-Scholes model with accurate lot size values."
+      },
+      "greeks": {
+        "title": "Greeks Analysis",
+        "description": "Visualize Delta, Gamma, Theta, Vega, and Rho to understand option price sensitivities and risk exposure."
+      },
+      "paperTrading": {
+        "title": "Paper Trading",
+        "description": "Practice with ₹10 Lakh virtual capital. Execute trades, track P&L, and build strategies risk-free."
+      },
+      "learn": {
+        "title": "Learn Options",
+        "description": "Master options from basics to advanced strategies with interactive lessons designed for Indian markets."
+      },
+      "aiInsights": {
+        "title": "AI Insights",
+        "description": "Get AI-powered market analysis, sentiment indicators, and intelligent trade recommendations."
+      },
+      "ipoDashboard": {
+        "title": "IPO Dashboard",
+        "description": "Track upcoming IPOs with live Grey Market Premium (GMP), listing gains, and AI-powered profitability analysis."
+      },
+      "upstox": {
+        "title": "Upstox Integration",
+        "description": "Connect your Upstox account for live market data and seamless paper trading experience."
+      },
+      "multiLanguage": {
+        "title": "Multi-Language",
+        "description": "Available in English, Hindi, Tamil, Telugu, Kannada, Bengali, Malayalam, Punjabi, and Odia."
+      }
+    }
+  },
+
+  "calculator": {
+    "badge": "Try It Now",
+    "title": "Black-Scholes Option Calculator",
+    "subtitle": "Calculate option prices and Greeks instantly - no download required",
+    "inputParameters": "Input Parameters",
+    "index": "Index",
+    "spotPrice": "Spot Price (₹)",
+    "strikePrice": "Strike Price (₹)",
+    "impliedVolatility": "Implied Volatility ({{value}}%)",
+    "daysToExpiry": "Days to Expiry ({{value}})",
+    "interestRate": "Interest Rate (%)",
+    "optionType": "Option Type",
+    "call": "CALL",
+    "put": "PUT",
+    "calculate": "Calculate",
+    "results": {
+      "title": "Results",
+      "theoreticalPrice": "Theoretical Price",
+      "strike": "{{value}} Strike",
+      "lotValue": "Lot Value ({{lotSize}} qty)",
+      "lotSize": "Lot Size",
+      "intrinsic": "Intrinsic",
+      "time": "Time",
+      "whatIf": "What-If Scenarios",
+      "spotUp": "Spot +1%",
+      "spotDown": "Spot -1%",
+      "ivUp": "IV +2%",
+      "tomorrow": "Tomorrow"
+    },
+    "greeks": {
+      "title": "Option Greeks",
+      "delta": "Delta",
+      "deltaDesc": "Price moves ₹{{value}} per ₹1 spot change",
+      "gamma": "Gamma",
+      "gammaDesc": "Delta changes by {{value}} per ₹1",
+      "theta": "Theta",
+      "thetaDesc": "Loses ₹{{value}} per day",
+      "vega": "Vega",
+      "vegaDesc": "₹{{value}} per 1% IV change",
+      "rho": "Rho",
+      "rhoDesc": "₹{{value}} per 1% rate change",
+      "valueSplit": "Value Split",
+      "intrinsic": "Intrinsic",
+      "time": "Time"
+    },
+    "scenarios": {
+      "title": "What-If Scenarios (Per Lot)",
+      "spotUp": "Spot +1%",
+      "spotDown": "Spot -1%",
+      "ivUp": "IV +2%",
+      "tomorrow": "Tomorrow"
+    }
+  },
+
+  "indices": {
+    "title": "Supported Indices",
+    "subtitle": "Trade options across all major Indian indices",
+    "lotSize": "Lot Size",
+    "expiry": "Expiry",
+    "items": {
+      "nifty": {
+        "name": "NIFTY 50",
+        "expiry": "Weekly (Thursday)"
+      },
+      "banknifty": {
+        "name": "BANK NIFTY",
+        "expiry": "Weekly (Wednesday)"
+      },
+      "finnifty": {
+        "name": "FIN NIFTY",
+        "expiry": "Weekly (Tuesday)"
+      },
+      "sensex": {
+        "name": "SENSEX",
+        "expiry": "Weekly (Friday)"
+      },
+      "midcpnifty": {
+        "name": "MIDCAP NIFTY",
+        "expiry": "Weekly (Monday)"
+      }
+    }
+  },
+
+  "learn": {
+    "title": "Learn Options Trading",
+    "subtitle": "Master options from basics to advanced strategies",
+    "openCourse": "Open Full Course",
+    "glossary": "Glossary",
+    "topics": {
+      "basics": {
+        "title": "Options Basics",
+        "description": "Understanding calls, puts, and how options work"
+      },
+      "moneyness": {
+        "title": "ITM, ATM, OTM",
+        "description": "Learn about option moneyness and intrinsic value"
+      },
+      "greeks": {
+        "title": "The Greeks",
+        "description": "Master Delta, Gamma, Theta, Vega and their impact"
+      },
+      "strategies": {
+        "title": "Simple Strategies",
+        "description": "Learn basic options strategies for different market views"
+      },
+      "indianMarkets": {
+        "title": "Indian Markets",
+        "description": "NSE derivatives, lot sizes, and expiry cycles"
+      },
+      "riskManagement": {
+        "title": "Risk Management",
+        "description": "Position sizing, stop losses, and portfolio protection"
+      }
+    },
+    "lessons": {
+      "whatAreOptions": "What are Options?",
+      "callVsPut": "Call vs Put Options",
+      "buyerVsSeller": "Buyer vs Seller",
+      "premiumComponents": "Premium Components",
+      "itm": "In The Money (ITM)",
+      "atm": "At The Money (ATM)",
+      "otm": "Out of The Money (OTM)",
+      "delta": "Delta (Δ) - Price Sensitivity",
+      "gamma": "Gamma (Γ) - Delta's Rate",
+      "theta": "Theta (Θ) - Time Decay",
+      "vega": "Vega (ν) - Volatility Impact",
+      "longCall": "Long Call (Bullish)",
+      "longPut": "Long Put (Bearish)",
+      "coveredCall": "Covered Call",
+      "protectivePut": "Protective Put",
+      "nseDerivatives": "NSE Derivatives Market",
+      "lotSizes": "Understanding Lot Sizes",
+      "expiryCycles": "Expiry Cycles",
+      "marginRequirements": "Margin Requirements",
+      "positionSizing": "Position Sizing",
+      "stopLoss": "Setting Stop Losses",
+      "hedging": "Hedging Strategies",
+      "portfolioProtection": "Portfolio Protection"
+    },
+    "glossaryTerms": {
+      "atm": {
+        "term": "ATM",
+        "full": "At The Money",
+        "definition": "When strike price equals current market price"
+      },
+      "ce": {
+        "term": "CE",
+        "full": "Call European",
+        "definition": "Call option with European-style exercise"
+      },
+      "delta": {
+        "term": "Delta",
+        "full": "Delta (Δ)",
+        "definition": "Measures option price change for ₹1 move in underlying"
+      },
+      "expiry": {
+        "term": "Expiry",
+        "full": "Expiry Date",
+        "definition": "Date when the option contract expires"
+      },
+      "gamma": {
+        "term": "Gamma",
+        "full": "Gamma (Γ)",
+        "definition": "Rate of change of delta"
+      },
+      "iv": {
+        "term": "IV",
+        "full": "Implied Volatility",
+        "definition": "Expected volatility implied by option prices"
+      },
+      "itm": {
+        "term": "ITM",
+        "full": "In The Money",
+        "definition": "Option with intrinsic value"
+      },
+      "lotSize": {
+        "term": "Lot Size",
+        "full": "Contract Lot Size",
+        "definition": "Minimum quantity for trading an option"
+      },
+      "oi": {
+        "term": "OI",
+        "full": "Open Interest",
+        "definition": "Total outstanding option contracts"
+      },
+      "otm": {
+        "term": "OTM",
+        "full": "Out of The Money",
+        "definition": "Option with no intrinsic value"
+      },
+      "pe": {
+        "term": "PE",
+        "full": "Put European",
+        "definition": "Put option with European-style exercise"
+      },
+      "premium": {
+        "term": "Premium",
+        "full": "Option Premium",
+        "definition": "Price paid to buy an option"
+      },
+      "strike": {
+        "term": "Strike",
+        "full": "Strike Price",
+        "definition": "Price at which option can be exercised"
+      },
+      "theta": {
+        "term": "Theta",
+        "full": "Theta (Θ)",
+        "definition": "Daily time decay of option premium"
+      },
+      "vega": {
+        "term": "Vega",
+        "full": "Vega (ν)",
+        "definition": "Option price change per 1% IV change"
+      }
+    }
+  },
+
+  "screenshots": {
+    "title": "App Screenshots",
+    "subtitle": "See Optix in action",
+    "items": {
+      "optionChain": {
+        "title": "Live Option Chain",
+        "description": "Real-time data with OI, Greeks, and PCR analysis"
+      },
+      "calculator": {
+        "title": "Options Calculator",
+        "description": "Black-Scholes pricing with Greeks visualization"
+      },
+      "paperTrading": {
+        "title": "Paper Trading",
+        "description": "Practice with ₹10L virtual capital"
+      },
+      "quiz": {
+        "title": "Interactive Quiz",
+        "description": "Test your options knowledge"
+      }
+    }
+  },
+
+  "pricing": {
+    "title": "Simple, Transparent Pricing",
+    "subtitle": "Start free, upgrade when you need live data",
+    "free": {
+      "name": "Free",
+      "price": "₹0",
+      "period": "forever",
+      "description": "Perfect for learning",
+      "features": [
+        "Option Chain (Demo Data)",
+        "Black-Scholes Calculator",
+        "All 5 Greeks Analysis",
+        "Paper Trading (₹10L)",
+        "Full Learning Course",
+        "Interactive Quizzes"
+      ],
+      "cta": "Get Started"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "₹0",
+      "period": "with broker",
+      "badge": "Most Popular",
+      "description": "Full live market access",
+      "features": [
+        "Everything in Free",
+        "Live Market Data",
+        "Real-time WebSocket",
+        "Upstox Integration",
+        "AI Insights",
+        "Priority Support"
+      ],
+      "cta": "Connect Broker"
+    }
+  },
+
+  "download": {
+    "title": "Download Optix",
+    "subtitle": "Get the full experience on your iPhone",
+    "appStore": "Download on the App Store",
+    "features": [
+      "Native iOS experience",
+      "Offline calculations",
+      "Push notifications",
+      "Widget support"
+    ]
+  },
+
+  "footer": {
+    "description": "Professional options trading tools for Indian markets. Master Black-Scholes pricing, Greeks analysis, and paper trading.",
+    "product": "Product",
+    "resources": "Resources",
+    "legal": "Legal",
+    "support": "Support",
+    "links": {
+      "calculator": "Calculator",
+      "features": "Features",
+      "screenshots": "Screenshots",
+      "pricing": "Pricing",
+      "documentation": "Documentation",
+      "blog": "Blog",
+      "faq": "FAQ",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "disclaimer": "Disclaimer",
+      "contact": "Contact",
+      "feedback": "Feedback"
+    },
+    "copyright": "© 2025 Optix. All rights reserved.",
+    "disclaimer": "Optix is for educational purposes only. Options trading involves significant risk of loss. Past performance does not guarantee future results. Always consult a financial advisor before trading."
+  },
+
+  "login": {
+    "title": "Welcome to Optix",
+    "subtitle": "Sign in to access your portfolio",
+    "phone": {
+      "title": "Mobile Number",
+      "placeholder": "Enter 10-digit mobile number",
+      "getOtp": "Get OTP",
+      "invalidPhone": "Please enter a valid 10-digit mobile number"
+    },
+    "otp": {
+      "title": "Verify OTP",
+      "subtitle": "We've sent a 6-digit code to",
+      "placeholder": "Enter 6-digit OTP",
+      "verify": "Verify & Login",
+      "resend": "Resend OTP",
+      "resendIn": "Resend OTP in",
+      "invalidOtp": "Please enter a valid 6-digit OTP"
+    },
+    "social": {
+      "continueWith": "or continue with",
+      "google": "Continue with Google",
+      "facebook": "Continue with Facebook",
+      "apple": "Continue with Apple"
+    },
+    "guest": {
+      "continue": "Continue as Guest",
+      "description": "Browse freely, login when you trade"
+    },
+    "errors": {
+      "sendOtp": "Failed to send OTP. Please try again.",
+      "verifyOtp": "Invalid OTP. Please try again.",
+      "socialLogin": "Login failed. Please try again.",
+      "network": "Network error. Please check your connection."
+    }
+  },
+
+  "app": {
+    "tabs": {
+      "chain": "Chain",
+      "calculator": "Calculator",
+      "paperTrade": "Paper Trade",
+      "aiInsights": "AI Insights",
+      "learn": "Learn",
+      "quiz": "Quiz"
+    },
+    "optionChain": {
+      "title": "Option Chain",
+      "expiry": "Expiry",
+      "spotPrice": "Spot",
+      "pcr": "PCR",
+      "maxPain": "Max Pain",
+      "calls": "CALLS",
+      "puts": "PUTS",
+      "strike": "STRIKE",
+      "oi": "OI",
+      "oiChange": "OI Chg",
+      "volume": "Volume",
+      "iv": "IV",
+      "ltp": "LTP",
+      "change": "Chg%",
+      "bid": "Bid",
+      "ask": "Ask",
+      "trade": "Trade",
+      "buy": "Buy",
+      "sell": "Sell",
+      "noData": "No data available",
+      "loading": "Loading option chain...",
+      "connectBroker": "Connect broker for live data",
+      "demoMode": "Demo Mode",
+      "liveMode": "Live Data"
+    },
+    "paperTrading": {
+      "title": "Paper Trading",
+      "portfolio": "Portfolio",
+      "positions": "Positions",
+      "history": "History",
+      "balance": "Balance",
+      "portfolioValue": "Portfolio Value",
+      "totalPnL": "Total P&L",
+      "todayPnL": "Today's P&L",
+      "winRate": "Win Rate",
+      "totalTrades": "Total Trades",
+      "noPositions": "No open positions",
+      "noHistory": "No trade history",
+      "position": {
+        "symbol": "Symbol",
+        "strike": "Strike",
+        "type": "Type",
+        "qty": "Qty",
+        "entryPrice": "Entry",
+        "currentPrice": "Current",
+        "pnl": "P&L",
+        "exit": "Exit"
+      }
+    },
+    "tradeModal": {
+      "title": "Place Order",
+      "orderType": "Order Type",
+      "market": "Market",
+      "limit": "Limit",
+      "quantity": "Quantity",
+      "lots": "lots",
+      "price": "Price",
+      "total": "Total Value",
+      "margin": "Margin Required",
+      "placeOrder": "Place Order",
+      "buyCall": "Buy Call",
+      "sellCall": "Sell Call",
+      "buyPut": "Buy Put",
+      "sellPut": "Sell Put",
+      "confirmBuy": "Confirm Buy",
+      "confirmSell": "Confirm Sell"
+    },
+    "aiInsights": {
+      "title": "AI Insights",
+      "subtitle": "AI-powered market analysis",
+      "marketSentiment": "Market Sentiment",
+      "bullish": "Bullish",
+      "bearish": "Bearish",
+      "neutral": "Neutral",
+      "recommendations": "Recommendations",
+      "analysis": "Market Analysis",
+      "features": {
+        "sentiment": {
+          "title": "Sentiment Analysis",
+          "description": "AI analyzes market data to determine overall sentiment"
+        },
+        "levels": {
+          "title": "Key Levels",
+          "description": "Important support and resistance levels"
+        },
+        "strategies": {
+          "title": "Strategy Suggestions",
+          "description": "AI-recommended options strategies"
+        },
+        "alerts": {
+          "title": "Smart Alerts",
+          "description": "Get notified of important market events"
+        }
+      }
+    },
+    "education": {
+      "title": "Learn Options",
+      "progress": "Progress",
+      "completed": "Completed",
+      "continue": "Continue Learning",
+      "startLesson": "Start Lesson",
+      "nextLesson": "Next Lesson",
+      "previousLesson": "Previous",
+      "markComplete": "Mark as Complete",
+      "keyPoints": "Key Points",
+      "example": "Example"
+    },
+    "quiz": {
+      "title": "Options Quiz",
+      "subtitle": "Test your knowledge",
+      "sets": {
+        "basics": "Options Basics",
+        "greeks": "The Greeks",
+        "strategies": "Trading Strategies"
+      },
+      "start": "Start Quiz",
+      "question": "Question",
+      "of": "of",
+      "score": "Score",
+      "correct": "Correct!",
+      "incorrect": "Incorrect",
+      "showAnswer": "Show Answer",
+      "nextQuestion": "Next Question",
+      "finish": "Finish Quiz",
+      "results": {
+        "title": "Quiz Complete!",
+        "score": "Your Score",
+        "passed": "Congratulations! You passed!",
+        "failed": "Keep learning and try again!",
+        "retake": "Retake Quiz"
+      }
+    }
+  },
+
+  "aiShowcase": {
+    "badge": "AI-Powered",
+    "title": "Intelligent Options Trading",
+    "subtitle": "Let AI analyze thousands of options in seconds and surface the best opportunities for you",
+    "tabs": {
+      "insights": "AI Insights",
+      "bot": "Options AI Bot",
+      "live": "Live"
+    },
+    "demo": {
+      "title": "AI Analysis Preview",
+      "topSuggestions": "Top Suggestions",
+      "marketSentiment": "Market Sentiment",
+      "bullish": "Bullish",
+      "bearish": "Bearish",
+      "neutral": "Neutral",
+      "updatedEvery": "Updated every 30 seconds during market hours",
+      "strongBuy": "Strong Buy",
+      "buy": "Buy",
+      "sell": "Sell"
+    },
+    "benefits": {
+      "title": "Why Use AI Insights?",
+      "items": [
+        "Analyze 100+ strikes across 4 indices in seconds",
+        "Filter out noise - see only high-probability setups",
+        "Understand market sentiment at a glance",
+        "Get entry, target, and stop-loss levels",
+        "Works for both intraday and positional trading",
+        "Available in the iOS app - download free"
+      ],
+      "cta": "Get the App"
+    },
+    "features": {
+      "smartTrade": {
+        "title": "Smart Trade Suggestions",
+        "description": "AI analyzes market conditions, IV, OI, and Greeks to suggest high-probability call and put options with entry/exit points.",
+        "highlight": "Real-time analysis"
+      },
+      "technical": {
+        "title": "Technical Analysis",
+        "description": "Automated RSI, MACD, and trend analysis across multiple timeframes to identify optimal trading opportunities.",
+        "highlight": "Multi-timeframe"
+      },
+      "sentiment": {
+        "title": "Market Sentiment",
+        "description": "PCR analysis, OI buildup patterns, and support/resistance levels derived from options data.",
+        "highlight": "Data-driven insights"
+      },
+      "risk": {
+        "title": "Risk-Reward Scoring",
+        "description": "Each suggestion comes with a confidence score based on volatility, liquidity, and market conditions.",
+        "highlight": "Quantified risk"
+      },
+      "alerts": {
+        "title": "Smart Alerts",
+        "description": "Get notified when high-probability setups appear matching your preferred trading style.",
+        "highlight": "Never miss opportunities"
+      },
+      "greeks": {
+        "title": "Greeks Optimization",
+        "description": "Delta, Gamma, Theta, and Vega analysis to find options with optimal risk characteristics.",
+        "highlight": "Professional-grade"
+      }
+    },
+    "bot": {
+      "name": "Options AI Bot",
+      "online": "Online",
+      "offline": "Offline",
+      "welcome": "Ask me anything about options!",
+      "welcomeSubtitle": "I can help with strategies, Greeks, market analysis, and more.",
+      "placeholder": "Ask about options trading...",
+      "send": "Send",
+      "errorOnline": "Sorry, I encountered an error. Please try again.",
+      "errorOffline": "The AI bot is currently being configured. Please try again later or download the iOS app for full access.",
+      "whatCanDo": "What Can the Bot Do?",
+      "features": {
+        "nlp": {
+          "title": "Natural Language Queries",
+          "description": "Ask questions like \"Show me bullish NIFTY options for this week\" or \"What's the best hedge for my position?\""
+        },
+        "strategy": {
+          "title": "Strategy Builder",
+          "description": "Describe your market view and risk tolerance - the bot suggests optimal strategies like strangles, spreads, or iron condors."
+        },
+        "portfolio": {
+          "title": "Portfolio Analysis",
+          "description": "Get instant analysis of your positions, Greeks exposure, and personalized hedging recommendations."
+        },
+        "learn": {
+          "title": "Learn As You Trade",
+          "description": "The bot explains why it suggests certain trades, helping you become a better options trader over time."
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Trade Smarter?",
+      "subtitle": "Try the web app now - iOS & Android coming soon!",
+      "downloadApp": "iOS & Android Coming Soon",
+      "tryWeb": "Try Web App"
+    }
+  },
+
+  "chatbot": {
+    "title": "Optixia",
+    "subtitle": "Options Trading Assistant",
+    "welcome": "Hi! I'm Optixia",
+    "welcomeMessage": "Ask me anything about options trading - strategies, Greeks, market analysis, and more.",
+    "placeholder": "Type your question...",
+    "send": "Send",
+    "poweredBy": "Powered by Optixia",
+    "escHint": "Press ESC to exit fullscreen",
+    "askAI": "Ask AI",
+    "sampleQuestions": [
+      "What is Put-Call Ratio?",
+      "Explain theta decay",
+      "Best strategy for sideways market?"
+    ],
+    "errors": {
+      "failed": "I'm currently being set up. Download the iOS app for full AI chatbot access, or try again later!"
+    }
+  },
+
+  "errors": {
+    "pageNotFound": "Page Not Found",
+    "somethingWrong": "Something went wrong",
+    "tryAgain": "Try Again",
+    "goHome": "Go to Home",
+    "networkError": "Network error. Please check your connection.",
+    "serverError": "Server error. Please try again later.",
+    "unauthorized": "Please login to continue",
+    "sessionExpired": "Session expired. Please login again."
+  }
+}
