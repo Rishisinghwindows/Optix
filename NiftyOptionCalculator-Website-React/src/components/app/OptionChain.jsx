@@ -8,11 +8,12 @@ import { AdBanner } from '../ads'
 import { ADS_CONFIG } from '../../config/adsConfig'
 
 const INDICES = {
-  NIFTY: { name: 'NIFTY 50', lotSize: 65, step: 50, color: '#22d3ee', pairId: 17940 },
+  NIFTY: { name: 'NIFTY 50', lotSize: 75, step: 50, color: '#22d3ee', pairId: 17940 },
   BANKNIFTY: { name: 'BANK NIFTY', lotSize: 30, step: 100, color: '#a78bfa', pairId: 17950 },
-  FINNIFTY: { name: 'FIN NIFTY', lotSize: 60, step: 50, color: '#34d399', pairId: 17940 },
-  SENSEX: { name: 'SENSEX', lotSize: 20, step: 100, color: '#f472b6', pairId: 17941 },
-  MIDCPNIFTY: { name: 'MIDCAP NIFTY', lotSize: 120, step: 25, color: '#fbbf24', pairId: 17940 },
+  FINNIFTY: { name: 'FIN NIFTY', lotSize: 25, step: 50, color: '#34d399', pairId: 17940 },
+  SENSEX: { name: 'SENSEX', lotSize: 10, step: 100, color: '#f472b6', pairId: 17941 },
+  MIDCPNIFTY: { name: 'MIDCAP NIFTY', lotSize: 50, step: 25, color: '#fbbf24', pairId: 17940 },
+  BANKEX: { name: 'BANKEX', lotSize: 15, step: 100, color: '#fb923c', pairId: 17941 },
 }
 
 // View Chart Link Component - Opens TradingView chart
@@ -23,7 +24,8 @@ function ViewChartLink({ index }) {
     BANKNIFTY: 'NSE:BANKNIFTY',
     FINNIFTY: 'NSE:FINNIFTY',
     SENSEX: 'BSE:SENSEX',
-    MIDCPNIFTY: 'NSE:NIFTY'
+    MIDCPNIFTY: 'NSE:NIFTY',
+    BANKEX: 'BSE:BANKEX'
   }
 
   const symbol = symbolMap[index] || 'NSE:NIFTY'

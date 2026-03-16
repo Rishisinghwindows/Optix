@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Optix</string>
+    <string name="app_tagline">ସ୍ମାର୍ଟ ଅପ୍ସନ ଟ୍ରେଡିଂ</string>
+
+    <!-- Navigation -->
+    <string name="nav_chain">ଚେନ୍</string>
+    <string name="nav_ai">AI</string>
+    <string name="nav_trade">ଟ୍ରେଡ</string>
+    <string name="nav_alerts">ଆଲର୍ଟ</string>
+    <string name="nav_settings">ସେଟିଂସ</string>
+
+    <!-- Option Chain -->
+    <string name="option_chain_title">ଅପ୍ସନ ଚେନ୍</string>
+    <string name="select_index">ଇଣ୍ଡେକ୍ସ ଚୟନ କରନ୍ତୁ</string>
+    <string name="select_expiry">ଏକ୍ସପାଇରୀ ବାଛନ୍ତୁ</string>
+    <string name="strike_price">ଷ୍ଟ୍ରାଇକ ମୂଲ୍ୟ</string>
+    <string name="call">କଲ</string>
+    <string name="put">ପୁଟ</string>
+    <string name="ltp">LTP</string>
+    <string name="change">ପରିବର୍ତ୍ତନ</string>
+    <string name="oi">OI</string>
+    <string name="iv">IV</string>
+    <string name="volume">ଭଲ୍ୟୁମ</string>
+    <string name="bid">ବିଡ</string>
+    <string name="ask">ଆସ୍କ</string>
+
+    <!-- Greeks -->
+    <string name="delta">Delta</string>
+    <string name="gamma">Gamma</string>
+    <string name="theta">Theta</string>
+    <string name="vega">Vega</string>
+    <string name="rho">Rho</string>
+
+    <!-- AI Insights -->
+    <string name="ai_insights_title">AI ଅନ୍ତର୍ଦୃଷ୍ଟି</string>
+    <string name="trade_suggestions">ଟ୍ରେଡ ସୁଝାବ</string>
+    <string name="market_sentiment">ବଜାର ମନୋଭାବ</string>
+    <string name="confidence">ଆତ୍ମବିଶ୍ୱାସ</string>
+    <string name="high">ଅଧିକ</string>
+    <string name="medium">ମଧ୍ୟମ</string>
+    <string name="low">କମ</string>
+
+    <!-- Paper Trading -->
+    <string name="paper_trading_title">ପେପର ଟ୍ରେଡିଂ</string>
+    <string name="positions">ପୋଜିସନ</string>
+    <string name="history">ଇତିହାସ</string>
+    <string name="performance">ପ୍ରଦର୍ଶନ</string>
+    <string name="buy">କିଣନ୍ତୁ</string>
+    <string name="sell">ବିକ୍ରି କରନ୍ତୁ</string>
+    <string name="entry_price">ଏଣ୍ଟ୍ରି ମୂଲ୍ୟ</string>
+    <string name="current_price">ବର୍ତ୍ତମାନ ମୂଲ୍ୟ</string>
+    <string name="pnl">P&amp;L</string>
+    <string name="quantity">ପରିମାଣ</string>
+    <string name="close_position">ପୋଜିସନ ବନ୍ଦ କରନ୍ତୁ</string>
+    <string name="no_positions">କୌଣସି ଖୋଲା ପୋଜିସନ ନାହିଁ</string>
+
+    <!-- Alerts -->
+    <string name="alerts_title">ମୂଲ୍ୟ ଆଲର୍ଟ</string>
+    <string name="create_alert">ଆଲର୍ଟ ସୃଷ୍ଟି କରନ୍ତୁ</string>
+    <string name="new_alert">+ ନୂଆ ଆଲର୍ଟ</string>
+    <string name="alert_type">ଆଲର୍ଟ ପ୍ରକାର</string>
+    <string name="spot_price">ସ୍ପଟ ମୂଲ୍ୟ</string>
+    <string name="option_premium">ଅପ୍ସନ ପ୍ରିମିୟମ</string>
+    <string name="pcr">PCR</string>
+    <string name="condition">ସର୍ତ୍ତ</string>
+    <string name="goes_above">ଉପରକୁ ଯାଏ</string>
+    <string name="goes_below">ତଳକୁ ଯାଏ</string>
+    <string name="crosses">ପାର କରେ</string>
+    <string name="target_value">ଲକ୍ଷ୍ୟ ମୂଲ୍ୟ</string>
+    <string name="alert_name">ଆଲର୍ଟ ନାମ</string>
+    <string name="note">ନୋଟ</string>
+    <string name="active">ସକ୍ରିୟ</string>
+    <string name="triggered">ଟ୍ରିଗର ହୋଇଛି</string>
+    <string name="paused">ବିରତ</string>
+    <string name="no_alerts">ଏପର୍ଯ୍ୟନ୍ତ କୌଣସି ଆଲର୍ଟ ନାହିଁ</string>
+    <string name="no_alerts_desc">ମୂଲ୍ୟ ଆପଣଙ୍କ ଲକ୍ଷ୍ୟରେ ପହଞ୍ଚିଲେ ବିଜ୍ଞପ୍ତି ପାଇବା ପାଇଁ ଆପଣଙ୍କ ପ୍ରଥମ ଆଲର୍ଟ ସୃଷ୍ଟି କରନ୍ତୁ</string>
+
+    <!-- Calculator -->
+    <string name="calculator_title">ଅପ୍ସନ କ୍ୟାଲକୁଲେଟର</string>
+    <string name="spot_price_label">ସ୍ପଟ ମୂଲ୍ୟ</string>
+    <string name="strike_price_label">ଷ୍ଟ୍ରାଇକ ମୂଲ୍ୟ</string>
+    <string name="time_to_expiry">ଏକ୍ସପାଇରୀ ପର୍ଯ୍ୟନ୍ତ ସମୟ (ଦିନ)</string>
+    <string name="volatility">ଭୋଲାଟିଲିଟି (%)</string>
+    <string name="risk_free_rate">ରିସ୍କ-ଫ୍ରି ରେଟ (%)</string>
+    <string name="option_type">ଅପ୍ସନ ପ୍ରକାର</string>
+    <string name="calculate">ଗଣନା କରନ୍ତୁ</string>
+    <string name="option_price">ଅପ୍ସନ ମୂଲ୍ୟ</string>
+
+    <!-- Settings -->
+    <string name="settings_title">ସେଟିଂସ</string>
+    <string name="appearance">ଦେଖଣା</string>
+    <string name="theme">ଥିମ</string>
+    <string name="theme_light">ଲାଇଟ</string>
+    <string name="theme_dark">ଡାର୍କ</string>
+    <string name="theme_system">ସିଷ୍ଟମ</string>
+    <string name="language">ଭାଷା</string>
+    <string name="account">ଆକାଉଣ୍ଟ</string>
+    <string name="login">ଲଗଇନ</string>
+    <string name="logout">ଲଗଆଉଟ</string>
+    <string name="about">ବିଷୟରେ</string>
+    <string name="version">ସଂସ୍କରଣ</string>
+    <string name="privacy_policy">ଗୋପନୀୟତା ନୀତି</string>
+    <string name="terms_of_service">ସେବା ସର୍ତ୍ତାବଳୀ</string>
+
+    <!-- Auth -->
+    <string name="login_title">Optix ରେ ଲଗଇନ କରନ୍ତୁ</string>
+    <string name="phone_number">ଫୋନ ନମ୍ବର</string>
+    <string name="enter_otp">OTP ଦିଅନ୍ତୁ</string>
+    <string name="send_otp">OTP ପଠାନ୍ତୁ</string>
+    <string name="verify_otp">OTP ଯାଞ୍ଚ କରନ୍ତୁ</string>
+    <string name="or">କିମ୍ବା</string>
+    <string name="continue_with_google">Google ସହ ଜାରି ରଖନ୍ତୁ</string>
+    <string name="login_required">ଲଗଇନ ଆବଶ୍ୟକ</string>
+    <string name="login_to_continue">ଜାରି ରଖିବାକୁ ଲଗଇନ କରନ୍ତୁ</string>
+
+    <!-- Common -->
+    <string name="loading">ଲୋଡ ହେଉଛି…</string>
+    <string name="error">ତ୍ରୁଟି</string>
+    <string name="retry">ପୁନଃଚେଷ୍ଟା କରନ୍ତୁ</string>
+    <string name="cancel">ବାତିଲ କରନ୍ତୁ</string>
+    <string name="save">ସେଭ କରନ୍ତୁ</string>
+    <string name="delete">ଡିଲିଟ କରନ୍ତୁ</string>
+    <string name="confirm">ନିଶ୍ଚିତ କରନ୍ତୁ</string>
+    <string name="success">ସଫଳ</string>
+    <string name="not_authenticated">ପ୍ରମାଣିତ ନୁହେଁ</string>
+    <string name="no_data">କୌଣସି ଡାଟା ଉପଲବ୍ଧ ନାହିଁ</string>
+    <string name="pull_to_refresh">ରିଫ୍ରେସ କରିବାକୁ ଟାଣନ୍ତୁ</string>
+
+    <!-- Indices -->
+    <string name="nifty50">NIFTY 50</string>
+    <string name="banknifty">Bank Nifty</string>
+    <string name="finnifty">Fin Nifty</string>
+    <string name="midcpnifty">Midcap Nifty</string>
+    <string name="sensex">Sensex</string>
+    <string name="bankex">Bankex</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">ଲାଇଭ ଅପ୍ସନ ଚେନ୍</string>
+    <string name="onboarding_desc_1">ସମସ୍ତ ପ୍ରମୁଖ ଇଣ୍ଡେକ୍ସ ପାଇଁ Greeks, IV, ଏବଂ OI ସହ ରିଅଲ-ଟାଇମ ଅପ୍ସନ ଚେନ୍ ଡାଟା</string>
+    <string name="onboarding_title_2">AI-ଚାଳିତ ଅନ୍ତର୍ଦୃଷ୍ଟି</string>
+    <string name="onboarding_desc_2">ଆତ୍ମବିଶ୍ୱାସ ସ୍ତର ଏବଂ ବିସ୍ତୃତ ଯୁକ୍ତି ସହ ବୁଦ୍ଧିମାନ ଟ୍ରେଡ ସୁଝାବ ପାଆନ୍ତୁ</string>
+    <string name="onboarding_title_3">ପେପର ଟ୍ରେଡିଂ</string>
+    <string name="onboarding_desc_3">ଭର୍ଚୁଆଲ ଟଙ୍କା ସହ ଟ୍ରେଡିଂ ଅଭ୍ୟାସ କରନ୍ତୁ ଏବଂ ଆପଣଙ୍କ ପ୍ରଦର୍ଶନ ଟ୍ରାକ କରନ୍ତୁ</string>
+    <string name="onboarding_title_4">ମୂଲ୍ୟ ଆଲର୍ଟ</string>
+    <string name="onboarding_desc_4">ରିଅଲ-ଟାଇମ ଆଲର୍ଟ ସହ ମୂଲ୍ୟ ଆପଣଙ୍କ ଲକ୍ଷ୍ୟରେ ପହଞ୍ଚିଲେ ବିଜ୍ଞପ୍ତି ପାଆନ୍ତୁ</string>
+    <string name="get_started">ଆରମ୍ଭ କରନ୍ତୁ</string>
+    <string name="next">ପରବର୍ତ୍ତୀ</string>
+    <string name="skip">ଛାଡ଼ନ୍ତୁ</string>
+</resources>

@@ -167,20 +167,35 @@ function AIChatbot({ isOpen, onClose, embedded = false, marketContext = null }) 
     setError(null)
   }
 
-  const formatMessage = (content) => {
-    // Simple markdown-like formatting
-    return content
-      .split('\n')
-      .map((line, i) => {
-        // Bold
-        line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        // Bullet points
-        if (line.startsWith('- ') || line.startsWith('* ')) {
-          return `<li key=${i}>${line.slice(2)}</li>`
-        }
-        return line
-      })
-      .join('<br/>')
+  const escapeHtml = (str) => {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;')
+  }
+
+  const formatMessage = (content, role) => {
+    // Escape HTML first to prevent XSS
+    let escaped = escapeHtml(content)
+    // Only apply markdown formatting for assistant messages
+    if (role === 'assistant') {
+      return escaped
+        .split('\n')
+        .map((line, i) => {
+          // Bold
+          line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          // Bullet points
+          if (line.startsWith('- ') || line.startsWith('* ')) {
+            return `<li key=${i}>${line.slice(2)}</li>`
+          }
+          return line
+        })
+        .join('<br/>')
+    }
+    // For user messages, just convert newlines to <br/>
+    return escaped.replace(/\n/g, '<br/>')
   }
 
   if (!isOpen && !embedded) return null
@@ -236,7 +251,7 @@ function AIChatbot({ isOpen, onClose, embedded = false, marketContext = null }) 
               <div className="message-content">
                 <div
                   className="message-text"
-                  dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }}
+                  dangerouslySetInnerHTML={{ __html: formatMessage(msg.content, msg.role) }}
                 />
                 <span className="message-time">
                   {msg.timestamp.toLocaleTimeString('en-IN', {

@@ -65,13 +65,16 @@ struct StrikeAnalysisSheet: View {
     private func analyzeOption() {
         isAnalyzing = true
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            // Get ML prediction
+        Task.detached {
+            // Brief delay for UI transition
+            try? await Task.sleep(nanoseconds: 500_000_000)
             let features = OptionMLFeatures.from(option: option, context: context)
-            prediction = MLOptionPredictor.shared.predictOption(features)
-
-            withAnimation {
-                isAnalyzing = false
+            let result = MLOptionPredictor.shared.predictOption(features)
+            await MainActor.run {
+                prediction = result
+                withAnimation {
+                    isAnalyzing = false
+                }
             }
         }
     }
@@ -201,7 +204,7 @@ struct QuickAnalysisStats: View {
 
                 MetricBox(
                     title: "IV",
-                    value: String(format: "%.1f%%", option.impliedVolatility),
+                    value: String(format: "%.1f%%", option.impliedVolatility * 100),
                     subtitle: "Implied Vol",
                     color: Theme.accentOrange
                 )

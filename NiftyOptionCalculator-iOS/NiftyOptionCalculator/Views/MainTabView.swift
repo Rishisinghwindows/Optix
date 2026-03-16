@@ -8,6 +8,7 @@ struct MainTabView: View {
     @EnvironmentObject var themeConfig: ThemeConfiguration
     @ObservedObject private var localization = LocalizationManager.shared
     @State private var selectedTab = 0
+    @State private var lastCalculatedSpotPrice: Double = 0
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -40,7 +41,6 @@ struct MainTabView: View {
                     .tag(4)
                     .id("settings-\(themeConfig.version)-\(localization.version)")
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
 
             // Custom Tab Bar
             CustomTabBar(selectedTab: $selectedTab)
@@ -54,6 +54,9 @@ struct MainTabView: View {
         .onChange(of: optionChainVM.spotPrice) { _, newPrice in
             guard newPrice > 0 else { return }
             calculatorVM.spotPrice = String(format: "%.0f", newPrice)
+            // Debounce: only recalculate if price changed by more than 1.0 point
+            guard abs(newPrice - lastCalculatedSpotPrice) >= 1.0 else { return }
+            lastCalculatedSpotPrice = newPrice
             // Auto-fetch LTP when spot price updates
             fetchCurrentLTP()
             calculatorVM.calculateAll()
@@ -387,7 +390,6 @@ struct GlassCard: ViewModifier {
             .background {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(.ultraThinMaterial)
-                    .environment(\.colorScheme, .dark)
                     .overlay {
                         RoundedRectangle(cornerRadius: cornerRadius)
                             .fill(Theme.glassOverlay)

@@ -237,7 +237,7 @@ final class TargetCalculator {
         entryPrice: Double,
         option: OptionData,
         spotLevels: [Double],
-        lotSize: Int = 25
+        lotSize: Int = 75
     ) -> [(spot: Double, pnl: Double)] {
         let totalQty = Double(quantity * lotSize)
 

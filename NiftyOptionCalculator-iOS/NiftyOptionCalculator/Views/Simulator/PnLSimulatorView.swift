@@ -214,7 +214,7 @@ private struct TotalPnLCard: View {
         if absValue >= 100_000 {
             return "\(sign)\(String(format: "%.1f", value / 100_000))L"
         } else if absValue >= 1_000 {
-            return "\(sign)\(String(format: "%.0f", value))"
+            return "\(sign)\(String(format: "%.1f", value / 1_000))K"
         }
         return "\(sign)\(String(format: "%.2f", value))"
     }
@@ -356,9 +356,9 @@ private struct PayoffChartCard: View {
                 // Profit area (above zero)
                 ForEach(points) { point in
                     AreaMark(
-                        x: .value("Spot", point.spot),
+                        x: .value("Spot", point.price),
                         yStart: .value("Zero", 0),
-                        yEnd: .value("P&L", max(point.pnl, 0))
+                        yEnd: .value("P&L", max(point.payoff, 0))
                     )
                     .foregroundStyle(
                         LinearGradient(
@@ -373,8 +373,8 @@ private struct PayoffChartCard: View {
                 // Loss area (below zero)
                 ForEach(points) { point in
                     AreaMark(
-                        x: .value("Spot", point.spot),
-                        yStart: .value("P&L", min(point.pnl, 0)),
+                        x: .value("Spot", point.price),
+                        yStart: .value("P&L", min(point.payoff, 0)),
                         yEnd: .value("Zero", 0)
                     )
                     .foregroundStyle(
@@ -390,10 +390,10 @@ private struct PayoffChartCard: View {
                 // P&L Line
                 ForEach(points) { point in
                     LineMark(
-                        x: .value("Spot", point.spot),
-                        y: .value("P&L", point.pnl)
+                        x: .value("Spot", point.price),
+                        y: .value("P&L", point.payoff)
                     )
-                    .foregroundStyle(point.pnl >= 0 ? Theme.accentGreen : Theme.accentRed)
+                    .foregroundStyle(point.payoff >= 0 ? Theme.accentGreen : Theme.accentRed)
                     .lineStyle(StrokeStyle(lineWidth: 2))
                     .interpolationMethod(.catmullRom)
                 }

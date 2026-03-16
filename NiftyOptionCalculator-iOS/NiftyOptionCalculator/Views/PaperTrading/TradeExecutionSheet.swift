@@ -217,8 +217,9 @@ private struct QuantitySelectorCard: View {
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 36))
-                        .foregroundColor(Theme.profit)
+                        .foregroundColor(quantity < 100 ? Theme.profit : Theme.textDisabled)
                 }
+                .disabled(quantity >= 100)
             }
             .padding(.vertical, 8)
 
@@ -694,7 +695,9 @@ struct SquareOffSheet: View {
                             let impact = UIImpactFeedbackGenerator(style: .heavy)
                             impact.impactOccurred()
                             viewModel.squareOff(position: position, currentLTP: currentLTP, quantity: quantity)
-                            dismiss()
+                            if !viewModel.showError {
+                                dismiss()
+                            }
                         } label: {
                             HStack(spacing: 12) {
                                 Image(systemName: "xmark.circle.fill")
@@ -732,6 +735,11 @@ struct SquareOffSheet: View {
         .onAppear {
             quantity = position.quantity
             currentLTP = position.currentLTP
+        }
+        .alert(L.commonError, isPresented: $viewModel.showError) {
+            Button(L.commonOK, role: .cancel) {}
+        } message: {
+            Text(viewModel.errorMessage ?? "An error occurred")
         }
     }
 }

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Optix</string>
+    <string name="app_tagline">സ്മാർട്ട് ഓപ്ഷൻസ് ട്രേഡിംഗ്</string>
+
+    <!-- Navigation -->
+    <string name="nav_chain">ചെയിൻ</string>
+    <string name="nav_ai">AI</string>
+    <string name="nav_trade">ട്രേഡ്</string>
+    <string name="nav_alerts">അലേർട്ടുകൾ</string>
+    <string name="nav_settings">ക്രമീകരണങ്ങൾ</string>
+
+    <!-- Option Chain -->
+    <string name="option_chain_title">ഓപ്ഷൻ ചെയിൻ</string>
+    <string name="select_index">സൂചിക തിരഞ്ഞെടുക്കുക</string>
+    <string name="select_expiry">കാലാവധി തിരഞ്ഞെടുക്കുക</string>
+    <string name="strike_price">സ്ട്രൈക്ക് വില</string>
+    <string name="call">കോൾ</string>
+    <string name="put">പുട്ട്</string>
+    <string name="ltp">LTP</string>
+    <string name="change">മാറ്റം</string>
+    <string name="oi">OI</string>
+    <string name="iv">IV</string>
+    <string name="volume">വോള്യം</string>
+    <string name="bid">ബിഡ്</string>
+    <string name="ask">ആസ്ക്</string>
+
+    <!-- Greeks -->
+    <string name="delta">Delta</string>
+    <string name="gamma">Gamma</string>
+    <string name="theta">Theta</string>
+    <string name="vega">Vega</string>
+    <string name="rho">Rho</string>
+
+    <!-- AI Insights -->
+    <string name="ai_insights_title">AI ഉൾക്കാഴ്ചകൾ</string>
+    <string name="trade_suggestions">ട്രേഡ് നിർദ്ദേശങ്ങൾ</string>
+    <string name="market_sentiment">വിപണി വികാരം</string>
+    <string name="confidence">ആത്മവിശ്വാസം</string>
+    <string name="high">ഉയർന്നത്</string>
+    <string name="medium">ഇടത്തരം</string>
+    <string name="low">താഴ്ന്നത്</string>
+
+    <!-- Paper Trading -->
+    <string name="paper_trading_title">പേപ്പർ ട്രേഡിംഗ്</string>
+    <string name="positions">പൊസിഷനുകൾ</string>
+    <string name="history">ചരിത്രം</string>
+    <string name="performance">പ്രകടനം</string>
+    <string name="buy">വാങ്ങുക</string>
+    <string name="sell">വിൽക്കുക</string>
+    <string name="entry_price">എൻട്രി വില</string>
+    <string name="current_price">നിലവിലെ വില</string>
+    <string name="pnl">P&amp;L</string>
+    <string name="quantity">അളവ്</string>
+    <string name="close_position">പൊസിഷൻ അടയ്ക്കുക</string>
+    <string name="no_positions">തുറന്ന പൊസിഷനുകൾ ഇല്ല</string>
+
+    <!-- Alerts -->
+    <string name="alerts_title">വില അലേർട്ടുകൾ</string>
+    <string name="create_alert">അലേർട്ട് സൃഷ്ടിക്കുക</string>
+    <string name="new_alert">+ പുതിയ അലേർട്ട്</string>
+    <string name="alert_type">അലേർട്ട് തരം</string>
+    <string name="spot_price">സ്പോട്ട് വില</string>
+    <string name="option_premium">ഓപ്ഷൻ പ്രീമിയം</string>
+    <string name="pcr">PCR</string>
+    <string name="condition">വ്യവസ്ഥ</string>
+    <string name="goes_above">മുകളിലേക്ക് പോകുന്നു</string>
+    <string name="goes_below">താഴേക്ക് പോകുന്നു</string>
+    <string name="crosses">മുറിച്ചുകടക്കുന്നു</string>
+    <string name="target_value">ലക്ഷ്യ മൂല്യം</string>
+    <string name="alert_name">അലേർട്ട് പേര്</string>
+    <string name="note">കുറിപ്പ്</string>
+    <string name="active">സജീവം</string>
+    <string name="triggered">ട്രിഗർ ചെയ്തു</string>
+    <string name="paused">താൽക്കാലികമായി നിർത്തി</string>
+    <string name="no_alerts">അലേർട്ടുകൾ ഇല്ല</string>
+    <string name="no_alerts_desc">വിലകൾ നിങ്ങളുടെ ലക്ഷ്യത്തിലെത്തുമ്പോൾ അറിയിപ്പ് ലഭിക്കാൻ ആദ്യത്തെ അലേർട്ട് സൃഷ്ടിക്കുക</string>
+
+    <!-- Calculator -->
+    <string name="calculator_title">ഓപ്ഷൻ കാൽക്കുലേറ്റർ</string>
+    <string name="spot_price_label">സ്പോട്ട് വില</string>
+    <string name="strike_price_label">സ്ട്രൈക്ക് വില</string>
+    <string name="time_to_expiry">കാലാവധി അവസാനിക്കാനുള്ള സമയം (ദിവസങ്ങൾ)</string>
+    <string name="volatility">വോളാറ്റിലിറ്റി (%)</string>
+    <string name="risk_free_rate">റിസ്ക്-ഫ്രീ നിരക്ക് (%)</string>
+    <string name="option_type">ഓപ്ഷൻ തരം</string>
+    <string name="calculate">കണക്കുകൂട്ടുക</string>
+    <string name="option_price">ഓപ്ഷൻ വില</string>
+
+    <!-- Settings -->
+    <string name="settings_title">ക്രമീകരണങ്ങൾ</string>
+    <string name="appearance">രൂപഭാവം</string>
+    <string name="theme">തീം</string>
+    <string name="theme_light">ലൈറ്റ്</string>
+    <string name="theme_dark">ഡാർക്ക്</string>
+    <string name="theme_system">സിസ്റ്റം</string>
+    <string name="language">ഭാഷ</string>
+    <string name="account">അക്കൗണ്ട്</string>
+    <string name="login">ലോഗിൻ</string>
+    <string name="logout">ലോഗൗട്ട്</string>
+    <string name="about">കുറിച്ച്</string>
+    <string name="version">പതിപ്പ്</string>
+    <string name="privacy_policy">സ്വകാര്യതാ നയം</string>
+    <string name="terms_of_service">സേവന നിബന്ധനകൾ</string>
+
+    <!-- Auth -->
+    <string name="login_title">Optix-ലേക്ക് ലോഗിൻ ചെയ്യുക</string>
+    <string name="phone_number">ഫോൺ നമ്പർ</string>
+    <string name="enter_otp">OTP നൽകുക</string>
+    <string name="send_otp">OTP അയയ്ക്കുക</string>
+    <string name="verify_otp">OTP പരിശോധിക്കുക</string>
+    <string name="or">അല്ലെങ്കിൽ</string>
+    <string name="continue_with_google">Google ഉപയോഗിച്ച് തുടരുക</string>
+    <string name="login_required">ലോഗിൻ ആവശ്യമാണ്</string>
+    <string name="login_to_continue">തുടരാൻ ലോഗിൻ ചെയ്യുക</string>
+
+    <!-- Common -->
+    <string name="loading">ലോഡ് ചെയ്യുന്നു…</string>
+    <string name="error">പിശക്</string>
+    <string name="retry">വീണ്ടും ശ്രമിക്കുക</string>
+    <string name="cancel">റദ്ദാക്കുക</string>
+    <string name="save">സേവ് ചെയ്യുക</string>
+    <string name="delete">ഇല്ലാതാക്കുക</string>
+    <string name="confirm">സ്ഥിരീകരിക്കുക</string>
+    <string name="success">വിജയം</string>
+    <string name="not_authenticated">പ്രാമാണീകരിച്ചിട്ടില്ല</string>
+    <string name="no_data">ഡാറ്റ ലഭ്യമല്ല</string>
+    <string name="pull_to_refresh">പുതുക്കാൻ വലിക്കുക</string>
+
+    <!-- Indices -->
+    <string name="nifty50">NIFTY 50</string>
+    <string name="banknifty">Bank Nifty</string>
+    <string name="finnifty">Fin Nifty</string>
+    <string name="midcpnifty">Midcap Nifty</string>
+    <string name="sensex">Sensex</string>
+    <string name="bankex">Bankex</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">തത്സമയ ഓപ്ഷൻ ചെയിൻ</string>
+    <string name="onboarding_desc_1">എല്ലാ പ്രധാന സൂചികകൾക്കും Greeks, IV, OI എന്നിവയുമായി തത്സമയ ഓപ്ഷൻ ചെയിൻ ഡാറ്റ</string>
+    <string name="onboarding_title_2">AI-അധിഷ്ഠിത ഉൾക്കാഴ്ചകൾ</string>
+    <string name="onboarding_desc_2">ആത്മവിശ്വാസ നിലകളും വിശദമായ ന്യായീകരണങ്ങളുമായി ബുദ്ധിപരമായ ട്രേഡ് നിർദ്ദേശങ്ങൾ നേടുക</string>
+    <string name="onboarding_title_3">പേപ്പർ ട്രേഡിംഗ്</string>
+    <string name="onboarding_desc_3">വെർച്വൽ പണം ഉപയോഗിച്ച് ട്രേഡിംഗ് പരിശീലിക്കുകയും നിങ്ങളുടെ പ്രകടനം ട്രാക്ക് ചെയ്യുകയും ചെയ്യുക</string>
+    <string name="onboarding_title_4">വില അലേർട്ടുകൾ</string>
+    <string name="onboarding_desc_4">തത്സമയ അലേർട്ടുകൾ ഉപയോഗിച്ച് വിലകൾ നിങ്ങളുടെ ലക്ഷ്യത്തിലെത്തുമ്പോൾ അറിയിപ്പ് ലഭിക്കുക</string>
+    <string name="get_started">ആരംഭിക്കുക</string>
+    <string name="next">അടുത്തത്</string>
+    <string name="skip">ഒഴിവാക്കുക</string>
+</resources>

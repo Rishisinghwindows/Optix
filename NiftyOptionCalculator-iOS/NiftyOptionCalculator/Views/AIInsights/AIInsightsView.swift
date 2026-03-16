@@ -16,6 +16,9 @@ struct AIInsightsView: View {
     @State private var selectedExpiry: ExpiryDate?
     @State private var availableExpiries: [ExpiryDate] = []
 
+    private let autoRefreshTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    private let countdownTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
     var body: some View {
         ZStack {
             Theme.backgroundGradient
@@ -50,7 +53,7 @@ struct AIInsightsView: View {
                     // Content
                     ScrollView {
                         VStack(spacing: 10) {
-                            // Market Bias + Risk Sentinel (single card)
+                            // Market Overview (Bias + Regime + Expected Range)
                             MarketBiasRiskCard(
                                 viewModel: viewModel,
                                 alerts: viewModel.riskSentinelAlerts
@@ -67,10 +70,8 @@ struct AIInsightsView: View {
                             AITabSelector(
                                 selectedTab: $viewModel.selectedTab,
                                 onTabChange: { tab in
-                                    print("🔄 [AI] Tab changed to: \(tab.rawValue)")
                                     // Refresh analysis when switching between Calls/Puts
                                     if tab != .market, let expiry = selectedExpiry {
-                                        print("🔄 [AI] Triggering refresh for \(tab.rawValue) with expiry: \(expiry.displayString)")
                                         loadDataForExpiry(expiry)
                                     }
                                 }
@@ -120,7 +121,7 @@ struct AIInsightsView: View {
                 viewModel.updateData(from: optionChainViewModel)
             }
         }
-        .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { _ in
+        .onReceive(autoRefreshTimer) { _ in
             guard autoRefreshEnabled else { return }
             guard !viewModel.isAnalyzing else { return }
             guard !viewModel.optionChain.isEmpty else { return }
@@ -129,7 +130,7 @@ struct AIInsightsView: View {
                 await refreshAnalysisAsync()
             }
         }
-        .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
+        .onReceive(countdownTimer) { _ in
             guard autoRefreshEnabled else { return }
             nextRefreshSeconds = max(0, nextRefreshSeconds - 1)
         }
@@ -142,18 +143,16 @@ struct AIInsightsView: View {
             )
             .presentationDetents([.medium, .large])
         }
-        .sheet(isPresented: $viewModel.showSuggestionDetail) {
-            if let suggestion = viewModel.selectedSuggestion {
-                SuggestionDetailSheet(
-                    suggestion: suggestion,
-                    optionChain: viewModel.optionChain,
-                    spotPrice: viewModel.spotPrice,
-                    pcr: viewModel.putCallRatio,
-                    maxPain: viewModel.maxPainStrike,
-                    atmStrike: viewModel.atmStrike ?? 0,
-                    indexName: selectedIndex.displayName
-                )
-            }
+        .sheet(item: $viewModel.selectedSuggestion) { suggestion in
+            SuggestionDetailSheet(
+                suggestion: suggestion,
+                optionChain: viewModel.optionChain,
+                spotPrice: viewModel.spotPrice,
+                pcr: viewModel.putCallRatio,
+                maxPain: viewModel.maxPainStrike,
+                atmStrike: viewModel.atmStrike ?? 0,
+                indexName: selectedIndex.displayName
+            )
         }
     }
 
@@ -194,7 +193,6 @@ struct AIInsightsView: View {
     }
 
     private func loadDataForExpiry(_ expiry: ExpiryDate) {
-        print("📅 [AI] loadDataForExpiry called: \(expiry.displayString)")
         let impact = UIImpactFeedbackGenerator(style: .light)
         impact.impactOccurred()
 
@@ -203,31 +201,24 @@ struct AIInsightsView: View {
         nextRefreshSeconds = 60
 
         Task {
-            print("📅 [AI] Fetching option chain for expiry: \(expiry.displayString)")
             // Use async version that waits for data to load
             await optionChainViewModel.selectExpiryAsync(expiry)
 
             await MainActor.run {
-                print("📅 [AI] Option chain loaded, count: \(optionChainViewModel.optionChain.count)")
                 viewModel.updateData(from: optionChainViewModel)
-                print("📅 [AI] Running AI analysis...")
                 viewModel.runAnalysis()
-                print("📅 [AI] Analysis complete. Calls: \(viewModel.callSuggestionCount), Puts: \(viewModel.putSuggestionCount)")
             }
         }
     }
 
     private func refreshAnalysis() {
-        print("🔄 [AI] refreshAnalysis called, selectedExpiry: \(selectedExpiry?.displayString ?? "nil")")
         let impact = UIImpactFeedbackGenerator(style: .medium)
         impact.impactOccurred()
         nextRefreshSeconds = 60
 
         if let expiry = selectedExpiry {
-            print("🔄 [AI] Loading data for expiry: \(expiry.displayString)")
             loadDataForExpiry(expiry)
         } else {
-            print("⚠️ [AI] No expiry selected, running analysis with current data")
             viewModel.runAnalysis()
         }
     }
@@ -732,7 +723,8 @@ struct MarketBiasRiskCard: View {
     }
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
+            // Row 1: Market Bias + Suggestions count
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(L.aiInsightsMarketBias)
@@ -763,6 +755,7 @@ struct MarketBiasRiskCard: View {
                 }
             }
 
+            // Row 2: Risk alert
             if let firstAlert = alerts.first {
                 HStack(spacing: 8) {
                     Circle()
@@ -796,6 +789,7 @@ struct MarketBiasRiskCard: View {
             Divider()
                 .background(Color.white.opacity(0.1))
 
+            // Row 3: Spot / PCR / Max Pain
             HStack(spacing: 12) {
                 QuickStatItem(
                     title: "Spot",
@@ -819,9 +813,81 @@ struct MarketBiasRiskCard: View {
                         color: Theme.accentOrange
                     )
                 }
+
+                if let vix = viewModel.aiAnalysis?.indiaVix {
+                    QuickStatItem(
+                        title: "India VIX",
+                        value: String(format: "%.1f", vix),
+                        icon: "waveform.path.ecg",
+                        color: vix > 20 ? Theme.loss : (vix > 15 ? Theme.accentOrange : Theme.profit)
+                    )
+                }
+            }
+
+            // Row 4: Market Regime + Expected Range
+            if viewModel.marketRegime != nil || viewModel.expectedMoveRange != nil {
+                Divider()
+                    .background(Color.white.opacity(0.1))
+
+                HStack(spacing: 0) {
+                    // Market Regime (left)
+                    if let regime = viewModel.marketRegime {
+                        HStack(spacing: 6) {
+                            Image(systemName: regime.icon)
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(regime.color)
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(regime.rawValue)
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(Theme.textPrimary)
+                                Text(regime.description)
+                                    .font(.system(size: 10))
+                                    .foregroundColor(Theme.textSecondary)
+                                    .lineLimit(1)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+
+                    // Expected Range (right)
+                    if let rangeText = viewModel.displayExpectedMoveRange,
+                       let range = viewModel.expectedMoveRange {
+                        VStack(alignment: .trailing, spacing: 4) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "ruler")
+                                    .font(.system(size: 10))
+                                    .foregroundColor(Theme.primaryBlue)
+                                Text(rangeText)
+                                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                                    .foregroundColor(Theme.textPrimary)
+                            }
+
+                            // Range bar
+                            GeometryReader { geo in
+                                let totalWidth = geo.size.width
+                                let rangeSpan = range.high - range.low
+                                let spotFraction = viewModel.spotPrice > 0 && rangeSpan > 0
+                                    ? CGFloat((viewModel.spotPrice - range.low) / rangeSpan)
+                                    : 0.5
+                                ZStack(alignment: .leading) {
+                                    RoundedRectangle(cornerRadius: 2)
+                                        .fill(Theme.primaryBlue.opacity(0.2))
+                                        .frame(height: 4)
+
+                                    Circle()
+                                        .fill(Theme.primaryBlue)
+                                        .frame(width: 8, height: 8)
+                                        .offset(x: max(0, min(totalWidth - 8, totalWidth * spotFraction - 4)))
+                                }
+                            }
+                            .frame(height: 8)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                    }
+                }
             }
         }
-        .padding(10)
+        .padding(12)
         .background {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Theme.surface)

@@ -30,11 +30,11 @@ struct PayoffDiagramView: View {
 
             // Chart
             Chart {
-                // Profit area (green)
-                ForEach(payoffData.points.filter { $0.payoff > 0 }) { point in
+                // Profit area (green) - use full dataset, clamp to zero
+                ForEach(payoffData.points) { point in
                     AreaMark(
                         x: .value("Price", point.price),
-                        y: .value("P&L", point.payoff)
+                        y: .value("P&L", max(0, point.payoff))
                     )
                     .foregroundStyle(
                         LinearGradient(
@@ -46,11 +46,11 @@ struct PayoffDiagramView: View {
                     .interpolationMethod(.catmullRom)
                 }
 
-                // Loss area (red)
-                ForEach(payoffData.points.filter { $0.payoff < 0 }) { point in
+                // Loss area (red) - use full dataset, clamp to zero
+                ForEach(payoffData.points) { point in
                     AreaMark(
                         x: .value("Price", point.price),
-                        y: .value("P&L", point.payoff)
+                        y: .value("P&L", min(0, point.payoff))
                     )
                     .foregroundStyle(
                         LinearGradient(
@@ -96,7 +96,7 @@ struct PayoffDiagramView: View {
                     }
 
                 // Breakeven points
-                ForEach(breakevens, id: \.self) { be in
+                ForEach(Array(breakevens.enumerated()), id: \.offset) { _, be in
                     PointMark(
                         x: .value("BE", be),
                         y: .value("P&L", 0)
@@ -194,9 +194,10 @@ struct PayoffDiagramView: View {
 
     private func handleTouch(at price: Double) {
         touchedPrice = price
-        let engine = StrategyCalculationEngine.shared
-        // Calculate payoff at touched price
-        // This needs access to strategy - handled via binding in parent
+        // Find nearest data point to calculate payoff at touched price
+        if let nearest = payoffData.points.min(by: { abs($0.price - price) < abs($1.price - price) }) {
+            touchedPayoff = nearest.payoff
+        }
     }
 
     private func clearTouch() {

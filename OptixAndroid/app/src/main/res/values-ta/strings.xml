@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Optix</string>
+    <string name="app_tagline">ஸ்மார்ட் ஆப்ஷன் டிரேடிங்</string>
+
+    <!-- Navigation -->
+    <string name="nav_chain">செயின்</string>
+    <string name="nav_ai">AI</string>
+    <string name="nav_trade">டிரேட்</string>
+    <string name="nav_alerts">அலர்ட்கள்</string>
+    <string name="nav_settings">அமைப்புகள்</string>
+
+    <!-- Option Chain -->
+    <string name="option_chain_title">ஆப்ஷன் செயின்</string>
+    <string name="select_index">இன்டெக்ஸ் தேர்ந்தெடுக்கவும்</string>
+    <string name="select_expiry">காலாவதி தேர்ந்தெடுக்கவும்</string>
+    <string name="strike_price">ஸ்ட்ரைக் விலை</string>
+    <string name="call">கால்</string>
+    <string name="put">புட்</string>
+    <string name="ltp">LTP</string>
+    <string name="change">மாற்றம்</string>
+    <string name="oi">OI</string>
+    <string name="iv">IV</string>
+    <string name="volume">அளவு</string>
+    <string name="bid">பிட்</string>
+    <string name="ask">ஆஸ்க்</string>
+
+    <!-- Greeks -->
+    <string name="delta">டெல்டா</string>
+    <string name="gamma">காமா</string>
+    <string name="theta">தீட்டா</string>
+    <string name="vega">வேகா</string>
+    <string name="rho">ரோ</string>
+
+    <!-- AI Insights -->
+    <string name="ai_insights_title">AI நுண்ணறிவுகள்</string>
+    <string name="trade_suggestions">டிரேட் பரிந்துரைகள்</string>
+    <string name="market_sentiment">சந்தை உணர்வு</string>
+    <string name="confidence">நம்பிக்கை</string>
+    <string name="high">உயர்</string>
+    <string name="medium">நடுத்தர</string>
+    <string name="low">குறைவு</string>
+
+    <!-- Paper Trading -->
+    <string name="paper_trading_title">பேப்பர் டிரேடிங்</string>
+    <string name="positions">நிலைகள்</string>
+    <string name="history">வரலாறு</string>
+    <string name="performance">செயல்திறன்</string>
+    <string name="buy">வாங்கு</string>
+    <string name="sell">விற்க</string>
+    <string name="entry_price">நுழைவு விலை</string>
+    <string name="current_price">தற்போதைய விலை</string>
+    <string name="pnl">P&amp;L</string>
+    <string name="quantity">அளவு</string>
+    <string name="close_position">நிலையை மூடு</string>
+    <string name="no_positions">திறந்த நிலைகள் இல்லை</string>
+
+    <!-- Alerts -->
+    <string name="alerts_title">விலை அலர்ட்கள்</string>
+    <string name="create_alert">அலர்ட் உருவாக்கு</string>
+    <string name="new_alert">+ புதிய அலர்ட்</string>
+    <string name="alert_type">அலர்ட் வகை</string>
+    <string name="spot_price">ஸ்பாட் விலை</string>
+    <string name="option_premium">ஆப்ஷன் பிரீமியம்</string>
+    <string name="pcr">PCR</string>
+    <string name="condition">நிபந்தனை</string>
+    <string name="goes_above">மேலே செல்கிறது</string>
+    <string name="goes_below">கீழே செல்கிறது</string>
+    <string name="crosses">கடக்கிறது</string>
+    <string name="target_value">இலக்கு மதிப்பு</string>
+    <string name="alert_name">அலர்ட் பெயர்</string>
+    <string name="note">குறிப்பு</string>
+    <string name="active">செயலில்</string>
+    <string name="triggered">தூண்டப்பட்டது</string>
+    <string name="paused">இடைநிறுத்தப்பட்டது</string>
+    <string name="no_alerts">இன்னும் அலர்ட்கள் இல்லை</string>
+    <string name="no_alerts_desc">விலைகள் உங்கள் இலக்குகளை அடையும்போது அறிவிக்கப்பட உங்கள் முதல் அலர்ட்டை உருவாக்கவும்</string>
+
+    <!-- Calculator -->
+    <string name="calculator_title">ஆப்ஷன் கால்குலேட்டர்</string>
+    <string name="spot_price_label">ஸ்பாட் விலை</string>
+    <string name="strike_price_label">ஸ்ட்ரைக் விலை</string>
+    <string name="time_to_expiry">காலாவதி வரை நேரம் (நாட்கள்)</string>
+    <string name="volatility">வோலடிலிட்டி (%)</string>
+    <string name="risk_free_rate">ரிஸ்க்-ஃப்ரீ ரேட் (%)</string>
+    <string name="option_type">ஆப்ஷன் வகை</string>
+    <string name="calculate">கணக்கிடு</string>
+    <string name="option_price">ஆப்ஷன் விலை</string>
+
+    <!-- Settings -->
+    <string name="settings_title">அமைப்புகள்</string>
+    <string name="appearance">தோற்றம்</string>
+    <string name="theme">தீம்</string>
+    <string name="theme_light">லைட்</string>
+    <string name="theme_dark">டார்க்</string>
+    <string name="theme_system">சிஸ்டம்</string>
+    <string name="language">மொழி</string>
+    <string name="account">கணக்கு</string>
+    <string name="login">உள்நுழைவு</string>
+    <string name="logout">வெளியேறு</string>
+    <string name="about">பற்றி</string>
+    <string name="version">பதிப்பு</string>
+    <string name="privacy_policy">தனியுரிமை கொள்கை</string>
+    <string name="terms_of_service">சேவை விதிமுறைகள்</string>
+
+    <!-- Auth -->
+    <string name="login_title">Optix இல் உள்நுழையவும்</string>
+    <string name="phone_number">தொலைபேசி எண்</string>
+    <string name="enter_otp">OTP உள்ளிடவும்</string>
+    <string name="send_otp">OTP அனுப்பு</string>
+    <string name="verify_otp">OTP சரிபார்</string>
+    <string name="or">அல்லது</string>
+    <string name="continue_with_google">Google உடன் தொடரவும்</string>
+    <string name="login_required">உள்நுழைவு தேவை</string>
+    <string name="login_to_continue">தொடர உள்நுழையவும்</string>
+
+    <!-- Common -->
+    <string name="loading">ஏற்றுகிறது…</string>
+    <string name="error">பிழை</string>
+    <string name="retry">மீண்டும் முயற்சிக்கவும்</string>
+    <string name="cancel">ரத்து செய்</string>
+    <string name="save">சேமி</string>
+    <string name="delete">நீக்கு</string>
+    <string name="confirm">உறுதிப்படுத்து</string>
+    <string name="success">வெற்றி</string>
+    <string name="not_authenticated">அங்கீகரிக்கப்படவில்லை</string>
+    <string name="no_data">தரவு இல்லை</string>
+    <string name="pull_to_refresh">புதுப்பிக்க இழுக்கவும்</string>
+
+    <!-- Indices -->
+    <string name="nifty50">நிஃப்டி 50</string>
+    <string name="banknifty">பேங்க் நிஃப்டி</string>
+    <string name="finnifty">ஃபின் நிஃப்டி</string>
+    <string name="midcpnifty">மிட்கேப் நிஃப்டி</string>
+    <string name="sensex">சென்செக்ஸ்</string>
+    <string name="bankex">பேங்கெக்ஸ்</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">நேரடி ஆப்ஷன் செயின்</string>
+    <string name="onboarding_desc_1">அனைத்து முக்கிய இன்டெக்ஸ்களுக்கும் Greeks, IV மற்றும் OI உடன் நிகழ்நேர ஆப்ஷன் செயின் தரவு</string>
+    <string name="onboarding_title_2">AI-இயக்கப்படும் நுண்ணறிவுகள்</string>
+    <string name="onboarding_desc_2">நம்பிக்கை நிலைகள் மற்றும் விரிவான காரணங்களுடன் புத்திசாலி டிரேட் பரிந்துரைகளைப் பெறுங்கள்</string>
+    <string name="onboarding_title_3">பேப்பர் டிரேடிங்</string>
+    <string name="onboarding_desc_3">மெய்நிகர் பணத்துடன் டிரேடிங் பயிற்சி செய்து உங்கள் செயல்திறனைக் கண்காணிக்கவும்</string>
+    <string name="onboarding_title_4">விலை அலர்ட்கள்</string>
+    <string name="onboarding_desc_4">விலைகள் உங்கள் இலக்குகளை அடையும்போது நிகழ்நேர அலர்ட்களுடன் அறிவிக்கப்படுங்கள்</string>
+    <string name="get_started">தொடங்கவும்</string>
+    <string name="next">அடுத்து</string>
+    <string name="skip">தவிர்</string>
+</resources>

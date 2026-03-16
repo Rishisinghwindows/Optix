@@ -259,7 +259,7 @@ RULES:
 """
         for strike, oi, chg, ltp, iv, vol in top_call_oi:
             chg_sign = "+" if chg > 0 else ""
-            iv_str = f"{iv*100:.1f}%" if iv > 0 else f"{iv:.1f}%" if iv > 0 else "N/A"
+            iv_str = f"{iv*100:.1f}%" if iv > 0 else "N/A"
             summary += f"| {int(strike)} | {self._format_number(oi)} | {chg_sign}{self._format_number(chg)} | ₹{ltp:.1f} | {iv_str} | {self._format_number(vol)} |\n"
 
         summary += f"""
@@ -269,7 +269,7 @@ RULES:
 """
         for strike, oi, chg, ltp, iv, vol in top_put_oi:
             chg_sign = "+" if chg > 0 else ""
-            iv_str = f"{iv*100:.1f}%" if iv > 0 else f"{iv:.1f}%" if iv > 0 else "N/A"
+            iv_str = f"{iv*100:.1f}%" if iv > 0 else "N/A"
             summary += f"| {int(strike)} | {self._format_number(oi)} | {chg_sign}{self._format_number(chg)} | ₹{ltp:.1f} | {iv_str} | {self._format_number(vol)} |\n"
 
         summary += f"""

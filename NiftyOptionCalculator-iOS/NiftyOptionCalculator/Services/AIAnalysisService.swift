@@ -118,6 +118,47 @@ final class AIAnalysisService {
             regime: marketRegime
         )
 
+        var finalCallPicks = topCallPicks
+        var finalPutPicks = topPutPicks
+
+        if finalCallPicks.isEmpty && !callScores.isEmpty {
+            let fallbackCalls = Array(callScores.prefix(2)).compactMap { score -> AITradeSuggestion? in
+                let option = score.option
+                guard option.lastTradedPrice > 0 else { return nil }
+                let (targetPrice, stopLossPrice, targetSpot, stopLossSpot) = calculateTargetAndStopLoss(
+                    option: option, score: score, context: context, isCall: true
+                )
+                return AITradeSuggestion(
+                    option: option, score: score, direction: .buy,
+                    entryPrice: option.lastTradedPrice, targetPrice: targetPrice,
+                    stopLossPrice: stopLossPrice, targetSpot: targetSpot, stopLossSpot: stopLossSpot,
+                    timeframe: determineTimeframe(option: option, score: score),
+                    reasoning: generateReasoningSummary(score: score),
+                    isLowConfidenceFallback: true
+                )
+            }
+            finalCallPicks = fallbackCalls
+        }
+
+        if finalPutPicks.isEmpty && !putScores.isEmpty {
+            let fallbackPuts = Array(putScores.prefix(2)).compactMap { score -> AITradeSuggestion? in
+                let option = score.option
+                guard option.lastTradedPrice > 0 else { return nil }
+                let (targetPrice, stopLossPrice, targetSpot, stopLossSpot) = calculateTargetAndStopLoss(
+                    option: option, score: score, context: context, isCall: false
+                )
+                return AITradeSuggestion(
+                    option: option, score: score, direction: .buy,
+                    entryPrice: option.lastTradedPrice, targetPrice: targetPrice,
+                    stopLossPrice: stopLossPrice, targetSpot: targetSpot, stopLossSpot: stopLossSpot,
+                    timeframe: determineTimeframe(option: option, score: score),
+                    reasoning: generateReasoningSummary(score: score),
+                    isLowConfidenceFallback: true
+                )
+            }
+            finalPutPicks = fallbackPuts
+        }
+
         // Identify options to avoid (low scores with reasons)
         let avoidList = identifyAvoidList(callScores: callScores, putScores: putScores)
 
@@ -156,8 +197,8 @@ final class AIAnalysisService {
 
         return AIAnalysisResult(
             marketBias: marketBias,
-            topCallPicks: topCallPicks,
-            topPutPicks: topPutPicks,
+            topCallPicks: finalCallPicks,
+            topPutPicks: finalPutPicks,
             avoidList: avoidList,
             marketInsights: allInsights,
             spotPrice: spotPrice,
@@ -465,11 +506,48 @@ final class AIAnalysisService {
         // Blend moneyness into Greeks score (reduced moneyness weight from 67% to 50% for more variety)
         let adjustedGreeksScore = (moneynessScore * 0.50) + (greeksScore * 0.50)
 
+        // =====================================================
+        // IV vs Realized Volatility Proxy (match Web engine)
+        // =====================================================
+        // Without historical data, use intraday move as realized vol proxy
+        // If IV >> RV: options overpriced (penalize buying)
+        // If IV << RV: options underpriced (boost buying)
+        let intradayMove = abs(context.intradayMovePercent)
+        let realizedVolProxy = max(1.0, intradayMove * sqrt(252.0))  // Annualized
+        let optionIV = option.impliedVolatility > 0 ? option.impliedVolatility * 100 : context.atmIV * 100  // Convert to percentage
+        let ivRVRatio = realizedVolProxy > 0 ? optionIV / realizedVolProxy : 1.0
+
+        var ivRVAdjustment: String? = nil
+        var adjustedIVScore = ivScore
+        if ivRVRatio > 2.0 {
+            adjustedIVScore = max(0, ivScore - 15)  // Significantly overpriced
+            ivRVAdjustment = "IV/RV ratio \(String(format: "%.1f", ivRVRatio))x — options significantly overpriced"
+        } else if ivRVRatio > 1.5 {
+            adjustedIVScore = max(0, ivScore - 8)  // Moderately overpriced
+            ivRVAdjustment = "IV/RV ratio \(String(format: "%.1f", ivRVRatio))x — options moderately overpriced"
+        } else if ivRVRatio < 0.7 {
+            adjustedIVScore = min(100, ivScore + 15)  // Underpriced — great buy
+            ivRVAdjustment = "IV/RV ratio \(String(format: "%.1f", ivRVRatio))x — options underpriced, good buying opportunity"
+        } else if ivRVRatio < 1.0 {
+            adjustedIVScore = min(100, ivScore + 8)  // Slightly underpriced
+            ivRVAdjustment = "IV/RV ratio \(String(format: "%.1f", ivRVRatio))x — options slightly underpriced"
+        }
+
+        if let adj = ivRVAdjustment {
+            reasoning.append(ScoreReasoning(
+                factor: "IV vs Realized Vol",
+                description: adj,
+                impact: ivRVRatio > 1.5 ? .bearish : .bullish,
+                weight: 0.05,
+                score: adjustedIVScore
+            ))
+        }
+
         return OptionScore(
             option: option,
             oiScore: oiScore,
             volumeScore: volumeScore,
-            ivScore: ivScore,
+            ivScore: adjustedIVScore,  // IV score adjusted by IV-RV ratio
             greeksScore: adjustedGreeksScore,
             pcrScore: pcrScore,
             maxPainScore: maxPainScore,
@@ -660,45 +738,82 @@ final class AIAnalysisService {
         var warnings: [RiskWarning] = []
         let isCall = option.optionType == .call
 
-        // 1. Theta Decay Warning
+        // 1. Theta Decay Warning — severity matches real-world decay acceleration
         let daysToExpiry = option.daysToExpiry
-        if daysToExpiry <= 3 {
+        if daysToExpiry <= 0 {
+            warnings.append(RiskWarning(
+                message: "EXPIRY DAY - extreme gamma risk, 40-60% premium lost in final hours",
+                severity: .critical
+            ))
+        } else if daysToExpiry <= 3 {
             warnings.append(RiskWarning(
                 message: "EXTREME theta decay (<3 days) - scalping only",
                 severity: .critical
             ))
         } else if daysToExpiry <= 7 {
             warnings.append(RiskWarning(
-                message: "Rapid theta decay - avoid holding overnight",
+                message: "Rapid theta decay (\(daysToExpiry) days) - avoid holding overnight",
+                severity: .severe  // Was .minor — 7 DTE options lose 3-5% per day
+            ))
+        } else if daysToExpiry <= 14 {
+            warnings.append(RiskWarning(
+                message: "Theta accelerating - \(daysToExpiry) days left",
                 severity: .minor
             ))
         }
 
-        // 2. IV Rank Warning (buying expensive options)
-        if ivRank > 70 {
+        // 2. IV Rank Warning — #1 reason retail loses money (SEBI: 91% lose)
+        // Buying when IV is expensive = paying inflated premium that crushes post-event
+        if ivRank > 80 {
+            warnings.append(RiskWarning(
+                message: "VERY HIGH IV Rank (\(Int(ivRank))) - premium extremely overpriced, IV crush imminent",
+                severity: .critical
+            ))
+        } else if ivRank > 70 {
             warnings.append(RiskWarning(
                 message: "High IV Rank (\(Int(ivRank))) - options expensive, IV crush risk",
                 severity: .severe
+            ))
+        } else if ivRank > 60 {
+            warnings.append(RiskWarning(
+                message: "Elevated IV Rank (\(Int(ivRank))) - premiums above fair value",
+                severity: .moderate
             ))
         }
 
         // 3. Low Liquidity Warning
         let bidAskSpread = option.askPrice - option.bidPrice
         let spreadPercent = option.lastTradedPrice > 0 ? (bidAskSpread / option.lastTradedPrice) * 100 : 100
-        if spreadPercent > 5 {
+        if spreadPercent > 10 {
+            warnings.append(RiskWarning(
+                message: "Very wide spread (\(String(format: "%.1f", spreadPercent))%) - avoid, slippage will eat profits",
+                severity: .critical
+            ))
+        } else if spreadPercent > 5 {
             warnings.append(RiskWarning(
                 message: "Wide spread (\(String(format: "%.1f", spreadPercent))%) - slippage risk",
                 severity: .moderate
             ))
         }
 
-        // 4. Deep OTM Warning
+        // 4. Deep OTM Warning — delta < 0.10 is a lottery ticket (>90% expire worthless)
         let distancePercent = abs(option.strikePrice - context.spotPrice) / context.spotPrice * 100
         let isOTM = isCall ? (option.strikePrice > context.spotPrice) : (option.strikePrice < context.spotPrice)
-        if isOTM && distancePercent > 3 {
+        let absDelta = abs(option.delta ?? 0.5)
+        if isOTM && absDelta < 0.10 {
             warnings.append(RiskWarning(
-                message: "Deep OTM (\(String(format: "%.1f", distancePercent))%) - low probability",
+                message: "Lottery ticket (delta \(String(format: "%.2f", absDelta))) - >90% expire worthless",
+                severity: .critical
+            ))
+        } else if isOTM && distancePercent > 5 {
+            warnings.append(RiskWarning(
+                message: "Deep OTM (\(String(format: "%.1f", distancePercent))%) - needs very large move",
                 severity: .severe
+            ))
+        } else if isOTM && distancePercent > 3 {
+            warnings.append(RiskWarning(
+                message: "OTM (\(String(format: "%.1f", distancePercent))%) - lower probability",
+                severity: .moderate
             ))
         }
 
@@ -730,9 +845,40 @@ final class AIAnalysisService {
         // 6. Low Volume Warning
         if option.volume < 100 {
             warnings.append(RiskWarning(
+                message: "Very low volume (\(option.volume)) - exit may be impossible",
+                severity: .severe
+            ))
+        } else if option.volume < 500 {
+            warnings.append(RiskWarning(
                 message: "Low volume (\(option.volume)) - liquidity concern",
                 severity: .moderate
             ))
+        }
+
+        // 7. High VIX + Buying Warning (new)
+        if let vix = context.indiaVix, vix > 25 {
+            warnings.append(RiskWarning(
+                message: "VIX at \(String(format: "%.1f", vix)) - extreme fear, premiums inflated",
+                severity: .severe
+            ))
+        }
+
+        // 8. Theta/Premium ratio warning (new — catches fast-decaying options)
+        let theta = abs(option.theta ?? 0)
+        let ltp = option.lastTradedPrice
+        if ltp > 0 && theta > 0 {
+            let thetaPercent = (theta / ltp) * 100
+            if thetaPercent > 5 {
+                warnings.append(RiskWarning(
+                    message: "Theta eats \(String(format: "%.1f", thetaPercent))% of premium daily",
+                    severity: .severe
+                ))
+            } else if thetaPercent > 3 {
+                warnings.append(RiskWarning(
+                    message: "Theta eats \(String(format: "%.1f", thetaPercent))% of premium daily",
+                    severity: .moderate
+                ))
+            }
         }
 
         return warnings
@@ -1421,16 +1567,25 @@ final class AIAnalysisService {
 
     // MARK: - Trade Suggestion Generation
 
-    private func passesStrictFilters(score: OptionScore, option: OptionData, context: AnalysisContext, isCall: Bool) -> (Bool, String?) {
+    private func passesStrictFilters(score: OptionScore, option: OptionData, context: AnalysisContext, isCall: Bool, regime: MarketRegime? = nil) -> (Bool, String?) {
         // On 0 DTE with strong aligned move, lower the strict threshold for momentum plays
         let isBearishAligned = !isCall && context.isBearishMove
         let isBullishAligned = isCall && context.isBullishMove
         let alignsWithMove = isBearishAligned || isBullishAligned
         let effectiveStrictMin: Double
-        if option.daysToExpiry <= 1 && alignsWithMove && context.moveStrengthMultiplier >= 1.25 {
-            effectiveStrictMin = 45  // Relaxed for strong momentum on expiry day
+        if option.daysToExpiry <= 1 && alignsWithMove && context.moveStrengthMultiplier >= 1.1 {
+            effectiveStrictMin = 45
+        } else if let regime = regime {
+            switch regime {
+            case .trending:
+                effectiveStrictMin = alignsWithMove ? 42 : 52
+            case .rangeBound, .flat:
+                effectiveStrictMin = 45
+            case .volatile:
+                effectiveStrictMin = 48
+            }
         } else {
-            effectiveStrictMin = strictMinScoreThreshold  // 60
+            effectiveStrictMin = strictMinScoreThreshold
         }
         if score.overallScore < effectiveStrictMin {
             return (false, "strict score <\(Int(effectiveStrictMin))")
@@ -1442,22 +1597,12 @@ final class AIAnalysisService {
         // On expiry day (0 DTE), exclude theta warnings since extreme decay is expected
         let criticalWarnings = score.riskWarnings.filter { warning in
             if option.daysToExpiry <= 1 && warning.contains("theta") {
-                return false  // Theta decay is expected on expiry day, not a risk signal
+                return false
             }
-            return warning.contains("EXTREME") || warning.contains("Deep OTM") || warning.contains("against")
+            return warning.contains("EXTREME") || warning.contains("against strong")
         }
-        if criticalWarnings.count >= 2 {
+        if criticalWarnings.count >= 3 {
             return (false, "multiple critical warnings")
-        }
-        if let ivRank = score.ivRank, ivRank > 85 {
-            return (false, "IV Rank too high")
-        }
-        // Only reject inverted term structure for 1-3 DTE; on expiry day (0 DTE)
-        // term structure is irrelevant — all value is intrinsic
-        if let termStructure = score.termStructure,
-           termStructure == .inverted,
-           option.daysToExpiry >= 1, option.daysToExpiry <= 3 {
-            return (false, "inverted term structure near expiry")
         }
         return (true, nil)
     }
@@ -1494,10 +1639,10 @@ final class AIAnalysisService {
                 switch regime {
                 case .trending:
                     if optionsAlignWithMove { effectiveMinScore -= 5 }  // More permissive for momentum
-                case .rangeBound:
-                    // Penalize deep OTM in range-bound
+                case .rangeBound, .flat:
                     let distPct = abs(option.strikePrice - context.spotPrice) / context.spotPrice * 100
-                    if distPct > 3 { effectiveMinScore += 5 }
+                    if distPct > 5 { effectiveMinScore += 5 }
+                    if distPct <= 1.5 { effectiveMinScore -= 3 }
                 case .volatile:
                     // Require higher liquidity in volatile markets
                     if option.volume < 1000 { effectiveMinScore += 5 }
@@ -1508,13 +1653,39 @@ final class AIAnalysisService {
                 continue
             }
 
+            // 1b. IV Crush Guard — #1 reason retail loses money (SEBI: 91% lose)
+            // When IVP > 80, buying premium is extremely risky — IV crush after any event
+            // wipes out gains even with correct direction
+            if let ivRank = score.ivRank {
+                if ivRank > 80 && !optionsAlignWithMove {
+                    continue  // Reject buying expensive options without strong momentum
+                }
+                if ivRank > 80 && optionsAlignWithMove {
+                    // Allow only if R:R is excellent (will be checked later)
+                    effectiveMinScore = max(effectiveMinScore, 60)  // Raise threshold
+                }
+            }
+
             // 2. Skip options with no price data
             if option.lastTradedPrice <= 0 {
                 continue
             }
 
             // 3. Minimum Volume Filter (liquidity)
-            if option.volume < minLiquidity {
+            let effectiveMinLiquidity: Int
+            if let regime = regime {
+                switch regime {
+                case .rangeBound, .flat:
+                    effectiveMinLiquidity = 200
+                case .trending:
+                    effectiveMinLiquidity = 300
+                case .volatile:
+                    effectiveMinLiquidity = minLiquidity
+                }
+            } else {
+                effectiveMinLiquidity = minLiquidity
+            }
+            if option.volume < effectiveMinLiquidity {
                 continue
             }
 
@@ -1532,6 +1703,18 @@ final class AIAnalysisService {
             // 6. Days to Expiry Filter (avoid theta crush)
             if option.daysToExpiry < minDaysToExpiry {
                 continue
+            }
+
+            // 6b. Expiry Day Guard — suppress naked long buying on 0 DTE
+            // Professional platforms (Sensibull, Tastytrade) only suggest spreads on expiry day
+            // Naked long premium loses 40-60% in final hours even with correct direction
+            if option.daysToExpiry <= 0 {
+                // Only allow if strong momentum aligned AND near ATM (delta 0.4-0.6)
+                let expDelta = abs(option.delta ?? 0.5)
+                let expiryAligned = (isCall && context.isStrongBullishMove) || (!isCall && context.isStrongBearishMove)
+                if !expiryAligned || expDelta < 0.35 || expDelta > 0.65 {
+                    continue  // Skip non-momentum 0 DTE trades
+                }
             }
 
             // Calculate spread percent for display
@@ -1568,10 +1751,35 @@ final class AIAnalysisService {
                 }
             }
 
+            // Apply alignment bonus to score (market direction + momentum + OI signal)
+            let boostedScore = OptionScore(
+                option: score.option,
+                oiScore: score.oiScore,
+                volumeScore: score.volumeScore,
+                ivScore: score.ivScore,
+                greeksScore: score.greeksScore,
+                pcrScore: score.pcrScore,
+                maxPainScore: score.maxPainScore,
+                liquidityScore: score.liquidityScore,
+                reasoning: score.reasoning,
+                mlPrediction: score.mlPrediction,
+                probabilityOfProfit: score.probabilityOfProfit,
+                ivRank: score.ivRank,
+                oiSignal: score.oiSignal,
+                riskWarnings: score.riskWarnings,
+                ivPercentile: score.ivPercentile,
+                ivPercentileScore: score.ivPercentileScore,
+                skewValue: score.skewValue,
+                skewScore: score.skewScore,
+                termStructure: score.termStructure,
+                termStructureScore: score.termStructureScore,
+                alignmentBonus: alignmentBonus
+            )
+
             // Calculate target and stop-loss
             let (targetPrice, stopLossPrice, targetSpot, stopLossSpot) = calculateTargetAndStopLoss(
                 option: option,
-                score: score,
+                score: boostedScore,
                 context: context,
                 isCall: isCall
             )
@@ -1597,28 +1805,37 @@ final class AIAnalysisService {
             // 9. Strict no-trade gate — relax threshold when aligned with significant move
             let effectiveStrictThreshold: Double
             if optionsAlignWithMove && context.moveMagnitude >= context.significantMoveThreshold {
-                effectiveStrictThreshold = 50  // Relaxed from 60 when aligned with significant move
+                effectiveStrictThreshold = 45
+            } else if let regime = regime {
+                switch regime {
+                case .rangeBound, .flat:
+                    effectiveStrictThreshold = 48
+                case .volatile:
+                    effectiveStrictThreshold = 50
+                case .trending:
+                    effectiveStrictThreshold = optionsAlignWithMove ? 45 : 55
+                }
             } else {
-                effectiveStrictThreshold = strictMinScoreThreshold  // 60
+                effectiveStrictThreshold = strictMinScoreThreshold
             }
 
             // Use relaxed threshold for strict check
-            if score.overallScore < effectiveStrictThreshold {
-                let strictCheck = passesStrictFilters(score: score, option: option, context: context, isCall: isCall)
+            if boostedScore.overallScore < effectiveStrictThreshold {
+                let strictCheck = passesStrictFilters(score: boostedScore, option: option, context: context, isCall: isCall, regime: regime)
                 if !strictCheck.0 {
                     continue
                 }
             }
 
             // Generate reasoning summary
-            var reasoning = generateReasoningSummary(score: score)
+            var reasoning = generateReasoningSummary(score: boostedScore)
             reasoning.insert(generateRiskAssessment(option: option, riskReward: riskReward, spreadPercent: spreadPercent), at: 0)
 
-            let timeframe = determineTimeframe(option: option, score: score)
+            let timeframe = determineTimeframe(option: option, score: boostedScore)
 
             let whyBuy = generateWhyBuyReasons(
                 option: option,
-                score: score,
+                score: boostedScore,
                 context: context,
                 isCall: isCall,
                 riskReward: riskReward
@@ -1626,18 +1843,18 @@ final class AIAnalysisService {
 
             let riskFactors = generateRiskFactors(
                 option: option,
-                score: score,
+                score: boostedScore,
                 context: context,
                 spreadPercent: spreadPercent
             )
 
             // Generate structured risk warnings for the suggestion
-            let ivRank = score.ivRank ?? 50
+            let ivRank = boostedScore.ivRank ?? 50
             let structuredWarnings = generateStructuredRiskWarnings(option: option, context: context, ivRank: ivRank)
 
             let suggestion = AITradeSuggestion(
                 option: option,
-                score: score,
+                score: boostedScore,
                 direction: .buy,
                 entryPrice: option.lastTradedPrice,
                 targetPrice: targetPrice,
@@ -1802,12 +2019,45 @@ final class AIAnalysisService {
             stopLossPrice = stopLossPrice * 0.95  // 5% more buffer for OTM
         }
 
-        // Ensure minimum R:R of 1.5:1 for practical trading
+        // =====================================================
+        // OI-WALL BLENDING (Match Web engine)
+        // =====================================================
+        // Use support/resistance levels (highest OI strikes) as natural targets
+        // Project option price at OI-wall spot using delta approximation
+        // Blend 60% OI-wall + 40% formula for more market-anchored targets
+        if let oiTargetSpot = isCall ? context.resistanceLevel : context.supportLevel {
+            let spotMoveToTarget = isCall ? (oiTargetSpot - currentSpot) : (currentSpot - oiTargetSpot)
+            if spotMoveToTarget > 0 {
+                let oiTargetPrice = entryPrice + (spotMoveToTarget * absDelta)
+                if oiTargetPrice > entryPrice * 1.05 {  // Only if meaningful
+                    targetPrice = oiTargetPrice * 0.6 + targetPrice * 0.4
+                }
+            }
+        }
+        if let oiSLSpot = isCall ? context.supportLevel : context.resistanceLevel {
+            let spotMoveToSL = isCall ? (currentSpot - oiSLSpot) : (oiSLSpot - currentSpot)
+            if spotMoveToSL > 0 {
+                let oiSLPrice = entryPrice - (spotMoveToSL * absDelta)
+                if oiSLPrice > 0 && oiSLPrice < entryPrice * 0.95 {  // Only if meaningful
+                    stopLossPrice = oiSLPrice * 0.6 + stopLossPrice * 0.4
+                }
+            }
+        }
+
+        // Ensure minimum R:R (DTE-aware — match Web engine)
+        let effectiveMinRR: Double
+        if daysToExpiry <= 0 {
+            effectiveMinRR = 0.8   // Expiry day — wider tolerance
+        } else if daysToExpiry <= 1 {
+            effectiveMinRR = 1.0   // Day before expiry
+        } else {
+            effectiveMinRR = 1.5   // Normal days
+        }
+
         let potentialProfit = targetPrice - entryPrice
         let potentialLoss = entryPrice - stopLossPrice
-        if potentialLoss > 0 && potentialProfit / potentialLoss < 1.5 {
-            // Adjust target up to achieve 1.5:1 R:R minimum
-            targetPrice = entryPrice + (potentialLoss * 1.5)
+        if potentialLoss > 0 && potentialProfit / potentialLoss < effectiveMinRR {
+            targetPrice = entryPrice + (potentialLoss * effectiveMinRR)
         }
 
         // Final sanity checks
@@ -2108,7 +2358,18 @@ final class AIAnalysisService {
             risks.append("⚠️ Low volume (\(option.volume)) - exit may be difficult")
         }
 
-        return Array(risks.prefix(4))  // Max 4 risk factors
+        // 9. Transaction cost warning for cheap options
+        let lotSize = context.lotSize
+        let totalCost = option.lastTradedPrice * Double(lotSize)
+        let estFees = totalCost * 0.004  // ~0.4% round trip
+        if option.lastTradedPrice < 10 && option.lastTradedPrice > 0 {
+            let feePercent = (estFees / totalCost) * 100
+            if feePercent > 2 {
+                risks.append("⚠️ Transaction costs (\(String(format: "%.1f", feePercent))%) eat into small premiums")
+            }
+        }
+
+        return Array(risks.prefix(5))  // Max 5 risk factors
     }
 
     // MARK: - Market Analysis
@@ -2300,6 +2561,11 @@ final class AIAnalysisService {
         // High VIX (>20) = Volatile regime
         if vix > 20 {
             return .volatile
+        }
+
+        // Very low VIX + tiny move = Flat market
+        if vix < 14 && moveMagnitude < 0.15 {
+            return .flat
         }
 
         // Strong directional move (>0.5%) = Trending
@@ -2612,7 +2878,7 @@ final class AIAnalysisService {
         let regimeFitScore: Double = {
             guard let r = regime else { return 50 }
             switch r {
-            case .rangeBound:
+            case .rangeBound, .flat:
                 return strategyType.isNeutral ? 90 : (strategyType == .bullCallSpread || strategyType == .bearPutSpread ? 60 : 30)
             case .volatile:
                 return (strategyType == .straddle || strategyType == .strangle) ? 85 : (strategyType.isNeutral ? 50 : 40)

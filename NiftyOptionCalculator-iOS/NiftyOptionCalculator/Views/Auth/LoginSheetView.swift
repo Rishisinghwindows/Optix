@@ -119,8 +119,14 @@ struct LoginSheetView: View {
                             .padding(.leading, 12)
 
                         TextField("9876543210", text: $phoneNumber)
-                            .keyboardType(.phonePad)
+                            .keyboardType(.numberPad)
                             .textContentType(.telephoneNumber)
+                            .onChange(of: phoneNumber) { _, newValue in
+                                let filtered = newValue.filter { $0.isNumber }
+                                if filtered != newValue {
+                                    phoneNumber = filtered
+                                }
+                            }
                     }
                     .padding(.vertical, 12)
                     .background(Color(.systemGray6))
@@ -133,11 +139,11 @@ struct LoginSheetView: View {
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(phoneNumber.count >= 10 ? Color.blue : Color.gray)
+                        .background(phoneNumber.count == 10 ? Color.blue : Color.gray)
                         .foregroundColor(.white)
                         .cornerRadius(12)
                 }
-                .disabled(phoneNumber.count < 10)
+                .disabled(phoneNumber.count != 10)
                 .padding(.horizontal)
             } else {
                 // OTP Input
@@ -167,8 +173,7 @@ struct LoginSheetView: View {
                         .background(Color(.systemGray6))
                         .cornerRadius(10)
                         .onChange(of: otp) { _, newValue in
-                            // Auto-submit when 6 digits entered
-                            if newValue.count == 6 {
+                            if newValue.count == 6, !isLoading {
                                 verifyOTP()
                             }
                         }
@@ -290,13 +295,12 @@ struct LoginSheetView: View {
             do {
                 let formattedPhone = "+91\(phoneNumber)"
                 try await authManager.verifyOTP(phone: formattedPhone, otp: otp)
+                await authManager.onLoginSuccess()
 
                 await MainActor.run {
                     isLoading = false
+                    dismiss()
                 }
-
-                await authManager.onLoginSuccess()
-                dismiss()
             } catch let error as AuthError {
                 await MainActor.run {
                     errorMessage = error.errorDescription
@@ -320,11 +324,11 @@ struct LoginSheetView: View {
             Task {
                 do {
                     try await authManager.loginWithApple(authorization: authorization)
+                    await authManager.onLoginSuccess()
                     await MainActor.run {
                         isLoading = false
+                        dismiss()
                     }
-                    await authManager.onLoginSuccess()
-                    dismiss()
                 } catch let error as AuthError {
                     await MainActor.run {
                         errorMessage = error.errorDescription

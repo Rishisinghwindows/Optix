@@ -201,10 +201,24 @@ export default function FloatingChatbot() {
     }
   };
 
-  const formatMessage = (content) => {
-    return content
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\n/g, '<br/>');
+  const escapeHtml = (str) => {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  };
+
+  const formatMessage = (content, role) => {
+    // Escape HTML first to prevent XSS
+    let escaped = escapeHtml(content);
+    if (role === 'assistant') {
+      return escaped
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br/>');
+    }
+    return escaped.replace(/\n/g, '<br/>');
   };
 
   const toggleChat = () => {
@@ -295,7 +309,7 @@ export default function FloatingChatbot() {
                   )}
                   <div
                     className="msg-bubble"
-                    dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }}
+                    dangerouslySetInnerHTML={{ __html: formatMessage(msg.content, msg.role) }}
                   />
                 </div>
               ))}

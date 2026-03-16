@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Optix</string>
+    <string name="app_tagline">స్మార్ట్ ఆప్షన్ ట్రేడింగ్</string>
+
+    <!-- Navigation -->
+    <string name="nav_chain">చైన్</string>
+    <string name="nav_ai">AI</string>
+    <string name="nav_trade">ట్రేడ్</string>
+    <string name="nav_alerts">అలర్ట్లు</string>
+    <string name="nav_settings">సెట్టింగ్స్</string>
+
+    <!-- Option Chain -->
+    <string name="option_chain_title">ఆప్షన్ చైన్</string>
+    <string name="select_index">ఇండెక్స్ ఎంచుకోండి</string>
+    <string name="select_expiry">ఎక్స్పైరీ ఎంచుకోండి</string>
+    <string name="strike_price">స్ట్రైక్ ధర</string>
+    <string name="call">కాల్</string>
+    <string name="put">పుట్</string>
+    <string name="ltp">LTP</string>
+    <string name="change">మార్పు</string>
+    <string name="oi">OI</string>
+    <string name="iv">IV</string>
+    <string name="volume">వాల్యూమ్</string>
+    <string name="bid">బిడ్</string>
+    <string name="ask">ఆస్క్</string>
+
+    <!-- Greeks -->
+    <string name="delta">డెల్టా</string>
+    <string name="gamma">గామా</string>
+    <string name="theta">థీటా</string>
+    <string name="vega">వేగా</string>
+    <string name="rho">రో</string>
+
+    <!-- AI Insights -->
+    <string name="ai_insights_title">AI అంతర్దృష్టులు</string>
+    <string name="trade_suggestions">ట్రేడ్ సూచనలు</string>
+    <string name="market_sentiment">మార్కెట్ సెంటిమెంట్</string>
+    <string name="confidence">నమ్మకం</string>
+    <string name="high">అధిక</string>
+    <string name="medium">మధ్యస్థ</string>
+    <string name="low">తక్కువ</string>
+
+    <!-- Paper Trading -->
+    <string name="paper_trading_title">పేపర్ ట్రేడింగ్</string>
+    <string name="positions">పొజిషన్లు</string>
+    <string name="history">చరిత్ర</string>
+    <string name="performance">పనితీరు</string>
+    <string name="buy">కొనండి</string>
+    <string name="sell">అమ్మండి</string>
+    <string name="entry_price">ఎంట్రీ ధర</string>
+    <string name="current_price">ప్రస్తుత ధర</string>
+    <string name="pnl">P&amp;L</string>
+    <string name="quantity">పరిమాణం</string>
+    <string name="close_position">పొజిషన్ మూసివేయండి</string>
+    <string name="no_positions">ఓపెన్ పొజిషన్లు లేవు</string>
+
+    <!-- Alerts -->
+    <string name="alerts_title">ధర అలర్ట్లు</string>
+    <string name="create_alert">అలర్ట్ సృష్టించండి</string>
+    <string name="new_alert">+ కొత్త అలర్ట్</string>
+    <string name="alert_type">అలర్ట్ రకం</string>
+    <string name="spot_price">స్పాట్ ధర</string>
+    <string name="option_premium">ఆప్షన్ ప్రీమియం</string>
+    <string name="pcr">PCR</string>
+    <string name="condition">షరతు</string>
+    <string name="goes_above">పైకి వెళ్తుంది</string>
+    <string name="goes_below">కిందకు వెళ్తుంది</string>
+    <string name="crosses">దాటుతుంది</string>
+    <string name="target_value">లక్ష్య విలువ</string>
+    <string name="alert_name">అలర్ట్ పేరు</string>
+    <string name="note">గమనిక</string>
+    <string name="active">యాక్టివ్</string>
+    <string name="triggered">ట్రిగ్గర్డ్</string>
+    <string name="paused">పాజ్ చేయబడింది</string>
+    <string name="no_alerts">ఇంకా అలర్ట్లు లేవు</string>
+    <string name="no_alerts_desc">ధరలు మీ లక్ష్యాలను చేరుకున్నప్పుడు నోటిఫై అవ్వడానికి మీ మొదటి అలర్ట్ సృష్టించండి</string>
+
+    <!-- Calculator -->
+    <string name="calculator_title">ఆప్షన్ కాలిక్యులేటర్</string>
+    <string name="spot_price_label">స్పాట్ ధర</string>
+    <string name="strike_price_label">స్ట్రైక్ ధర</string>
+    <string name="time_to_expiry">ఎక్స్పైరీకి సమయం (రోజులు)</string>
+    <string name="volatility">వోలటిలిటీ (%)</string>
+    <string name="risk_free_rate">రిస్క్-ఫ్రీ రేట్ (%)</string>
+    <string name="option_type">ఆప్షన్ రకం</string>
+    <string name="calculate">లెక్కించు</string>
+    <string name="option_price">ఆప్షన్ ధర</string>
+
+    <!-- Settings -->
+    <string name="settings_title">సెట్టింగ్స్</string>
+    <string name="appearance">రూపం</string>
+    <string name="theme">థీమ్</string>
+    <string name="theme_light">లైట్</string>
+    <string name="theme_dark">డార్క్</string>
+    <string name="theme_system">సిస్టమ్</string>
+    <string name="language">భాష</string>
+    <string name="account">ఖాతా</string>
+    <string name="login">లాగిన్</string>
+    <string name="logout">లాగ్అవుట్</string>
+    <string name="about">గురించి</string>
+    <string name="version">వెర్షన్</string>
+    <string name="privacy_policy">ప్రైవసీ పాలసీ</string>
+    <string name="terms_of_service">సేవా నిబంధనలు</string>
+
+    <!-- Auth -->
+    <string name="login_title">Optixలో లాగిన్ అవ్వండి</string>
+    <string name="phone_number">ఫోన్ నంబర్</string>
+    <string name="enter_otp">OTP నమోదు చేయండి</string>
+    <string name="send_otp">OTP పంపండి</string>
+    <string name="verify_otp">OTP ధృవీకరించండి</string>
+    <string name="or">లేదా</string>
+    <string name="continue_with_google">Googleతో కొనసాగించండి</string>
+    <string name="login_required">లాగిన్ అవసరం</string>
+    <string name="login_to_continue">కొనసాగించడానికి లాగిన్ అవ్వండి</string>
+
+    <!-- Common -->
+    <string name="loading">లోడ్ అవుతోంది…</string>
+    <string name="error">లోపం</string>
+    <string name="retry">మళ్ళీ ప్రయత్నించండి</string>
+    <string name="cancel">రద్దు చేయండి</string>
+    <string name="save">సేవ్ చేయండి</string>
+    <string name="delete">తొలగించు</string>
+    <string name="confirm">నిర్ధారించండి</string>
+    <string name="success">విజయం</string>
+    <string name="not_authenticated">ప్రమాణీకరించబడలేదు</string>
+    <string name="no_data">డేటా అందుబాటులో లేదు</string>
+    <string name="pull_to_refresh">రిఫ్రెష్ చేయడానికి లాగండి</string>
+
+    <!-- Indices -->
+    <string name="nifty50">నిఫ్టీ 50</string>
+    <string name="banknifty">బ్యాంక్ నిఫ్టీ</string>
+    <string name="finnifty">ఫిన్ నిఫ్టీ</string>
+    <string name="midcpnifty">మిడ్క్యాప్ నిఫ్టీ</string>
+    <string name="sensex">సెన్సెక్స్</string>
+    <string name="bankex">బ్యాంకెక్స్</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">లైవ్ ఆప్షన్ చైన్</string>
+    <string name="onboarding_desc_1">అన్ని ప్రధాన ఇండెక్స్‌లకు Greeks, IV మరియు OIతో రియల్-టైమ్ ఆప్షన్ చైన్ డేటా</string>
+    <string name="onboarding_title_2">AI-ఆధారిత అంతర్దృష్టులు</string>
+    <string name="onboarding_desc_2">నమ్మకం స్థాయిలు మరియు వివరణాత్మక కారణాలతో తెలివైన ట్రేడ్ సూచనలు పొందండి</string>
+    <string name="onboarding_title_3">పేపర్ ట్రేడింగ్</string>
+    <string name="onboarding_desc_3">వర్చువల్ డబ్బుతో ట్రేడింగ్ ప్రాక్టీస్ చేయండి మరియు మీ పనితీరును ట్రాక్ చేయండి</string>
+    <string name="onboarding_title_4">ధర అలర్ట్లు</string>
+    <string name="onboarding_desc_4">ధరలు మీ లక్ష్యాలను చేరుకున్నప్పుడు రియల్-టైమ్ అలర్ట్లతో నోటిఫై అవ్వండి</string>
+    <string name="get_started">ప్రారంభించండి</string>
+    <string name="next">తదుపరి</string>
+    <string name="skip">దాటవేయండి</string>
+</resources>

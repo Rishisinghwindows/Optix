@@ -6,6 +6,11 @@ struct TradeJournalView: View {
     @StateObject private var viewModel = TradeJournalViewModel()
     @ObservedObject private var authManager = AuthManager.shared
     @State private var showLoginSheet = false
+    @State private var entryToDelete: JournalEntry?
+
+    private var filterKey: String {
+        "\(viewModel.filterOutcome?.rawValue ?? "")-\(viewModel.filterSymbol)-\(viewModel.filterTag?.rawValue ?? "")"
+    }
 
     var body: some View {
         ZStack {
@@ -47,13 +52,29 @@ struct TradeJournalView: View {
         }
         .sheet(isPresented: $showLoginSheet) {
             LoginSheetView()
+                .environmentObject(AuthManager.shared)
         }
         .alert("Error", isPresented: $viewModel.showError) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(viewModel.errorMessage ?? "An unknown error occurred")
         }
+        .alert("Delete Entry", isPresented: Binding(
+            get: { entryToDelete != nil },
+            set: { if !$0 { entryToDelete = nil } }
+        )) {
+            Button("Cancel", role: .cancel) { entryToDelete = nil }
+            Button("Delete", role: .destructive) {
+                if let entry = entryToDelete {
+                    Task { await viewModel.deleteEntry(entry) }
+                }
+                entryToDelete = nil
+            }
+        } message: {
+            Text("Are you sure you want to delete this journal entry? This action cannot be undone.")
+        }
         .task {
+            guard authManager.isLoggedIn else { return }
             await viewModel.loadEntries()
             await viewModel.loadStats()
         }
@@ -146,9 +167,7 @@ struct TradeJournalView: View {
                                     }
 
                                     Button(role: .destructive) {
-                                        Task {
-                                            await viewModel.deleteEntry(entry)
-                                        }
+                                        entryToDelete = entry
                                     } label: {
                                         Label("Delete", systemImage: "trash")
                                     }
@@ -220,7 +239,6 @@ struct TradeJournalView: View {
                         viewModel.filterOutcome = nil
                         viewModel.filterSymbol = ""
                         viewModel.filterTag = nil
-                        Task { await viewModel.loadEntries() }
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(Theme.textSecondary)
@@ -228,13 +246,7 @@ struct TradeJournalView: View {
                 }
             }
         }
-        .onChange(of: viewModel.filterOutcome) { _, _ in
-            Task { await viewModel.loadEntries() }
-        }
-        .onChange(of: viewModel.filterSymbol) { _, _ in
-            Task { await viewModel.loadEntries() }
-        }
-        .onChange(of: viewModel.filterTag) { _, _ in
+        .onChange(of: filterKey) { _, _ in
             Task { await viewModel.loadEntries() }
         }
     }

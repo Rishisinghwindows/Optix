@@ -160,7 +160,7 @@ private struct PositionCard: View {
                         VStack(alignment: .trailing, spacing: 2) {
                             Text(position.displayCurrentLTP)
                                 .font(.system(size: 22, weight: .bold, design: .monospaced))
-                                .foregroundColor(Theme.accentGreen)
+                                .foregroundColor(position.unrealizedPnL >= 0 ? Theme.profit : Theme.loss)
 
                             Text("LTP")
                                 .font(.system(size: 11))

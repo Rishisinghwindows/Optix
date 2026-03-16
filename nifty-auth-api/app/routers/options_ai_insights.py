@@ -248,7 +248,7 @@ def score_option(
     sentiment: str,
     total_call_oi: int,
     total_put_oi: int,
-    rank_index: int = 0,  # Position in the option chain for variation
+    _rank_index: int = 0,  # Unused, kept for API compatibility
     intraday_change_pct: Optional[float] = None,  # Intraday momentum
     bias_score: int = 0  # Net bias score from sentiment calculation
 ) -> tuple:
@@ -503,8 +503,9 @@ def _compute_target_sl(ltp: float, iv_pct: float, action: str) -> tuple:
         stop_loss = ltp * (1 - sl_pct)
     else:
         # SELL: target below entry (premium decays), SL above
+        # Ensure R:R >= 1.2:1 even at high IV
         target_pct = max(0.50, min(0.80, 0.60 + iv_factor * 0.3))
-        sl_pct = max(0.50, min(1.0, 0.40 + iv_factor * 1.0))
+        sl_pct = max(0.30, min(0.65, target_pct / 1.2))  # SL capped to maintain >= 1.2:1 R:R
         target = ltp * (1 - target_pct)
         stop_loss = ltp * (1 + sl_pct)
 
@@ -589,7 +590,7 @@ def generate_suggestions(
     suggestion_id = 1
 
     # Get lot size for P&L calculation
-    lot_sizes = {"NIFTY": 75, "BANKNIFTY": 30, "FINNIFTY": 25, "MIDCPNIFTY": 50, "SENSEX": 10}
+    lot_sizes = {"NIFTY": 75, "BANKNIFTY": 30, "FINNIFTY": 25, "MIDCPNIFTY": 50, "SENSEX": 10, "BANKEX": 15}
     lot_size = lot_sizes.get(symbol, 25)
 
     # Add top calls (up to half of max)
@@ -765,7 +766,7 @@ def generate_insights(
 
     # Overall sentiment insight
     insights.append(MarketInsightResponse(
-        title=f"{sentiment.title()} Outlook",
+        title=f"{sentiment.replace('_', ' ').title()} Outlook",
         description=f"Overall market sentiment is {sentiment} based on OI patterns, PCR{' and VIX' if vix else ''} analysis",
         sentiment=sentiment,
         importance="high"
@@ -883,9 +884,10 @@ async def get_ai_insights(
                         atm_ivs.append(pe_iv)
             if atm_ivs:
                 avg_iv = sum(atm_ivs) / len(atm_ivs)
-        # IV percentile: NIFTY historical IV range ~8-35%, BANKNIFTY ~10-45%
-        # Use 35% as the high-IV benchmark
-        iv_percentile = min(100, max(0, (avg_iv / 35) * 100))
+        # IV percentile: Use symbol-specific high-IV benchmarks
+        iv_benchmarks = {"NIFTY": 35, "BANKNIFTY": 45, "FINNIFTY": 35, "MIDCPNIFTY": 40, "SENSEX": 30, "BANKEX": 35}
+        iv_benchmark = iv_benchmarks.get(symbol, 35)
+        iv_percentile = min(100, max(0, (avg_iv / iv_benchmark) * 100))
 
         return AIInsightsResponse(
             symbol=symbol,
@@ -901,7 +903,7 @@ async def get_ai_insights(
         )
 
     except Exception as e:
-        # Return demo data on error
+        logger.error(f"AI insights error for {symbol}: {e}", exc_info=True)
         return generate_demo_insights(symbol)
 
 

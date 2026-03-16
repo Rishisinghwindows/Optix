@@ -5,14 +5,25 @@
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
+// Standard normal CDF approximation (Abramowitz & Stegun)
+function normalCDF(x) {
+  const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741;
+  const a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+  const sign = x < 0 ? -1 : 1;
+  x = Math.abs(x) / Math.sqrt(2);
+  const t = 1.0 / (1.0 + p * x);
+  const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+  return 0.5 * (1.0 + sign * y);
+}
+
 class AIAnalysisService {
   constructor() {
     this.apiBaseURL = `${API_BASE_URL}/api/v1`;
     this.conservativeRules = {
       maxVix: 25,
       minDaysToExpiry: 0,
-      minDisplayScore: 70,
-      minOI: 10000,
+      minDisplayScore: 55,
+      minOI: 1000,
       minVolumeMultiplier: 0.8,
       maxIVRatio: 1.5,
       minDelta: 0.15,
@@ -221,7 +232,7 @@ class AIAnalysisService {
     const isCall = suggestion.optionType === 'CE';
     const spot = context.spotPrice;
     const pcr = context.pcr || 1.0;
-    const daysToExpiry = suggestion.daysToExpiry || 7;
+    const daysToExpiry = suggestion.daysToExpiry ?? 7;
     const oiChange = suggestion.oiChange || 0;
     const score = suggestion.score || 50;
     const riskReward = suggestion.riskReward || 1.5;
@@ -712,17 +723,19 @@ class AIAnalysisService {
               suggestion.score = suggestion.mlPrediction.displayScore;
             }
 
-            // OI signal scoring bonus (matching iOS)
-            if (suggestion.oiSignal?.signal === 'Long Buildup') suggestion.score = Math.min(95, suggestion.score + 5);
-            if (suggestion.oiSignal?.signal === 'Short Buildup') suggestion.score = Math.max(30, suggestion.score - 3);
+            // Market direction alignment bonus (matching iOS alignmentBonus)
+            suggestion.score += this.calculateAlignmentBonus('CE', context, suggestion);
 
             // Market regime adjustments
-            if (regime === 'rangeBound') {
+            if (regime === 'rangeBound' || regime === 'flat') {
               const distPct = Math.abs(row.strikePrice - spot) / spot * 100;
-              if (distPct > 3) suggestion.score = Math.max(30, suggestion.score - 5);
+              if (distPct > 5) suggestion.score = Math.max(30, suggestion.score - 5);
+              if (distPct <= 1.5) suggestion.score = Math.min(95, suggestion.score + 3);
             } else if (regime === 'volatile') {
               if ((suggestion.volume || 0) < 1000) suggestion.score = Math.max(30, suggestion.score - 5);
             }
+
+            suggestion.score = Math.max(30, Math.min(95, Math.round(suggestion.score)));
 
             // Update tier after score adjustments
             suggestion.tier = this.determineTier(suggestion.score);
@@ -745,17 +758,19 @@ class AIAnalysisService {
               suggestion.score = suggestion.mlPrediction.displayScore;
             }
 
-            // OI signal scoring bonus
-            if (suggestion.oiSignal?.signal === 'Long Buildup') suggestion.score = Math.min(95, suggestion.score + 5);
-            if (suggestion.oiSignal?.signal === 'Short Buildup') suggestion.score = Math.max(30, suggestion.score - 3);
+            // Market direction alignment bonus (matching iOS alignmentBonus)
+            suggestion.score += this.calculateAlignmentBonus('PE', context, suggestion);
 
             // Market regime adjustments
-            if (regime === 'rangeBound') {
+            if (regime === 'rangeBound' || regime === 'flat') {
               const distPct = Math.abs(row.strikePrice - spot) / spot * 100;
-              if (distPct > 3) suggestion.score = Math.max(30, suggestion.score - 5);
+              if (distPct > 5) suggestion.score = Math.max(30, suggestion.score - 5);
+              if (distPct <= 1.5) suggestion.score = Math.min(95, suggestion.score + 3);
             } else if (regime === 'volatile') {
               if ((suggestion.volume || 0) < 1000) suggestion.score = Math.max(30, suggestion.score - 5);
             }
+
+            suggestion.score = Math.max(30, Math.min(95, Math.round(suggestion.score)));
 
             suggestion.tier = this.determineTier(suggestion.score);
 
@@ -768,15 +783,37 @@ class AIAnalysisService {
       }
     }
 
-    if (suggestions.length === 0 && candidates.length > 0) {
-      if (!context.noTradeReason) {
-        context.noTradeReason = 'Only low-confidence setups found — showing top 3 ideas';
-      }
-      return candidates.sort((a, b) => {
+    const callSuggestions = suggestions.filter(s => s.optionType === 'CE');
+    const putSuggestions = suggestions.filter(s => s.optionType === 'PE');
+    const needsFallback = suggestions.length < 4 || callSuggestions.length < 2 || putSuggestions.length < 2;
+
+    if (needsFallback && candidates.length > 0) {
+      const sortedCandidates = candidates.sort((a, b) => {
         const aScore = a.mlPrediction?.finalScore || 0;
         const bScore = b.mlPrediction?.finalScore || 0;
         return bScore - aScore;
-      }).slice(0, 3).map(s => ({ ...s, lowConfidence: true }));
+      });
+
+      const fallbackCalls = sortedCandidates.filter(s => s.optionType === 'CE' && !suggestions.includes(s));
+      const fallbackPuts = sortedCandidates.filter(s => s.optionType === 'PE' && !suggestions.includes(s));
+
+      while (callSuggestions.length < 2 && fallbackCalls.length > 0) {
+        const fb = fallbackCalls.shift();
+        suggestions.push({ ...fb, lowConfidence: true });
+        callSuggestions.push(fb);
+      }
+      while (putSuggestions.length < 2 && fallbackPuts.length > 0) {
+        const fb = fallbackPuts.shift();
+        suggestions.push({ ...fb, lowConfidence: true });
+        putSuggestions.push(fb);
+      }
+
+      if (suggestions.length === 0) {
+        if (!context.noTradeReason) {
+          context.noTradeReason = 'Only low-confidence setups found — showing top ideas';
+        }
+        return sortedCandidates.slice(0, 4).map(s => ({ ...s, lowConfidence: true }));
+      }
     }
 
     // Sort by ML score, limit to 8 per side (matching iOS maxSuggestions=8)
@@ -807,24 +844,62 @@ class AIAnalysisService {
     // Skip if no valid price
     if (ltp <= 0 || isNaN(ltp)) return null;
 
-    // Volatility-aware stop/target (avoid tight stops in high IV)
+    // Price-tiered target/SL (matching iOS)
     const entryPrice = parseFloat(ltp.toFixed(2));
     const iv = option.impliedVolatility || context.atmIV || 15;
     const ivFactor = Math.min(0.6, Math.max(0.15, iv / 100));
-    const dte = context.daysToExpiry || 7;
+    const dte = context.daysToExpiry ?? 7;
     const timeFactor = Math.min(1.6, Math.max(0.6, Math.sqrt(dte / 7)));
-    const stopLossPct = Math.min(0.7, Math.max(0.30, 0.20 + ivFactor * 0.9 * timeFactor));
-    const targetPct = Math.min(1.6, Math.max(0.60, stopLossPct * 2.0));
 
-    const stopLossPrice = parseFloat((entryPrice * (1 - stopLossPct)).toFixed(2));
-    const targetPrice = parseFloat((entryPrice * (1 + targetPct)).toFixed(2));
+    // Base target/SL percentages by entry price tier
+    let baseTargetPct, baseSLPct;
+    if (entryPrice >= 200) { baseTargetPct = 0.20; baseSLPct = 0.15; }
+    else if (entryPrice >= 100) { baseTargetPct = 0.25; baseSLPct = 0.18; }
+    else if (entryPrice >= 50) { baseTargetPct = 0.30; baseSLPct = 0.20; }
+    else if (entryPrice >= 20) { baseTargetPct = 0.40; baseSLPct = 0.25; }
+    else if (entryPrice >= 10) { baseTargetPct = 0.50; baseSLPct = 0.30; }
+    else if (entryPrice >= 5) { baseTargetPct = 0.60; baseSLPct = 0.35; }
+    else { baseTargetPct = 1.00; baseSLPct = 0.40; }
+
+    const stopLossPct = Math.max(0.15, Math.min(0.50, baseSLPct * ivFactor * timeFactor * 3.0));
+    const targetPct = Math.max(0.20, Math.min(1.50, baseTargetPct * ivFactor * timeFactor * 3.0));
+
+    let stopLossPrice = parseFloat((entryPrice * (1 - stopLossPct)).toFixed(2));
+    let targetPrice = parseFloat((entryPrice * (1 + targetPct)).toFixed(2));
+
+    // OI-wall based smart targets
+    const spot = context.spotPrice || context.atmStrike;
+    const oiWalls = this.calculateOIWallTargets(option, optionType, context, optionChain);
+    if (oiWalls) {
+      const wallDelta = Math.abs(option.delta || 0.5);
+      const spotMoveTarget = oiWalls.targetSpot - spot;
+      const oiTargetPrice = entryPrice + (spotMoveTarget * wallDelta);
+      const spotMoveSL = oiWalls.supportSpot - spot;
+      const oiStopPrice = entryPrice + (spotMoveSL * wallDelta);
+
+      // Blend: 60% OI-wall, 40% IV-formula
+      if (oiTargetPrice > entryPrice * 1.05) {
+        targetPrice = parseFloat((oiTargetPrice * 0.6 + targetPrice * 0.4).toFixed(2));
+      }
+      if (oiStopPrice < entryPrice * 0.95 && oiStopPrice > 0) {
+        stopLossPrice = parseFloat((oiStopPrice * 0.6 + stopLossPrice * 0.4).toFixed(2));
+      }
+
+      // Enforce minimum R:R of 1.5
+      const rr = (targetPrice - entryPrice) / Math.max(0.01, entryPrice - stopLossPrice);
+      if (rr < 1.5) {
+        targetPrice = parseFloat((entryPrice + (entryPrice - stopLossPrice) * 1.5).toFixed(2));
+      }
+    }
+
     const riskReward = (targetPrice - entryPrice) / Math.max(0.01, (entryPrice - stopLossPrice));
 
     // Add strikePrice to option for score calculation
     const optionWithStrike = { ...option, strikePrice };
 
-    // Calculate score
-    const score = this.calculateScore(optionWithStrike, context, optionType);
+    // Calculate score (11-factor weighted model)
+    const scoreResult = this.calculateScore(optionWithStrike, context, optionType, optionChain);
+    const score = scoreResult.score;
 
     // Generate ML prediction (simplified)
     const mlPrediction = this.generateMLPrediction(optionWithStrike, context, optionType);
@@ -856,7 +931,7 @@ class AIAnalysisService {
       gamma: option.gamma || null,
       theta: option.theta || null,
       vega: option.vega || null,
-      daysToExpiry: context.daysToExpiry || 7,
+      daysToExpiry: context.daysToExpiry ?? 7,
       mlPrediction,
       lowConfidence: false,
     };
@@ -864,10 +939,40 @@ class AIAnalysisService {
     // Enrich with new professional metrics (matching iOS)
     suggestionObj.tier = this.determineTier(mlPrediction?.displayScore || score);
     suggestionObj.confidence = this.determineConfidence(suggestionObj);
-    suggestionObj.thetaZone = this.determineThetaZone(context.daysToExpiry || 7);
+    suggestionObj.thetaZone = this.determineThetaZone(context.daysToExpiry ?? 7);
     suggestionObj.oiSignal = this.determineOISignal(suggestionObj, context);
     suggestionObj.riskWarnings = this.generateWeightedWarnings(suggestionObj, context);
     suggestionObj.scoreFactors = this.generateScoreFactors(suggestionObj, context);
+
+    // Store detailed score factors and IV-RV ratio
+    suggestionObj.scoreFactorsDetailed = scoreResult.factors;
+    suggestionObj.ivRVRatio = scoreResult.ivRVRatio;
+
+    // POP (probability of profit) using simplified Black-Scholes N(d2)
+    const T = Math.max(1, context.daysToExpiry ?? 7) / 365;
+    const sigma = (option.impliedVolatility || context.atmIV || 15) / 100;
+    const r = 0.065;
+    if (spot > 0 && strikePrice > 0 && sigma > 0) {
+      const d2 = (Math.log(spot / strikePrice) + (r - 0.5 * sigma * sigma) * T) / (sigma * Math.sqrt(T));
+      const rawPop = optionType === 'CE' ? normalCDF(d2) : normalCDF(-d2);
+      suggestionObj.pop = Math.round(rawPop * 100);
+    }
+
+    // Inject actual POP into weighted score (replace placeholder of 50)
+    if (suggestionObj.pop > 0) {
+      const popWeight = 0.14;
+      const currentPopContribution = 50 * popWeight;
+      const newPopContribution = suggestionObj.pop * popWeight;
+      suggestionObj.score = Math.round(Math.max(30, Math.min(95,
+        suggestionObj.score - currentPopContribution + newPopContribution
+      )));
+    }
+
+    // Term structure: compare option IV to VIX
+    const vix = context.indiaVix || context.vix || 15;
+    const optIV = option.impliedVolatility || context.atmIV || 15;
+    const ivDiff = optIV - vix;
+    suggestionObj.termStructure = ivDiff < -3 ? 'inverted' : ivDiff > 3 ? 'contango' : 'flat';
 
     return suggestionObj;
   }
@@ -878,12 +983,30 @@ class AIAnalysisService {
     const displayScore = ml?.displayScore || suggestion.score || 0;
     const signal = ml?.signal || 'HOLD';
 
-    if (displayScore < rules.minDisplayScore) return false;
+    const regime = context.marketRegime || 'rangeBound';
+    let effectiveMinDisplayScore = rules.minDisplayScore;
+    if (regime === 'rangeBound' || regime === 'flat') {
+        effectiveMinDisplayScore = 45;
+    } else if (regime === 'volatile') {
+        effectiveMinDisplayScore = 50;
+    } else if (regime === 'trending') {
+        effectiveMinDisplayScore = 55;
+    }
+    if (displayScore < effectiveMinDisplayScore) return false;
     if (rules.requireStrongBuy && signal !== 'STRONG BUY') return false;
-    if (!rules.requireStrongBuy && signal !== 'BUY' && signal !== 'STRONG BUY') return false;
+    if (!rules.requireStrongBuy && (signal === 'SELL' || signal === 'STRONG SELL')) return false;
 
     const avgVolume = context.avgVolume || 1;
-    if ((suggestion.volume || 0) < avgVolume * rules.minVolumeMultiplier) return false;
+    let effectiveVolumeMultiplier = rules.minVolumeMultiplier;
+    let effectiveMinOIChange = rules.minOIChange;
+    if (regime === 'rangeBound' || regime === 'flat') {
+        effectiveVolumeMultiplier = 0.3;
+        effectiveMinOIChange = 100;
+    } else if (regime === 'trending') {
+        effectiveVolumeMultiplier = 0.5;
+        effectiveMinOIChange = 500;
+    }
+    if ((suggestion.volume || 0) < avgVolume * effectiveVolumeMultiplier) return false;
 
     const iv = suggestion.iv || context.atmIV || 15;
     const atmIV = context.atmIV || 15;
@@ -894,58 +1017,281 @@ class AIAnalysisService {
     const delta = Math.abs(suggestion.delta || 0);
     if (delta > 0.01 && (delta < rules.minDelta || delta > rules.maxDelta)) return false;
 
-    if ((suggestion.oiChange || 0) < rules.minOIChange) return false;
-    if ((suggestion.riskReward || 0) < rules.minRiskReward) return false;
+    if ((suggestion.oiChange || 0) < effectiveMinOIChange) return false;
     if (suggestion.spreadPct !== null && suggestion.spreadPct > rules.maxSpreadPct) return false;
+
+    // Delta hard filter (match iOS: 0.20-0.80)
+    const absDelta = Math.abs(suggestion.delta || 0);
+    if (absDelta > 0 && (absDelta < 0.20 || absDelta > 0.80)) return false;
+
+    // Multiple critical warnings rejection (match iOS)
+    const criticalWarnings = (suggestion.riskWarnings || []).filter(w => w.severity === 'critical');
+    if (criticalWarnings.length >= 3) return false;
+
+    // Low confidence + low score rejection
+    if (suggestion.confidence?.level === 'Low' && suggestion.score < 55) return false;
+
+    // DTE-aware R:R minimums (match iOS)
+    const dte = suggestion.daysToExpiry ?? 7;
+    let minRR;
+    if (dte === 0) minRR = 0.8;
+    else if (dte === 1) minRR = 1.0;
+    else minRR = 1.5;
+    if ((suggestion.riskReward || 0) < minRR) return false;
 
     return true;
   }
 
   /**
-   * Calculate suggestion score (matching iOS/Android logic)
-   * Uses ML confidence as the primary display score
+   * Calculate suggestion score — 11-factor weighted model matching iOS
+   * @param {Object} option - option data with strikePrice
+   * @param {Object} context - market context
+   * @param {string} optionType - 'CE' or 'PE'
+   * @param {Array} [optionChain] - full option chain for percentile/skew calculations
+   * @returns {{score: number, factors: Object}}
    */
-  calculateScore(option, context, optionType) {
-    let score = 50.0;
+  calculateScore(option, context, optionType, optionChain) {
+    const weights = {
+      ivRank: 0.18,
+      oiSignal: 0.18,
+      pop: 0.14,
+      greeks: 0.14,
+      volume: 0.09,
+      pcr: 0.09,
+      ivPercentile: 0.06,
+      maxPain: 0.04,
+      liquidity: 0.04,
+      skew: 0.02,
+      termStructure: 0.02
+    };
 
-    const spot = context.spotPrice;
-    const strikePrice = option.strikePrice || context.atmStrike;
-    const oi = option.openInterest || 0;
-    const volume = option.totalTradedVolume || 0;
-    const iv = option.impliedVolatility || 15;
+    const scores = {};
+
+    // 1. IV Rank (18%) — lower IV = cheaper options = higher score
+    const vix = context.indiaVix || context.vix || 15;
     const atmIV = context.atmIV || 15;
-    const maxOI = context.maxOI || 10000000;
-    const avgVolume = context.avgVolume || 50000;
+    const iv = option.impliedVolatility || atmIV;
+    const vixRank = Math.min(100, Math.max(0, ((vix - 10) / 25) * 100));
+    const ivVsATMRank = Math.min(100, Math.max(0, ((iv / atmIV - 0.8) / 0.4) * 100));
+    const ivRank = vixRank * 0.6 + ivVsATMRank * 0.4;
+    scores.ivRank = 100 - ivRank;
 
-    // OI score
-    const oiRatio = oi / Math.max(1, maxOI);
-    score += oiRatio * 15;
+    // 2. OI Signal (18%) — aligned buildup = high score
+    const oiSignal = this.determineOISignal(
+      { optionType, oiChange: option.changeinOpenInterest || 0 },
+      context
+    );
+    const callMap = { 'Long Buildup': 85, 'Short Covering': 70, 'Neutral': 50, 'Long Unwinding': 30, 'Short Buildup': 20 };
+    const putMap = { 'Short Buildup': 85, 'Long Unwinding': 70, 'Neutral': 50, 'Short Covering': 30, 'Long Buildup': 20 };
+    scores.oiSignal = (optionType === 'CE' ? callMap : putMap)[oiSignal.signal] || 50;
 
-    // Volume score
-    const volumeRatio = avgVolume > 0 ? volume / avgVolume : 1.0;
-    score += Math.min(15.0, volumeRatio * 5);
+    // 3. POP (14%) — placeholder, overridden after createSuggestion computes it
+    scores.pop = 50;
 
-    // IV score
-    const ivRatio = atmIV > 0 ? iv / atmIV : 1.0;
-    if (ivRatio < 0.9) {
-      score += 10.0;
-    } else if (ivRatio > 1.2) {
-      score -= 5.0;
+    // 4. Greeks (14%) — optimal delta range
+    const delta = Math.abs(option.delta || 0);
+    if (delta >= 0.4 && delta <= 0.6) scores.greeks = 80;
+    else if (delta >= 0.3 && delta <= 0.7) scores.greeks = 65;
+    else if (delta > 0.8) scores.greeks = 45;
+    else if (delta < 0.2) scores.greeks = 35;
+    else scores.greeks = 55;
+    if ((option.gamma || 0) > 0.01) scores.greeks = Math.min(100, scores.greeks + 10);
+    const ltp = option.lastPrice || option.ltp || 1;
+    if (ltp > 0 && Math.abs(option.theta || 0) / ltp > 0.03) scores.greeks = Math.max(0, scores.greeks - 10);
+
+    // 5. Volume (9%)
+    const vol = option.totalTradedVolume || option.volume || 0;
+    const avgVol = context.avgVolume || 1;
+    const volOIRatio = (option.openInterest || 1) > 0 ? vol / (option.openInterest || 1) : 0;
+    if (volOIRatio > 1.0) scores.volume = Math.min(100, 70 + volOIRatio * 10);
+    else if (vol > avgVol * 2) scores.volume = Math.min(90, 65 + (vol / avgVol - 2) * 5);
+    else if (vol > avgVol) scores.volume = 55 + (vol / avgVol - 1) * 10;
+    else if (vol < 100) scores.volume = 30;
+    else scores.volume = 45;
+
+    // 6. PCR Context (9%) — contrarian
+    const pcr = context.pcr || 1.0;
+    if (optionType === 'CE') {
+      scores.pcr = pcr > 1.2 ? 70 : pcr > 1.0 ? 60 : pcr < 0.8 ? 45 : 50;
     } else {
-      score += 5.0;
+      scores.pcr = pcr < 0.8 ? 65 : pcr < 1.0 ? 55 : pcr > 1.2 ? 40 : 50;
     }
 
-    // Moneyness score (reduced weight from 10 to 7 for more variety, matching iOS 50% blend)
-    const moneyness = Math.abs((strikePrice - spot) / spot);
-    if (moneyness < 0.02) {
-      score += 7.0;  // ATM
-    } else if (moneyness < 0.04) {
-      score += 5.5;   // Near ATM
-    } else if (moneyness < 0.06) {
-      score += 3.5;
+    // 7. IV Percentile (6%) — where this option's IV sits in the chain
+    const allIVs = [];
+    if (optionChain) {
+      for (const row of optionChain) {
+        const opt = row[optionType];
+        if (opt && opt.impliedVolatility > 0) allIVs.push(opt.impliedVolatility);
+      }
+    }
+    if (allIVs.length > 0) {
+      const belowCount = allIVs.filter(v => v < iv).length;
+      const percentile = (belowCount / allIVs.length) * 100;
+      scores.ivPercentile = Math.min(100, Math.max(0, 100 - percentile));
+    } else {
+      scores.ivPercentile = 50;
     }
 
-    return Math.max(30, Math.min(95, Math.round(score)));
+    // 8. Max Pain (4%)
+    const spot = context.spotPrice || context.atmStrike || 0;
+    const maxPain = context.maxPain || context.atmStrike || 0;
+    const strikePrice = option.strikePrice || context.atmStrike || 0;
+    if (maxPain > 0 && spot > 0) {
+      const distPct = Math.abs(strikePrice - maxPain) / spot * 100;
+      scores.maxPain = distPct < 1 ? 70 : distPct < 2 ? 60 : Math.max(20, 60 - distPct * 10);
+      if (optionType === 'CE' && spot < maxPain) scores.maxPain = Math.min(100, scores.maxPain + 15);
+      if (optionType === 'PE' && spot > maxPain) scores.maxPain = Math.min(100, scores.maxPain + 15);
+    } else {
+      scores.maxPain = 50;
+    }
+
+    // 9. Liquidity (4%) — bid-ask spread
+    const bid = option.bidPrice || option.bidprice || 0;
+    const ask = option.askPrice || option.askprice || 0;
+    const spreadPct = ask > 0 ? ((ask - bid) / ask) * 100 : 5;
+    if (spreadPct < 1) scores.liquidity = 90;
+    else if (spreadPct < 3) scores.liquidity = 70;
+    else if (spreadPct < 5) scores.liquidity = 50;
+    else if (spreadPct < 10) scores.liquidity = 35;
+    else scores.liquidity = 20;
+
+    // 10. Skew (2%) — put-call IV difference
+    scores.skew = 50;
+    if (optionChain) {
+      const row = optionChain.find(r => r.strikePrice === strikePrice);
+      if (row && row.CE && row.PE) {
+        const callIV = row.CE.impliedVolatility || 0;
+        const putIV = row.PE.impliedVolatility || 0;
+        const skewDiff = putIV - callIV;
+        if (optionType === 'CE') {
+          scores.skew = skewDiff <= 2 ? 65 : skewDiff >= 8 ? 35 : 50;
+        } else {
+          scores.skew = skewDiff >= 6 ? 70 : skewDiff <= 0 ? 35 : 50;
+        }
+      }
+    }
+
+    // 11. Term Structure (2%)
+    const ivDiff = iv - vix;
+    scores.termStructure = ivDiff > 3 ? 70 : ivDiff < -3 ? 35 : 55;
+
+    // IV vs Realized Volatility proxy adjustment
+    const intradayMove = Math.abs(context.intradayChange || context.pChange || 0);
+    const realizedVolProxy = intradayMove * Math.sqrt(252);
+    const ivRVRatio = realizedVolProxy > 1 ? iv / realizedVolProxy : 1.0;
+    let ivRVAdjustment = 0;
+    if (ivRVRatio > 2.0) ivRVAdjustment = -8;
+    else if (ivRVRatio > 1.5) ivRVAdjustment = -4;
+    else if (ivRVRatio < 0.7) ivRVAdjustment = +8;
+    else if (ivRVRatio < 1.0) ivRVAdjustment = +4;
+
+    // Weighted final score
+    let finalScore = 0;
+    for (const [factor, weight] of Object.entries(weights)) {
+      finalScore += (scores[factor] || 50) * weight;
+    }
+    finalScore += ivRVAdjustment;
+
+    return {
+      score: Math.round(Math.max(30, Math.min(95, finalScore))),
+      factors: scores,
+      ivRVRatio: realizedVolProxy > 1 ? parseFloat(ivRVRatio.toFixed(2)) : null
+    };
+  }
+
+  /**
+   * Calculate OI-wall based smart targets
+   * Finds next significant OI concentration as natural target/support
+   */
+  calculateOIWallTargets(option, optionType, context, optionChain) {
+    const spot = context.spotPrice || context.atmStrike;
+    const strikePrice = option.strikePrice;
+    const entryPrice = option.lastPrice || option.ltp;
+    if (!optionChain || !entryPrice || entryPrice <= 0) return null;
+
+    const oiData = [];
+    for (const row of optionChain) {
+      const ce = row.CE, pe = row.PE;
+      if (ce) oiData.push({ strike: row.strikePrice, type: 'CE', oi: ce.openInterest || 0 });
+      if (pe) oiData.push({ strike: row.strikePrice, type: 'PE', oi: pe.openInterest || 0 });
+    }
+
+    const avgOI = oiData.reduce((s, d) => s + d.oi, 0) / (oiData.length || 1);
+    const significantOI = oiData.filter(d => d.oi > avgOI * 2);
+
+    let targetSpot, supportSpot;
+
+    if (optionType === 'CE') {
+      const callWalls = significantOI
+        .filter(d => d.type === 'CE' && d.strike > spot)
+        .sort((a, b) => a.strike - b.strike);
+      targetSpot = callWalls[0]?.strike || (spot * 1.015);
+
+      const putWalls = significantOI
+        .filter(d => d.type === 'PE' && d.strike < spot)
+        .sort((a, b) => b.strike - a.strike);
+      supportSpot = putWalls[0]?.strike || (spot * 0.99);
+    } else {
+      const putWalls = significantOI
+        .filter(d => d.type === 'PE' && d.strike < spot)
+        .sort((a, b) => b.strike - a.strike);
+      targetSpot = putWalls[0]?.strike || (spot * 0.985);
+
+      const callWalls = significantOI
+        .filter(d => d.type === 'CE' && d.strike > spot)
+        .sort((a, b) => a.strike - b.strike);
+      supportSpot = callWalls[0]?.strike || (spot * 1.01);
+    }
+
+    return { targetSpot, supportSpot };
+  }
+
+  /**
+   * Calculate alignment bonus based on market direction + momentum + OI signal
+   * Matching iOS alignmentBonus logic
+   */
+  calculateAlignmentBonus(optionType, context, suggestion) {
+    let bonus = 0;
+    const marketBullishScore = context.marketBullishScore || 0;
+    const isCall = optionType === 'CE';
+    const intradayChangePct = context.intradayChange || context.pChange || context.change || 0;
+    const absChange = Math.abs(intradayChangePct);
+
+    // 1. Market direction alignment bonus (+5 if option type matches market direction)
+    const isAligned = isCall ? marketBullishScore > 0.1 : marketBullishScore < -0.1;
+    if (isAligned) {
+      bonus += 5.0;
+    }
+
+    // 2. Momentum bonus (strong intraday moves boost aligned options)
+    let moveMultiplier = 1.0;
+    if (absChange > 0.5) {
+      moveMultiplier = 1.5;
+    } else if (absChange > 0.3) {
+      moveMultiplier = 1.2;
+    }
+
+    const momentumAligned = isCall ? intradayChangePct > 0.3 : intradayChangePct < -0.3;
+    if (momentumAligned) {
+      bonus += 5.0 * moveMultiplier;
+    }
+
+    // 3. OI signal alignment bonuses (matching iOS)
+    const oiSignal = suggestion.oiSignal?.signal;
+    if (isCall) {
+      if (oiSignal === 'Long Buildup') bonus += 15;
+      else if (oiSignal === 'Short Covering') bonus += 8;
+      else if (oiSignal === 'Short Buildup') bonus -= 10;
+      else if (oiSignal === 'Long Unwinding') bonus -= 5;
+    } else {
+      if (oiSignal === 'Short Buildup') bonus += 15;
+      else if (oiSignal === 'Long Unwinding') bonus += 8;
+      else if (oiSignal === 'Long Buildup') bonus -= 10;
+      else if (oiSignal === 'Short Covering') bonus -= 5;
+    }
+
+    return bonus;
   }
 
   /**
@@ -953,8 +1299,8 @@ class AIAnalysisService {
    */
   ML_THRESHOLDS = {
     STRONG_BUY: 0.35,
-    BUY: 0.15,
-    SELL: -0.15,
+    BUY: 0.08,
+    SELL: -0.08,
     STRONG_SELL: -0.35
   };
 
@@ -1033,13 +1379,15 @@ class AIAnalysisService {
       marketBullishScore -= 0.1;
     }
 
-    // Factor 4: VIX consideration
-    if (vix > 22) {
-      marketBullishScore -= 0.15;  // High fear = bearish
-    } else if (vix > 18) {
+    // Factor 4: VIX consideration (contrarian at extremes)
+    if (vix > 30) {
+      marketBullishScore += 0.05;  // Extreme fear = contrarian bullish
+    } else if (vix > 22) {
       marketBullishScore -= 0.05;
+    } else if (vix > 18) {
+      marketBullishScore -= 0.03;
     } else if (vix < 12) {
-      marketBullishScore += 0.1;  // Low fear = bullish
+      marketBullishScore += 0.1;
     }
 
     // Market bullish score calculated
@@ -1175,6 +1523,7 @@ class AIAnalysisService {
     const intradayChange = Math.abs(context.intradayChange || context.pChange || 0);
 
     if (vix > 20) return 'volatile';
+    if (vix < 14 && intradayChange < 0.15) return 'flat';
     if (intradayChange >= 0.5) return 'trending';
     if (intradayChange >= 0.3 && vix >= 14) return 'trending';
     if (vix < 14 && intradayChange < 0.3) return 'rangeBound';
@@ -1190,6 +1539,7 @@ class AIAnalysisService {
       trending: { label: 'Trending', icon: '📈', color: '#4ade80', description: 'Momentum plays favored, OTM options viable' },
       rangeBound: { label: 'Range-Bound', icon: '↔️', color: '#60a5fa', description: 'ATM options preferred, avoid deep OTM' },
       volatile: { label: 'Volatile', icon: '⚡', color: '#fbbf24', description: 'High-liquidity options only, wider stops' },
+      flat: { label: 'Flat', icon: '➖', color: '#94a3b8', description: 'Low volatility, ATM straddles/strangles preferred' },
     };
     return info[regime] || info.rangeBound;
   }
@@ -1203,7 +1553,7 @@ class AIAnalysisService {
    * @returns {'topPick'|'worthWatching'}
    */
   determineTier(score) {
-    return score >= 70 ? 'topPick' : 'worthWatching';
+    return score >= 62 ? 'topPick' : 'worthWatching';
   }
 
   // =====================================================
@@ -1299,14 +1649,16 @@ class AIAnalysisService {
   generateWeightedWarnings(suggestion, context) {
     const warnings = [];
     const isCall = suggestion.optionType === 'CE';
-    const dte = suggestion.daysToExpiry || 7;
+    const dte = suggestion.daysToExpiry ?? 7;
     const intradayChange = context.intradayChange || context.pChange || 0;
 
-    // Theta decay
-    if (dte <= 3) {
+    // Theta decay (severity matches iOS)
+    if (dte <= 0) {
+      warnings.push({ message: 'Expiry day — extreme theta decay', severity: 'critical', penalty: 10 });
+    } else if (dte <= 3) {
       warnings.push({ message: 'EXTREME theta decay (<3 days)', severity: 'critical', penalty: 10 });
     } else if (dte <= 7) {
-      warnings.push({ message: 'Rapid theta decay', severity: 'minor', penalty: 4 });
+      warnings.push({ message: 'Rapid theta decay (3-5% daily)', severity: 'severe', penalty: 8 });
     }
 
     // IV Rank (estimate from VIX)

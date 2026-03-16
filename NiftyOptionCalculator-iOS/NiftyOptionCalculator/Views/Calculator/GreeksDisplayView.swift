@@ -233,7 +233,7 @@ struct GreekDetailCard: View {
         switch greekName {
         case "Delta":
             return (greeks.delta,
-                    "For every 1 point move in Nifty, this option moves ₹\(String(format: "%.2f", abs(greeks.delta)))",
+                    "For every 1 point move in the underlying, this option moves ₹\(String(format: "%.2f", abs(greeks.delta)))",
                     greeks.delta > 0.7 ? L.greeksHighDelta :
                     greeks.delta < 0.3 ? L.greeksLowDelta : L.greeksModerateDelta)
         case "Gamma":
@@ -440,7 +440,7 @@ struct GreekPill: View {
 struct PositionImpactView: View {
     let greeks: GreeksResult
     let quantity: Int
-    let lotSize: Int = 25
+    var lotSize: Int = 75
 
     private var totalQty: Double {
         Double(quantity * lotSize)
@@ -469,7 +469,7 @@ struct PositionImpactView: View {
             VStack(spacing: 8) {
                 ImpactCard(
                     icon: "arrow.up.forward",
-                    title: "100 pt Nifty move",
+                    title: "100 pt move",
                     value: String(format: "₹%.0f", greeks.delta * 100 * totalQty),
                     isPositive: greeks.delta >= 0,
                     description: "Based on current Delta"

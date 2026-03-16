@@ -6,8 +6,8 @@ final class BlackScholesEngine {
 
     // MARK: - Constants
 
-    /// Default risk-free rate for India (RBI repo rate approximation)
-    static let defaultRiskFreeRate: Double = 0.07
+    /// Default risk-free rate for India (RBI repo rate)
+    static let defaultRiskFreeRate: Double = 0.065
 
     // MARK: - Core Calculations
 

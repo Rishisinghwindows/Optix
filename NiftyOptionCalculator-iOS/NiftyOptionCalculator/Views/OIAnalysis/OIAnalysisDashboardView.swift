@@ -7,6 +7,7 @@ struct OIAnalysisDashboardView: View {
     @Environment(\.dismiss) private var dismiss
 
     let symbol: String
+    let strikeInterval: Double
 
     init(
         optionChain: [OptionChainRow],
@@ -15,6 +16,7 @@ struct OIAnalysisDashboardView: View {
         symbol: String
     ) {
         self.symbol = symbol
+        self.strikeInterval = strikeInterval
         _viewModel = StateObject(wrappedValue: OIAnalysisViewModel(
             optionChain: optionChain,
             spotPrice: spotPrice,
@@ -35,6 +37,7 @@ struct OIAnalysisDashboardView: View {
                         OIHeatmapView(
                             strikeData: viewModel.sortedStrikeData,
                             spotPrice: result.spotPrice,
+                            strikeInterval: strikeInterval,
                             onStrikeSelect: { viewModel.selectStrike($0) }
                         )
                         .tag(OIAnalysisTab.heatmap)
@@ -259,13 +262,13 @@ private struct StrikeHeader: View {
                         .foregroundColor(Theme.textMuted)
 
                     HStack(spacing: 4) {
-                        Image(systemName: data.netOIChange > 0 ? "arrow.up" : "arrow.down")
+                        Image(systemName: data.netOIChange > 0 ? "arrow.up" : (data.netOIChange < 0 ? "arrow.down" : "minus"))
                             .font(.caption)
                         Text(formatOI(abs(data.netOIChange)))
                             .font(.system(.subheadline, design: .monospaced))
                             .fontWeight(.semibold)
                     }
-                    .foregroundColor(data.netOIChange > 0 ? Theme.profit : Theme.loss)
+                    .foregroundColor(data.netOIChange > 0 ? Theme.profit : (data.netOIChange < 0 ? Theme.loss : .secondary))
                 }
 
                 Divider()

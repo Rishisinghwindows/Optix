@@ -5,6 +5,7 @@ import SwiftUI
 struct OIHeatmapView: View {
     let strikeData: [StrikeOIData]
     let spotPrice: Double
+    var strikeInterval: Double = 50
     let onStrikeSelect: (Double) -> Void
 
     @State private var showCallOI = true
@@ -82,6 +83,7 @@ struct OIHeatmapView: View {
                             HeatmapRow(
                                 data: data,
                                 spotPrice: spotPrice,
+                                strikeInterval: strikeInterval,
                                 maxCallOI: maxCallOI,
                                 maxPutOI: maxPutOI,
                                 showCallOI: showCallOI,
@@ -114,6 +116,7 @@ struct OIHeatmapView: View {
 private struct HeatmapRow: View {
     let data: StrikeOIData
     let spotPrice: Double
+    let strikeInterval: Double
     let maxCallOI: Int
     let maxPutOI: Int
     let showCallOI: Bool
@@ -121,7 +124,7 @@ private struct HeatmapRow: View {
     let onTap: () -> Void
 
     private var isATM: Bool {
-        abs(data.strikePrice - spotPrice) <= 25
+        abs(data.strikePrice - spotPrice) <= strikeInterval / 2
     }
 
     private var callIntensity: Double {
@@ -316,6 +319,7 @@ private struct HeatmapLegend: View {
     return OIHeatmapView(
         strikeData: sampleData,
         spotPrice: 24000,
+        strikeInterval: 50,
         onStrikeSelect: { _ in }
     )
     .padding()

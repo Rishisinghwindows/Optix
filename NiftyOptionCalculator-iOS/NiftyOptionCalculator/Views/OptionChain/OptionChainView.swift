@@ -129,7 +129,7 @@ struct OptionChainView: View {
                 StrikeAnalysisSheet(
                     option: option,
                     context: MLPredictionContext(
-                        atmIV: viewModel.atmIV ?? 15,
+                        atmIV: viewModel.atmIV ?? 0.15,
                         pcr: viewModel.putCallRatio,
                         maxPainStrike: viewModel.maxPainStrike,
                         spotPrice: viewModel.spotPrice,
@@ -197,7 +197,7 @@ struct OptionChainView: View {
 
         }
         .navigationDestination(isPresented: $showCalculator) {
-            CalculatorView(viewModel: calculatorVM, paperTradingVM: paperTradingVM)
+            CalculatorView(viewModel: calculatorVM, paperTradingVM: paperTradingVM, selectedIndex: viewModel.selectedIndex)
                 .toolbar(.hidden, for: .tabBar)
         }
         .onChange(of: viewModel.selectedOption) { _, option in
@@ -727,7 +727,7 @@ struct QuickStatsBar: View {
                     // ATM IV
                     StatChip(
                         label: "ATM IV",
-                        value: String(format: "%.1f%%", (viewModel.atmIV ?? 0.15) * 100),
+                        value: viewModel.atmIV != nil ? String(format: "%.1f%%", viewModel.atmIV! * 100) : "--",
                         color: Theme.accentPurple
                     )
 
@@ -941,6 +941,19 @@ struct ModernOptionChainTable: View {
         showNearbyOnly ? viewModel.nearbyStrikes : viewModel.filteredOptionChain
     }
 
+    private var strikeInterval: Double {
+        let strikes = displayedChain.map { $0.strikePrice }.sorted()
+        guard strikes.count >= 2 else { return 50 }
+        var minDiff = Double.greatestFiniteMagnitude
+        for i in 1..<strikes.count {
+            let diff = strikes[i] - strikes[i - 1]
+            if diff > 0 && diff < minDiff {
+                minDiff = diff
+            }
+        }
+        return minDiff == .greatestFiniteMagnitude ? 50 : minDiff
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             // Column Headers
@@ -956,6 +969,7 @@ struct ModernOptionChainTable: View {
                                 spotPrice: viewModel.spotPrice,
                                 maxOI: viewModel.maxOI,
                                 isSelected: selectedStrike == row.strikePrice,
+                                strikeInterval: strikeInterval,
                                 onCallTap: {
                                     if let call = row.callOption {
                                         triggerSelection(row.strikePrice)
@@ -1077,11 +1091,9 @@ struct ModernOptionChainTable: View {
                         }
                 )
                 .onAppear {
-                    print("📋 [ScrollView] onAppear - optionChain.count: \(viewModel.optionChain.count), hasScrolledToATM: \(hasScrolledToATM), userHasScrolled: \(userHasScrolled)")
                     // Scroll to ATM on first appear if data is already loaded
                     if !hasScrolledToATM && !userHasScrolled && !viewModel.optionChain.isEmpty {
-                        if let atm = viewModel.atmStrike {
-                            print("📋 [ScrollView] Will scroll to ATM: \(atm) in 0.3s")
+                        if viewModel.atmStrike != nil {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                 if !hasScrolledToATM && !userHasScrolled {
                                     scrollToATM(proxy: proxy)
@@ -1091,11 +1103,9 @@ struct ModernOptionChainTable: View {
                         }
                     }
                 }
-                .onChange(of: viewModel.optionChain.count) { oldCount, newCount in
-                    print("📋 [ScrollView] onChange count - from \(oldCount) to \(newCount), hasScrolledToATM: \(hasScrolledToATM), userHasScrolled: \(userHasScrolled)")
+                .onChange(of: viewModel.optionChain.count) { _, newCount in
                     // Scroll to ATM when option chain first loads (only if user hasn't scrolled)
                     if !hasScrolledToATM && !userHasScrolled && newCount > 0 && viewModel.atmStrike != nil {
-                        print("📋 [ScrollView] Will scroll to ATM in 0.5s")
                         // Wait for layout to complete
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             if !hasScrolledToATM && !userHasScrolled {
@@ -1108,7 +1118,6 @@ struct ModernOptionChainTable: View {
                 .onChange(of: viewModel.selectedExpiry?.id) { oldExpiry, newExpiry in
                     // When expiry changes, reset scroll tracking so we scroll to ATM for new expiry
                     if oldExpiry != nil && newExpiry != nil && oldExpiry != newExpiry {
-                        print("📋 [ScrollView] Expiry changed, resetting scroll tracking")
                         hasScrolledToATM = false
                         userHasScrolled = false
                     }
@@ -1119,7 +1128,6 @@ struct ModernOptionChainTable: View {
 
     private func scrollToATM(proxy: ScrollViewProxy) {
         guard let targetATM = viewModel.atmStrike else {
-            print("⚠️ [Scroll] No ATM strike available")
             return
         }
 
@@ -1128,11 +1136,8 @@ struct ModernOptionChainTable: View {
         let nearestStrike = displayedChain.min(by: { abs($0.strikePrice - targetATM) < abs($1.strikePrice - targetATM) })
 
         guard let strikeToScrollTo = nearestStrike?.strikePrice else {
-            print("⚠️ [Scroll] No strikes in displayed chain")
             return
         }
-
-        print("📍 [Scroll] Scrolling to ATM strike: \(strikeToScrollTo) (target was: \(targetATM))")
 
         // Immediate scroll without animation for faster positioning
         proxy.scrollTo(strikeToScrollTo, anchor: .center)
@@ -1202,11 +1207,12 @@ struct ModernOptionRow: View {
     let spotPrice: Double
     let maxOI: Int
     let isSelected: Bool
+    let strikeInterval: Double
     let onCallTap: () -> Void
     let onPutTap: () -> Void
 
     private var isATM: Bool {
-        abs(row.strikePrice - spotPrice) <= 25
+        abs(row.strikePrice - spotPrice) <= strikeInterval / 2
     }
 
     private var callIsITM: Bool {

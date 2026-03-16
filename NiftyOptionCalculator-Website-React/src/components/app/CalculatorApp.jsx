@@ -7,9 +7,10 @@ import { ADS_CONFIG } from '../../config/adsConfig'
 const INDICES = {
   NIFTY: { name: 'NIFTY', lotSize: 75, defaultSpot: 24250 },
   BANKNIFTY: { name: 'BANKNIFTY', lotSize: 30, defaultSpot: 51500 },
-  FINNIFTY: { name: 'FINNIFTY', lotSize: 65, defaultSpot: 23100 },
-  SENSEX: { name: 'SENSEX', lotSize: 20, defaultSpot: 79500 },
-  MIDCPNIFTY: { name: 'MIDCPNIFTY', lotSize: 120, defaultSpot: 12800 }
+  FINNIFTY: { name: 'FINNIFTY', lotSize: 25, defaultSpot: 23100 },
+  SENSEX: { name: 'SENSEX', lotSize: 10, defaultSpot: 79500 },
+  MIDCPNIFTY: { name: 'MIDCPNIFTY', lotSize: 50, defaultSpot: 12800 },
+  BANKEX: { name: 'BANKEX', lotSize: 15, defaultSpot: 57000 }
 }
 
 function CalculatorApp() {
@@ -27,7 +28,7 @@ function CalculatorApp() {
   const [strikePrice, setStrikePrice] = useState(initialStrike)
   const [volatility, setVolatility] = useState(15)
   const [daysToExpiry, setDaysToExpiry] = useState(initialDays)
-  const [interestRate, setInterestRate] = useState(7)
+  const [interestRate, setInterestRate] = useState(6.5)
   const [optionType, setOptionType] = useState(initialType)
   const [selectedIndex, setSelectedIndex] = useState(initialIndex)
 
@@ -76,9 +77,9 @@ function CalculatorApp() {
 
   // Calculate profit/loss scenarios
   const profitAtTarget = (targetResult.price - result.price) * lotSize
-  const profitAtTargetPct = ((targetResult.price - result.price) / result.price) * 100
+  const profitAtTargetPct = result.price > 0 ? ((targetResult.price - result.price) / result.price) * 100 : 0
   const lossAtStopLoss = (stopLossResult.price - result.price) * lotSize
-  const lossAtStopLossPct = ((stopLossResult.price - result.price) / result.price) * 100
+  const lossAtStopLossPct = result.price > 0 ? ((stopLossResult.price - result.price) / result.price) * 100 : 0
 
   const maxProfit = profitAtTarget
   const maxLoss = Math.abs(lossAtStopLoss)
@@ -428,13 +429,13 @@ function CalculatorApp() {
             <div className="breakdown-bar">
               <div
                 className="intrinsic-part"
-                style={{ width: `${(result.intrinsicValue / result.price) * 100 || 0}%` }}
+                style={{ width: `${result.price > 0 ? (result.intrinsicValue / result.price) * 100 : 0}%` }}
               >
                 {result.intrinsicValue > 0 && formatCurrency(result.intrinsicValue)}
               </div>
               <div
                 className="time-part"
-                style={{ width: `${(result.timeValue / result.price) * 100 || 100}%` }}
+                style={{ width: `${result.price > 0 ? (result.timeValue / result.price) * 100 : 100}%` }}
               >
                 {formatCurrency(result.timeValue)}
               </div>

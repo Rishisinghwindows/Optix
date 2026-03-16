@@ -54,7 +54,7 @@ enum SuggestionTier: String, CaseIterable, Codable {
     }
 
     static func from(score: Double) -> SuggestionTier {
-        if score >= 70 { return .topPick }
+        if score >= 62 { return .topPick }
         return .worthWatching
     }
 }
@@ -116,12 +116,14 @@ enum MarketRegime: String, CaseIterable, Codable {
     case trending = "Trending"
     case rangeBound = "Range-Bound"
     case volatile = "Volatile"
+    case flat = "Flat"
 
     var icon: String {
         switch self {
         case .trending: return "arrow.up.right"
         case .rangeBound: return "arrow.left.arrow.right"
         case .volatile: return "waveform.path.ecg"
+        case .flat: return "minus"
         }
     }
 
@@ -130,6 +132,7 @@ enum MarketRegime: String, CaseIterable, Codable {
         case .trending: return Theme.profit
         case .rangeBound: return Theme.primaryBlue
         case .volatile: return Theme.accentOrange
+        case .flat: return Theme.textSecondary
         }
     }
 
@@ -138,6 +141,7 @@ enum MarketRegime: String, CaseIterable, Codable {
         case .trending: return "Momentum plays favored, OTM options viable"
         case .rangeBound: return "ATM options preferred, avoid deep OTM"
         case .volatile: return "High-liquidity options only, wider stops"
+        case .flat: return "Low volatility, ATM straddles/strangles preferred"
         }
     }
 }
@@ -375,7 +379,8 @@ struct OptionScore: Identifiable, Equatable {
          oiSignal: OISignal? = nil, riskWarnings: [String] = [],
          ivPercentile: Double? = nil, ivPercentileScore: Double? = nil,
          skewValue: Double? = nil, skewScore: Double? = nil,
-         termStructure: TermStructure? = nil, termStructureScore: Double? = nil) {
+         termStructure: TermStructure? = nil, termStructureScore: Double? = nil,
+         alignmentBonus: Double = 0) {
         self.id = UUID()
         self.option = option
         self.oiScore = oiScore
@@ -486,6 +491,9 @@ struct OptionScore: Identifiable, Equatable {
         }
         baseScore = baseScore - totalPenalty
 
+        // Apply market alignment / momentum / OI signal bonus
+        baseScore += alignmentBonus
+
         self.overallScore = min(100, max(0, baseScore))
 
         // Determine confidence based on multiple factors
@@ -585,12 +593,14 @@ struct AITradeSuggestion: Identifiable, Equatable {
     let riskFactors: [String] // Risk warnings
     let tier: SuggestionTier  // Top Pick or Worth Watching
     let structuredWarnings: [RiskWarning] // Severity-weighted warnings
+    let isLowConfidenceFallback: Bool // True when suggestion was added as guaranteed minimum fallback
 
     init(option: OptionData, score: OptionScore, direction: TradeDirection,
          entryPrice: Double, targetPrice: Double, stopLossPrice: Double,
          targetSpot: Double, stopLossSpot: Double, timeframe: String, reasoning: [String],
          whyBuy: [String] = [], riskFactors: [String] = [],
-         structuredWarnings: [RiskWarning] = []) {
+         structuredWarnings: [RiskWarning] = [],
+         isLowConfidenceFallback: Bool = false) {
         self.id = UUID()
         self.option = option
         self.score = score
@@ -606,6 +616,7 @@ struct AITradeSuggestion: Identifiable, Equatable {
         self.riskFactors = riskFactors
         self.tier = SuggestionTier.from(score: score.overallScore)
         self.structuredWarnings = structuredWarnings
+        self.isLowConfidenceFallback = isLowConfidenceFallback
 
         // Calculate P&L
         self.potentialProfit = abs(targetPrice - entryPrice)
@@ -690,6 +701,64 @@ struct AITradeSuggestion: Identifiable, Equatable {
         Array(score.reasoning
             .sorted { $0.score > $1.score }
             .prefix(3))
+    }
+
+    // MARK: - Position Sizing & Capital Awareness
+    // SEBI data: avg trader loses ₹26K/year in transaction costs alone
+    // 2% rule: max risk per trade = 2% of capital
+
+    /// Estimated capital needed for 1 lot (premium × lot size)
+    /// lotSize defaults to 75 (NIFTY); pass actual lot size for other indices
+    func capitalPerLot(lotSize: Int = 75) -> Double {
+        entryPrice * Double(lotSize)
+    }
+
+    /// Max loss per lot in rupees
+    func maxLossPerLot(lotSize: Int = 75) -> Double {
+        potentialLoss * Double(lotSize)
+    }
+
+    /// Estimated transaction costs per lot (brokerage + STT + exchange ≈ 0.4% round trip)
+    func estimatedTransactionCost(lotSize: Int = 75) -> Double {
+        capitalPerLot(lotSize: lotSize) * 0.004
+    }
+
+    /// Net target profit after transaction costs
+    func netTargetProfit(lotSize: Int = 75) -> Double {
+        let grossProfit = potentialProfit * Double(lotSize)
+        return grossProfit - estimatedTransactionCost(lotSize: lotSize)
+    }
+
+    /// Minimum capital needed using 2% risk rule
+    func minimumCapitalNeeded(lotSize: Int = 75) -> Double {
+        maxLossPerLot(lotSize: lotSize) / 0.02  // 2% rule
+    }
+
+    /// Display-friendly capital needed
+    func displayCapitalPerLot(lotSize: Int = 75) -> String {
+        let cap = capitalPerLot(lotSize: lotSize)
+        if cap >= 100000 {
+            return "₹\(String(format: "%.1f", cap / 100000))L"
+        }
+        return "₹\(String(format: "%.0f", cap))"
+    }
+
+    /// Display-friendly max loss per lot
+    func displayMaxLossPerLot(lotSize: Int = 75) -> String {
+        let loss = maxLossPerLot(lotSize: lotSize)
+        if loss >= 100000 {
+            return "₹\(String(format: "%.1f", loss / 100000))L"
+        }
+        return "₹\(String(format: "%.0f", loss))"
+    }
+
+    /// Trailing stop-loss guidance: move SL to breakeven once 50% of target reached
+    var trailingSLTrigger: Double {
+        entryPrice + (potentialProfit * 0.5)
+    }
+
+    var displayTrailingSLTrigger: String {
+        "Move SL to ₹\(String(format: "%.2f", entryPrice)) when price reaches ₹\(String(format: "%.2f", trailingSLTrigger))"
     }
 
     // Professional trade quality assessment

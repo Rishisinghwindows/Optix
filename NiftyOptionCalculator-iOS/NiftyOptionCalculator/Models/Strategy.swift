@@ -368,7 +368,7 @@ struct Strategy: Identifiable {
         name: String = "",
         type: StrategyType,
         legs: [StrategyLeg] = [],
-        lotSize: Int = 25,
+        lotSize: Int = 75,
         underlyingPrice: Double = 0,
         expiryDate: Date = Date()
     ) {

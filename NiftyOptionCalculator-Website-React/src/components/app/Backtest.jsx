@@ -174,8 +174,8 @@ const STRIKE_SELECTION = [
 
 // Supported indices
 const INDICES = [
-  { symbol: 'NIFTY', name: 'NIFTY 50', lotSize: 25, tickSize: 50 },
-  { symbol: 'BANKNIFTY', name: 'Bank NIFTY', lotSize: 15, tickSize: 100 },
+  { symbol: 'NIFTY', name: 'NIFTY 50', lotSize: 75, tickSize: 50 },
+  { symbol: 'BANKNIFTY', name: 'Bank NIFTY', lotSize: 30, tickSize: 100 },
   { symbol: 'FINNIFTY', name: 'Fin NIFTY', lotSize: 25, tickSize: 50 },
   { symbol: 'MIDCPNIFTY', name: 'Midcap NIFTY', lotSize: 50, tickSize: 25 },
   { symbol: 'SENSEX', name: 'SENSEX', lotSize: 10, tickSize: 100 }
@@ -395,7 +395,7 @@ export default function Backtest() {
         start_date: config.startDate,
         end_date: config.endDate,
         initial_capital: config.initialCapital,
-        lot_size: selectedIndex?.lotSize || 25,
+        lot_size: selectedIndex?.lotSize || 75,
         max_positions: config.maxOpenPositions,
         strategy_config: {
           strategy_type: config.strategyId,
@@ -836,7 +836,7 @@ export default function Backtest() {
             min="1"
           />
           <button className="bt-lots-btn" onClick={() => updateConfig('lots', config.lots + 1)}>+</button>
-          <span className="bt-lots-info">= {config.lots * (selectedIndex?.lotSize || 25)} qty</span>
+          <span className="bt-lots-info">= {config.lots * (selectedIndex?.lotSize || 75)} qty</span>
         </div>
       </div>
     </div>

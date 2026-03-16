@@ -5911,6 +5911,144 @@
   border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
+.regime-flat {
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+/* Market Regime Card (enhanced) */
+.regime-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.regime-card .regime-icon {
+  font-size: 18px;
+}
+
+.regime-card .regime-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.regime-card .regime-label {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.regime-card .regime-desc {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* POP Badge */
+.pop-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--surface);
+  border: 1px solid;
+  color: var(--text-primary);
+}
+
+/* Term Structure Badge */
+.term-structure-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--surface);
+}
+
+.term-structure-badge.inverted {
+  border: 1px solid rgba(255, 149, 0, 0.5);
+  color: #ff9500;
+  background: rgba(255, 149, 0, 0.1);
+}
+
+.term-structure-badge.flat {
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+/* Unusual Activity Section */
+.unusual-activity-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.ua-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ua-header:hover {
+  background: var(--surface-hover);
+}
+
+.ua-count {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.ua-toggle {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.ua-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.ua-strike {
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 80px;
+}
+
+.ua-detail {
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.ua-value {
+  font-weight: 600;
+  color: #fbbf24;
+}
+
 /* Tier Section */
 .tier-section {
   margin-bottom: 16px;

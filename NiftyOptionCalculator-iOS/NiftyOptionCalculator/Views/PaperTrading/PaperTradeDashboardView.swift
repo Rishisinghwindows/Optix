@@ -12,7 +12,7 @@ struct PaperTradeDashboardView: View {
     @Namespace private var tabAnimation
 
     // Timer for auto-refresh
-    @State private var refreshTimer: Timer?
+    private let refreshTimer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
     @State private var showLoginSheet = false
 
     var body: some View {
@@ -59,12 +59,12 @@ struct PaperTradeDashboardView: View {
                 from: optionChainVM.optionChain,
                 spotPrice: optionChainVM.spotPrice
             )
-            // Start auto-refresh timer
-            startRefreshTimer()
         }
-        .onDisappear {
-            // Stop timer when leaving view
-            stopRefreshTimer()
+        .onReceive(refreshTimer) { _ in
+            guard viewModel.hasOpenPositions else { return }
+            Task { @MainActor in
+                await refreshPositionPrices()
+            }
         }
         .onChange(of: optionChainVM.dataVersion) { _, _ in
             // Update prices when option chain updates
@@ -103,23 +103,6 @@ struct PaperTradeDashboardView: View {
 
     // MARK: - Auto-Refresh Logic
 
-    private func startRefreshTimer() {
-        // Only refresh if we have open positions
-        guard viewModel.hasOpenPositions else { return }
-
-        // Refresh every 3 seconds
-        refreshTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
-            Task { @MainActor in
-                await refreshPositionPrices()
-            }
-        }
-    }
-
-    private func stopRefreshTimer() {
-        refreshTimer?.invalidate()
-        refreshTimer = nil
-    }
-
     private func refreshPositionPrices() async {
         guard viewModel.hasOpenPositions else { return }
 
@@ -143,36 +126,49 @@ struct PaperTradeDashboardView: View {
         )
     }
 
+    private static let expiryFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MMM-yyyy"
+        return formatter
+    }()
+
     private func fetchPricesForIndex(_ index: TradingIndex) async {
-        // Use UpstoxAPIService to fetch option chain for positions
         let apiService = UpstoxAPIService.shared
 
-        // Get expiry dates for the position's index
         guard let expiry = viewModel.portfolio.openPositions
             .first(where: { $0.index == index.rawValue })?.expiryDate else { return }
 
-        // Format expiry date
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MMM-yyyy"
-        let expiryString = formatter.string(from: expiry)
+        let expiryString = Self.expiryFormatter.string(from: expiry)
 
-        // Fetch option chain
+        // Snapshot positions needed before async work
+        let positionsSnapshot = viewModel.portfolio.openPositions.enumerated().compactMap { (idx, position) -> (Int, PaperPosition)? in
+            position.index == index.rawValue ? (idx, position) : nil
+        }
+
         do {
             let optionChain = try await apiService.fetchOptionChain(index: index, expiry: expiryString)
-            // Update positions with fetched prices
-            for (idx, position) in viewModel.portfolio.openPositions.enumerated() {
-                if position.index == index.rawValue {
-                    if let row = optionChain.first(where: { $0.strikePrice == position.strikePrice }) {
-                        let option = position.optionType == .call ? row.callOption : row.putOption
-                        if let ltp = option?.lastTradedPrice, ltp > 0 {
-                            viewModel.portfolio.openPositions[idx].currentLTP = ltp
-                        }
+
+            // Build updates from fetched data
+            var updates: [(Int, Double)] = []
+            for (idx, position) in positionsSnapshot {
+                if let row = optionChain.first(where: { $0.strikePrice == position.strikePrice }) {
+                    let option = position.optionType == .call ? row.callOption : row.putOption
+                    if let ltp = option?.lastTradedPrice, ltp > 0 {
+                        updates.append((idx, ltp))
                     }
                 }
             }
-            viewModel.objectWillChange.send()
+
+            // Apply updates on main actor
+            await MainActor.run {
+                for (idx, ltp) in updates {
+                    guard idx < viewModel.portfolio.openPositions.count else { continue }
+                    viewModel.portfolio.openPositions[idx].currentLTP = ltp
+                }
+                viewModel.objectWillChange.send()
+            }
         } catch {
-            print("[PaperTradeDashboard] Error fetching prices: \(error)")
+            // Silently fail; will retry on next timer tick
         }
     }
 }

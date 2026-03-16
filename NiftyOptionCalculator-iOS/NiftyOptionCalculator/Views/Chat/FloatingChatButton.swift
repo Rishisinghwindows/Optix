@@ -104,6 +104,19 @@ struct FloatingChatButton: View {
             .onLongPressGesture(minimumDuration: 0.1, pressing: { pressing in
                 isPressed = pressing
             }, perform: {})
+            .onAppear {
+                guard positionX >= 0 || positionY >= 0 else { return }
+                let minX = edgePadding
+                let maxX = screenWidth - buttonSize - edgePadding
+                let minY = safeArea.top + edgePadding
+                let maxY = screenHeight - buttonSize - safeArea.bottom - 90
+                if positionX >= 0 {
+                    positionX = max(minX, min(maxX, positionX))
+                }
+                if positionY >= 0 {
+                    positionY = max(minY, min(maxY, positionY))
+                }
+            }
         }
         .fullScreenCover(isPresented: $showChat) {
             ChatView()

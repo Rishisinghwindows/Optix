@@ -285,7 +285,7 @@ private struct MetricsGridCard: View {
 
                 MetricCell(label: L.paperTradeBestTrade, value: viewModel.formatCurrency(metrics.largestWin), icon: "arrow.up.circle.fill", color: Theme.profit)
 
-                MetricCell(label: L.paperTradeWorstTrade, value: "-" + viewModel.formatCurrency(metrics.largestLoss), icon: "arrow.down.circle.fill", color: Theme.loss)
+                MetricCell(label: L.paperTradeWorstTrade, value: "-" + viewModel.formatCurrency(abs(metrics.largestLoss)), icon: "arrow.down.circle.fill", color: Theme.loss)
             }
         }
         .padding(16)

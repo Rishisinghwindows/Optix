@@ -15,7 +15,7 @@ struct TradeSuggestionCard: View {
     }
 
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 6) {
             // Header Row
             Button(action: onTap) {
                 HStack {
@@ -36,7 +36,7 @@ struct TradeSuggestionCard: View {
                             .font(.system(size: 12, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                             .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
+                            .padding(.vertical, 3)
                             .background {
                                 RoundedRectangle(cornerRadius: 6)
                                     .fill(suggestion.option.optionType == .call ? Theme.profit : Theme.loss)
@@ -49,20 +49,34 @@ struct TradeSuggestionCard: View {
                     ConfidenceBadge(confidence: suggestion.score.confidence)
 
                     // Score Gauge
-                    AIScoreGauge(score: suggestion.score.overallScore, size: 44)
+                    AIScoreGauge(score: suggestion.score.overallScore, size: 40)
                 }
             }
             .buttonStyle(.plain)
 
             // Indicators Row: Theta Dot + OI Signal
             Button(action: onTap) {
-                HStack(spacing: 12) {
+                HStack(spacing: 8) {
                     // Theta Zone Dot
                     ThetaZoneDot(zone: suggestion.score.thetaDecayZone)
 
                     // OI Signal Capsule
                     if let oiSignal = suggestion.score.oiSignal, oiSignal != .neutral {
                         OISignalBadge(signal: oiSignal)
+                    }
+
+                    // Term Structure Badge
+                    if let ts = suggestion.score.termStructure, ts != .contango {
+                        HStack(spacing: 3) {
+                            Image(systemName: ts == .inverted ? "exclamationmark.triangle.fill" : "equal")
+                                .font(.system(size: 9))
+                            Text(ts == .inverted ? "Inverted" : "Flat")
+                                .font(.system(size: 10, weight: .semibold))
+                        }
+                        .foregroundColor(ts == .inverted ? Color(hex: "FF9500") : Theme.textSecondary)
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 2)
+                        .background(Capsule().fill((ts == .inverted ? Color(hex: "FF9500") : Theme.textMuted).opacity(0.15)))
                     }
 
                     Spacer()
@@ -77,7 +91,7 @@ struct TradeSuggestionCard: View {
 
             // Price Row
             Button(action: onTap) {
-                HStack(spacing: 16) {
+                HStack(spacing: 12) {
                     PriceItem(
                         label: L.aiInsightsEntry,
                         value: suggestion.displayEntry,
@@ -101,56 +115,71 @@ struct TradeSuggestionCard: View {
 
             Divider()
                 .background(Color.white.opacity(0.1))
+                .padding(.vertical, 1)
 
             // Stats Row
             Button(action: onTap) {
-                HStack {
+                HStack(spacing: 6) {
                     // Risk Reward
-                    HStack(spacing: 6) {
+                    HStack(spacing: 4) {
                         Image(systemName: "arrow.left.arrow.right")
-                            .font(.system(size: 12))
+                            .font(.system(size: 11))
                             .foregroundColor(Theme.primaryBlue)
 
                         Text("R:R \(suggestion.displayRiskReward)")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.system(size: 12, weight: .semibold))
                             .foregroundColor(suggestion.riskRewardRatio >= 2 ? Theme.profit : Theme.textSecondary)
+                    }
+
+                    // POP%
+                    if let pop = suggestion.score.displayPOP {
+                        HStack(spacing: 3) {
+                            Image(systemName: "percent")
+                                .font(.system(size: 10))
+                                .foregroundColor(Theme.primaryBlue)
+                            Text("POP \(pop)")
+                                .font(.system(size: 11, weight: .bold))
+                                .foregroundColor(popColor(suggestion.score.probabilityOfProfit))
+                        }
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 2)
+                        .background(Capsule().fill(Theme.surfaceElevated))
                     }
 
                     Spacer()
 
                     // Potential Profit
-                    HStack(spacing: 4) {
+                    HStack(spacing: 3) {
                         Image(systemName: "arrow.up.right")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.system(size: 10, weight: .bold))
                             .foregroundColor(Theme.profit)
 
                         Text(suggestion.displayProfitPercentage)
-                            .font(.system(size: 13, weight: .bold))
+                            .font(.system(size: 12, weight: .bold))
                             .foregroundColor(Theme.profit)
                     }
 
                     Text("/")
+                        .font(.system(size: 11))
                         .foregroundColor(Theme.textMuted)
 
                     // Potential Loss
-                    HStack(spacing: 4) {
+                    HStack(spacing: 3) {
                         Image(systemName: "arrow.down.right")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.system(size: 10, weight: .bold))
                             .foregroundColor(Theme.loss)
 
                         Text(suggestion.displayLossPercentage)
-                            .font(.system(size: 13, weight: .bold))
+                            .font(.system(size: 12, weight: .bold))
                             .foregroundColor(Theme.loss)
                     }
 
-                    Spacer()
-
                     // Timeframe
                     Text(suggestion.timeframe)
-                        .font(.system(size: 11, weight: .medium))
+                        .font(.system(size: 10, weight: .medium))
                         .foregroundColor(Theme.textMuted)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
                         .background {
                             Capsule()
                                 .fill(Theme.surfaceElevated)
@@ -165,7 +194,7 @@ struct TradeSuggestionCard: View {
                 isExpanded: $isWhyExpanded
             )
         }
-        .padding(14)
+        .padding(10)
         .background {
             RoundedRectangle(cornerRadius: 14)
                 .fill(Theme.surface)
@@ -179,6 +208,13 @@ struct TradeSuggestionCard: View {
                         )
                 }
         }
+    }
+
+    private func popColor(_ pop: Double?) -> Color {
+        guard let pop = pop else { return Theme.textSecondary }
+        if pop >= 55 { return Theme.profit }
+        if pop >= 40 { return Color(hex: "FBBF24") }
+        return Theme.loss
     }
 }
 
@@ -405,6 +441,7 @@ struct AIScoreGauge: View {
 
     @State private var animatedProgress: Double = 0
     @State private var displayedScore: Int = 0
+    @State private var scoreAnimationWork: DispatchWorkItem?
 
     private var progress: Double {
         score / 100
@@ -458,19 +495,27 @@ struct AIScoreGauge: View {
     }
 
     private func animateScoreCount() {
+        // Cancel any previous animation
+        scoreAnimationWork?.cancel()
+
         let targetScore = Int(score)
         let duration: Double = 0.8
         let steps = 20
         let stepDuration = duration / Double(steps)
 
-        for step in 0...steps {
-            DispatchQueue.main.asyncAfter(deadline: .now() + stepDuration * Double(step) + 0.2) {
-                let progress = Double(step) / Double(steps)
-                // Ease out curve
-                let easedProgress = 1 - pow(1 - progress, 3)
-                displayedScore = Int(Double(targetScore) * easedProgress)
+        let workItem = DispatchWorkItem { [targetScore] in
+            for step in 0...steps {
+                DispatchQueue.main.asyncAfter(deadline: .now() + stepDuration * Double(step)) {
+                    let progress = Double(step) / Double(steps)
+                    // Ease out curve
+                    let easedProgress = 1 - pow(1 - progress, 3)
+                    displayedScore = Int(Double(targetScore) * easedProgress)
+                }
             }
         }
+
+        scoreAnimationWork = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
     }
 }
 
@@ -718,7 +763,17 @@ struct SuggestionDetailSheet: View {
             marketBias: suggestion.option.optionType == .call ? "Bullish" : "Bearish",
             support: support,
             resistance: resistance,
-            atmStrike: atmStrike > 0 ? atmStrike : (currentSpot / 50).rounded() * 50,
+            atmStrike: atmStrike > 0 ? atmStrike : {
+                let interval: Double
+                switch indexName.uppercased() {
+                case let n where n.contains("BANK") && n.contains("NIFTY"): interval = 100
+                case let n where n.contains("SENSEX"): interval = 100
+                case let n where n.contains("BANKEX"): interval = 100
+                case let n where n.contains("MIDCAP"): interval = 25
+                default: interval = 50  // NIFTY, FINNIFTY
+                }
+                return (currentSpot / interval).rounded() * interval
+            }(),
             indexName: indexName,
             vix: nil
         )

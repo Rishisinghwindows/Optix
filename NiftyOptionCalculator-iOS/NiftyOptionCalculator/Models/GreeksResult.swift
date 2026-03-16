@@ -202,7 +202,7 @@ struct PositionSimulation: Identifiable {
         currentPrice: Double,
         targetPrice: Double,
         stopLossPrice: Double,
-        lotSize: Int = 25 // Nifty lot size
+        lotSize: Int = 75 // Nifty lot size
     ) {
         self.id = UUID()
         self.quantity = quantity

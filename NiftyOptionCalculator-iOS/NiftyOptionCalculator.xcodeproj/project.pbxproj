@@ -30,6 +30,16 @@
 		5C7808AC0CEC59522F9D6D3B /* PaperTradingAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9161848207908B13E35669 /* PaperTradingAPIService.swift */; };
 		5CEB78B68F40ECCB4BAC26C7 /* AngelOneAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8907BF7F03A6466FF4A573F7 /* AngelOneAPIService.swift */; };
 		666D1745B600752A0808FD12 /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E45B46DF9B6AD1B8E1C82A2 /* ChatModels.swift */; };
+		7BF146D9206721F81E87AA8E /* PushNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075531097F7FC717C9D17F65 /* PushNotificationService.swift */; };
+		208B1963DF95D6C6821B8F41 /* OptionScreenerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605A09A766676DE92913E11A /* OptionScreenerViewModel.swift */; };
+		280AA5FFD979C6AF85D0CD43 /* TradeJournalViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3358AC787F1549796CB39E /* TradeJournalViewModel.swift */; };
+		4E9C313F16652769523D3258 /* PnLSimulatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A039F68F35403CFADAE0AF0B /* PnLSimulatorViewModel.swift */; };
+		47909C2271136A4728087114 /* TradeJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69B6607A1CF59F39ED366F7 /* TradeJournal.swift */; };
+		004FBD81A82675C5D6FB088C /* JournalEntryFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73ED7BC549F0FA76D86CB1C6 /* JournalEntryFormView.swift */; };
+		9E84ABBE8F7C3947695D0823 /* TradeJournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CA19DE88AE86E7DFA3DFC0 /* TradeJournalView.swift */; };
+		BE83D25D4142981F1269C010 /* OptionScreenerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 474771252ADCC90F3DB9F8A8 /* OptionScreenerView.swift */; };
+		0F9A9E796E1A80D30758CA46 /* PnLSimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3F2FA7AB26AA5EFA7A732B /* PnLSimulatorView.swift */; };
+		329F053589CF6A343A6B0292 /* TradeJournalAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6356B3EAF3EA5C2B5A11E3D /* TradeJournalAPIService.swift */; };
 		69AB36DCEFB71785F7464C7A /* AIAnalysisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F693F2633669937A357532F0 /* AIAnalysisService.swift */; };
 		6F3A898DF835F9ED213D920D /* Strategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A800D0CBB47315EE9621FA3C /* Strategy.swift */; };
 		718CD4EC4B82F90CB837B01A /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43539317B8CCC87B55C111AD /* SplashView.swift */; };
@@ -223,6 +233,16 @@
 		EE96CD2FC7FAD5F855F9124E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		F0A1B2C3D4E5F60718293A4B /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		F3533A6AB1A86B7D3D643304 /* UpstoxWebSocketService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UpstoxWebSocketService.swift; sourceTree = "<group>"; };
+		075531097F7FC717C9D17F65 /* PushNotificationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PushNotificationService.swift; path = NiftyOptionCalculator/Services/PushNotificationService.swift; sourceTree = SOURCE_ROOT; };
+		605A09A766676DE92913E11A /* OptionScreenerViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OptionScreenerViewModel.swift; path = NiftyOptionCalculator/ViewModels/OptionScreenerViewModel.swift; sourceTree = SOURCE_ROOT; };
+		DF3358AC787F1549796CB39E /* TradeJournalViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TradeJournalViewModel.swift; path = NiftyOptionCalculator/ViewModels/TradeJournalViewModel.swift; sourceTree = SOURCE_ROOT; };
+		A039F68F35403CFADAE0AF0B /* PnLSimulatorViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PnLSimulatorViewModel.swift; path = NiftyOptionCalculator/ViewModels/PnLSimulatorViewModel.swift; sourceTree = SOURCE_ROOT; };
+		C69B6607A1CF59F39ED366F7 /* TradeJournal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TradeJournal.swift; path = NiftyOptionCalculator/Models/TradeJournal.swift; sourceTree = SOURCE_ROOT; };
+		73ED7BC549F0FA76D86CB1C6 /* JournalEntryFormView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = JournalEntryFormView.swift; path = NiftyOptionCalculator/Views/Journal/JournalEntryFormView.swift; sourceTree = SOURCE_ROOT; };
+		E0CA19DE88AE86E7DFA3DFC0 /* TradeJournalView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TradeJournalView.swift; path = NiftyOptionCalculator/Views/Journal/TradeJournalView.swift; sourceTree = SOURCE_ROOT; };
+		474771252ADCC90F3DB9F8A8 /* OptionScreenerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OptionScreenerView.swift; path = NiftyOptionCalculator/Views/Screener/OptionScreenerView.swift; sourceTree = SOURCE_ROOT; };
+		2E3F2FA7AB26AA5EFA7A732B /* PnLSimulatorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PnLSimulatorView.swift; path = NiftyOptionCalculator/Views/Simulator/PnLSimulatorView.swift; sourceTree = SOURCE_ROOT; };
+		F6356B3EAF3EA5C2B5A11E3D /* TradeJournalAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TradeJournalAPIService.swift; path = NiftyOptionCalculator/Services/TradeJournalAPIService.swift; sourceTree = SOURCE_ROOT; };
 		F693F2633669937A357532F0 /* AIAnalysisService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIAnalysisService.swift; sourceTree = "<group>"; };
 		F709E9F1B8187D57940B9069 /* NiftyOptionCalculatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NiftyOptionCalculatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBD289F52A6A9C16865E2057 /* ChartsTabView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChartsTabView.swift; path = NiftyOptionCalculator/Views/Charts/ChartsTabView.swift; sourceTree = SOURCE_ROOT; };
@@ -428,6 +448,16 @@
 				8907BF7F03A6466FF4A573F7 /* AngelOneAPIService.swift */,
 				ABE6FC4A76898699191F8CFA /* DhanAPIService.swift */,
 				2A982A5B1217CB39453F6B82 /* ShoonyaAPIService.swift */,
+				075531097F7FC717C9D17F65 /* PushNotificationService.swift */,
+				605A09A766676DE92913E11A /* OptionScreenerViewModel.swift */,
+				DF3358AC787F1549796CB39E /* TradeJournalViewModel.swift */,
+				A039F68F35403CFADAE0AF0B /* PnLSimulatorViewModel.swift */,
+				C69B6607A1CF59F39ED366F7 /* TradeJournal.swift */,
+				73ED7BC549F0FA76D86CB1C6 /* JournalEntryFormView.swift */,
+				E0CA19DE88AE86E7DFA3DFC0 /* TradeJournalView.swift */,
+				474771252ADCC90F3DB9F8A8 /* OptionScreenerView.swift */,
+				2E3F2FA7AB26AA5EFA7A732B /* PnLSimulatorView.swift */,
+				F6356B3EAF3EA5C2B5A11E3D /* TradeJournalAPIService.swift */,
 				F693F2633669937A357532F0 /* AIAnalysisService.swift */,
 				CLD002002002002CLD002 /* ClaudeAIService.swift */,
 				C6905A5B6DF058F32E246490 /* MLOptionPredictor.swift */,
@@ -776,6 +806,16 @@
 				718CD4EC4B82F90CB837B01A /* SplashView.swift in Sources */,
 				95092743468BA6DB2ABE3717 /* OnboardingView.swift in Sources */,
 				DE2094A74F069A8E09FDAAB0 /* AIInsight.swift in Sources */,
+				7BF146D9206721F81E87AA8E /* PushNotificationService.swift in Sources */,
+				208B1963DF95D6C6821B8F41 /* OptionScreenerViewModel.swift in Sources */,
+				280AA5FFD979C6AF85D0CD43 /* TradeJournalViewModel.swift in Sources */,
+				4E9C313F16652769523D3258 /* PnLSimulatorViewModel.swift in Sources */,
+				47909C2271136A4728087114 /* TradeJournal.swift in Sources */,
+				004FBD81A82675C5D6FB088C /* JournalEntryFormView.swift in Sources */,
+				9E84ABBE8F7C3947695D0823 /* TradeJournalView.swift in Sources */,
+				BE83D25D4142981F1269C010 /* OptionScreenerView.swift in Sources */,
+				0F9A9E796E1A80D30758CA46 /* PnLSimulatorView.swift in Sources */,
+				329F053589CF6A343A6B0292 /* TradeJournalAPIService.swift in Sources */,
 				69AB36DCEFB71785F7464C7A /* AIAnalysisService.swift in Sources */,
 				CLD001001001001CLD001 /* ClaudeAIService.swift in Sources */,
 				974C352698E6446E54A9CE9F /* AIAnalysisViewModel.swift in Sources */,

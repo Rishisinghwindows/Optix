@@ -77,6 +77,5 @@ docker-compose.override.yml
 .pids/
 .claude/
 android build/
-OptixAndroid/
 chroma_data/
 chromadb_data/

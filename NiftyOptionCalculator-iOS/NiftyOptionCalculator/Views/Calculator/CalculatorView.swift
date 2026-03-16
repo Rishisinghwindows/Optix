@@ -3,11 +3,13 @@ import SwiftUI
 struct CalculatorView: View {
     @ObservedObject var viewModel: CalculatorViewModel
     @ObservedObject var paperTradingVM: PaperTradingViewModel
+    var selectedIndex: TradingIndex = .nifty50
     @FocusState private var focusedField: Field?
     @State private var showAdvancedAnalysis = true
     @State private var showSimulator = false
     @StateObject private var simulatorViewModel = PnLSimulatorViewModel()
     @AppStorage("hideCalculatorDisclaimer") private var hideDisclaimer = false
+    @State private var calculateWorkItem: DispatchWorkItem?
 
     enum Field: Hashable {
         case spot, strike, days, iv, target, stopLoss, currentPrice
@@ -57,7 +59,7 @@ struct CalculatorView: View {
                                 premium: viewModel.calculatedPrice ?? 0,
                                 iv: viewModel.ivValue,
                                 dte: viewModel.daysToExpiryValue,
-                                lotSize: 75,
+                                lotSize: selectedIndex.lotSize,
                                 quantity: 1
                             )
                             showSimulator = true
@@ -131,20 +133,11 @@ struct CalculatorView: View {
         .onTapGesture {
             focusedField = nil
         }
-        .onChange(of: viewModel.spotPrice) { _, _ in
-            viewModel.calculateAll()
-        }
-        .onChange(of: viewModel.strikePrice) { _, _ in
-            viewModel.calculateAll()
-        }
-        .onChange(of: viewModel.daysToExpiry) { _, _ in
-            viewModel.calculateAll()
-        }
-        .onChange(of: viewModel.impliedVolatility) { _, _ in
-            viewModel.calculateAll()
-        }
-        .onChange(of: viewModel.optionType) { _, _ in
-            viewModel.calculateAll()
+        .onChange(of: "\(viewModel.spotPrice)|\(viewModel.strikePrice)|\(viewModel.daysToExpiry)|\(viewModel.impliedVolatility)|\(viewModel.optionType)") { _, _ in
+            calculateWorkItem?.cancel()
+            let workItem = DispatchWorkItem { viewModel.calculateAll() }
+            calculateWorkItem = workItem
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: workItem)
         }
         .onChange(of: viewModel.targetSpot) { _, _ in
             viewModel.calculateTargetSL()

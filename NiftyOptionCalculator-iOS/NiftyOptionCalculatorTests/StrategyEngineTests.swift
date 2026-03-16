@@ -499,7 +499,8 @@ final class StrategyEngineIntegrationTests: XCTestCase {
             previousClose: 21990,
             lotSize: 75
         )
-        XCTAssertEqual(calmResult.marketRegime, .rangeBound, "Low VIX + small move should be range-bound")
+        // Low VIX (12) + tiny move → flat regime (VIX < 14 && absMove < 0.15)
+        XCTAssertEqual(calmResult.marketRegime, .flat, "Low VIX + small move should be flat")
     }
 
     func testBankNiftyUsesCorrectInterval() {
@@ -544,10 +545,11 @@ final class StrategyEngineIntegrationTests: XCTestCase {
 final class MarketRegimeTests: XCTestCase {
 
     func testAllRegimesExist() {
-        XCTAssertEqual(MarketRegime.allCases.count, 3)
+        XCTAssertEqual(MarketRegime.allCases.count, 4)
         XCTAssertNotNil(MarketRegime.trending)
         XCTAssertNotNil(MarketRegime.rangeBound)
         XCTAssertNotNil(MarketRegime.volatile)
+        XCTAssertNotNil(MarketRegime.flat)
     }
 
     func testRegimeRawValues() {

@@ -94,7 +94,7 @@ function PnLSimulator() {
           optionType: leg.optionType || 'call',
           premium: parseFloat(leg.premium) || 100,
           iv: parseFloat(leg.iv) || 0.15,
-          daysToExpiry: parseInt(leg.daysToExpiry) || 7,
+          daysToExpiry: leg.daysToExpiry != null && leg.daysToExpiry !== '' ? parseInt(leg.daysToExpiry) : 7,
           lotSize: parseInt(leg.lotSize) || 75,
           quantity: parseInt(leg.quantity) || 1,
         }))
@@ -104,6 +104,7 @@ function PnLSimulator() {
     }
 
     // Single-leg from individual URL params
+    const dteParam = searchParams.get('daysToExpiry')
     return [
       {
         spotPrice: parseFloat(searchParams.get('spotPrice')) || 25000,
@@ -111,7 +112,7 @@ function PnLSimulator() {
         optionType: searchParams.get('optionType') || 'call',
         premium: parseFloat(searchParams.get('premium')) || 100,
         iv: parseFloat(searchParams.get('iv')) || 0.15,
-        daysToExpiry: parseInt(searchParams.get('daysToExpiry')) || 7,
+        daysToExpiry: dteParam != null && dteParam !== '' ? parseInt(dteParam) : 7,
         lotSize: parseInt(searchParams.get('lotSize')) || 75,
         quantity: parseInt(searchParams.get('quantity')) || 1,
       },

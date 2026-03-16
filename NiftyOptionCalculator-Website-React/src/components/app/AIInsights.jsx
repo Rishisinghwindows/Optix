@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import marketAPI from '../../services/marketAPI'
 import aiAnalysisService from '../../services/aiAnalysisService'
 
@@ -18,6 +18,29 @@ function AIInsights() {
   const [expandedWhyTrade, setExpandedWhyTrade] = useState({})
   const [strategies, setStrategies] = useState([])
   const [expandedStrategy, setExpandedStrategy] = useState(null)
+  const [uaExpanded, setUAExpanded] = useState(false)
+
+  // Unusual activity detection
+  const unusualActivities = useMemo(() => {
+    if (!optionChain?.length) return [];
+    const activities = [];
+    const avgVol = optionChain.reduce((s, r) => s + (r.CE?.totalTradedVolume || 0) + (r.PE?.totalTradedVolume || 0), 0) / (optionChain.length * 2);
+    for (const row of optionChain) {
+      for (const type of ['CE', 'PE']) {
+        const opt = row[type];
+        if (!opt) continue;
+        const vol = opt.totalTradedVolume || 0;
+        if (vol > avgVol * 4 && vol > 5000) {
+          activities.push({
+            strikePrice: row.strikePrice, optionType: type,
+            description: `${(vol / avgVol).toFixed(1)}x avg volume`,
+            displayValue: vol.toLocaleString()
+          });
+        }
+      }
+    }
+    return activities.slice(0, 5);
+  }, [optionChain]);
 
   // Fetch expiry dates
   useEffect(() => {
@@ -283,6 +306,24 @@ function AIInsights() {
                   <span className="stat-value">{marketContext.maxPain}</span>
                   <span className="stat-label">Max Pain</span>
                 </div>
+                {marketContext.vix > 0 && (
+                  <div className="stat">
+                    <span className="stat-icon" style={{ color: marketContext.vix > 20 ? '#FF3B30' : marketContext.vix > 15 ? '#FF9500' : '#34C759' }}>⚡</span>
+                    <span className="stat-value" style={{ color: marketContext.vix > 20 ? '#FF3B30' : marketContext.vix > 15 ? '#FF9500' : '#34C759' }}>{marketContext.vix.toFixed(1)}</span>
+                    <span className="stat-label">India VIX</span>
+                  </div>
+                )}
+                {marketContext.spotPrice > 0 && marketContext.atmIV > 0 && (
+                  <div className="stat">
+                    <span className="stat-icon">📐</span>
+                    <span className="stat-value">
+                      {Math.round(marketContext.spotPrice - marketContext.spotPrice * (marketContext.atmIV / 100) * Math.sqrt((marketContext.daysToExpiry ?? 7) / 365))}
+                      {' – '}
+                      {Math.round(marketContext.spotPrice + marketContext.spotPrice * (marketContext.atmIV / 100) * Math.sqrt((marketContext.daysToExpiry ?? 7) / 365))}
+                    </span>
+                    <span className="stat-label">Expected Range</span>
+                  </div>
+                )}
               </div>
               <div className="support-resistance">
                 <div className="level support">
@@ -330,15 +371,35 @@ function AIInsights() {
             </button>
           </div>
 
-          {/* Market Regime Badge */}
-          {marketContext?.marketRegime && (
-            <div className={`regime-badge regime-${marketContext.marketRegime}`}>
-              <span className="regime-icon">
-                {marketContext.marketRegime === 'trending' ? '📈' : marketContext.marketRegime === 'volatile' ? '⚡' : '↔️'}
-              </span>
-              <span className="regime-label">
-                {marketContext.marketRegime === 'trending' ? 'Trending' : marketContext.marketRegime === 'volatile' ? 'Volatile' : 'Range-Bound'}
-              </span>
+          {/* Market Regime Card */}
+          {marketContext?.marketRegime && (() => {
+            const regimeInfo = aiAnalysisService.getRegimeInfo(marketContext.marketRegime);
+            return (
+              <div className={`regime-card regime-${marketContext.marketRegime}`}>
+                <span className="regime-icon">{regimeInfo.icon}</span>
+                <div className="regime-text">
+                  <span className="regime-label">{regimeInfo.label}</span>
+                  <span className="regime-desc">{regimeInfo.description}</span>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Unusual Activity */}
+          {unusualActivities.length > 0 && (
+            <div className="unusual-activity-section">
+              <div className="ua-header" onClick={() => setUAExpanded(!uaExpanded)}>
+                <span>⚡ Unusual Activity</span>
+                <span className="ua-count">{unusualActivities.length}</span>
+                <span className="ua-toggle">{uaExpanded ? '▾' : '▸'}</span>
+              </div>
+              {uaExpanded && unusualActivities.map((ua, i) => (
+                <div key={i} className="ua-row">
+                  <span className="ua-strike">{ua.strikePrice} {ua.optionType}</span>
+                  <span className="ua-detail">{ua.description}</span>
+                  <span className="ua-value">{ua.displayValue}</span>
+                </div>
+              ))}
             </div>
           )}
 
@@ -546,6 +607,18 @@ function AIInsights() {
                         {suggestion.oiSignal && suggestion.oiSignal.signal !== 'N/A' && (
                           <span className="oi-signal-badge" style={{ borderColor: suggestion.oiSignal.color }}>
                             {suggestion.oiSignal.icon} {suggestion.oiSignal.signal}
+                          </span>
+                        )}
+                        {suggestion.pop != null && (
+                          <span className="pop-badge" style={{
+                            borderColor: suggestion.pop >= 55 ? '#4ade80' : suggestion.pop >= 40 ? '#fbbf24' : '#f87171'
+                          }}>
+                            📊 POP {suggestion.pop}%
+                          </span>
+                        )}
+                        {suggestion.termStructure && suggestion.termStructure !== 'contango' && (
+                          <span className={`term-structure-badge ${suggestion.termStructure}`}>
+                            {suggestion.termStructure === 'inverted' ? '⚠️' : '='} {suggestion.termStructure === 'inverted' ? 'Inverted' : 'Flat'}
                           </span>
                         )}
                       </div>

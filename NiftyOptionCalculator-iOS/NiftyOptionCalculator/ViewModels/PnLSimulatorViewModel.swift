@@ -27,11 +27,7 @@ struct LegSimResult: Identifiable {
     let newVega: Double
 }
 
-struct PayoffPoint: Identifiable {
-    let id = UUID()
-    let spot: Double
-    let pnl: Double
-}
+// PayoffPoint defined in Models/Strategy.swift
 
 // MARK: - PnLSimulatorViewModel
 
@@ -295,7 +291,7 @@ final class PnLSimulatorViewModel: ObservableObject {
                 totalPnlAtSpot += (price - leg.entryPremium) * positionSize
             }
 
-            points.append(PayoffPoint(spot: simSpot, pnl: totalPnlAtSpot))
+            points.append(PayoffPoint(price: simSpot, payoff: totalPnlAtSpot))
         }
 
         payoffPoints = points

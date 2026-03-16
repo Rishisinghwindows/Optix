@@ -5,9 +5,10 @@ import { calculateBlackScholes, getMoneyness, formatCurrency } from '../utils/bl
 const INDICES = {
   NIFTY: { name: 'NIFTY', lotSize: 75, defaultSpot: 24250 },
   BANKNIFTY: { name: 'BANKNIFTY', lotSize: 30, defaultSpot: 51500 },
-  FINNIFTY: { name: 'FINNIFTY', lotSize: 65, defaultSpot: 23100 },
-  SENSEX: { name: 'SENSEX', lotSize: 20, defaultSpot: 79500 },
-  MIDCPNIFTY: { name: 'MIDCPNIFTY', lotSize: 120, defaultSpot: 12800 }
+  FINNIFTY: { name: 'FINNIFTY', lotSize: 25, defaultSpot: 23100 },
+  SENSEX: { name: 'SENSEX', lotSize: 10, defaultSpot: 79500 },
+  MIDCPNIFTY: { name: 'MIDCPNIFTY', lotSize: 50, defaultSpot: 12800 },
+  BANKEX: { name: 'BANKEX', lotSize: 15, defaultSpot: 57000 }
 }
 
 function Calculator() {
@@ -16,7 +17,7 @@ function Calculator() {
   const [strikePrice, setStrikePrice] = useState(24300)
   const [volatility, setVolatility] = useState(15)
   const [daysToExpiry, setDaysToExpiry] = useState(7)
-  const [interestRate, setInterestRate] = useState(7)
+  const [interestRate, setInterestRate] = useState(6.5)
   const [optionType, setOptionType] = useState('call')
   const [selectedIndex, setSelectedIndex] = useState('NIFTY')
 
@@ -299,11 +300,11 @@ function Calculator() {
                   <div className="split-bar">
                     <div
                       className="split-intrinsic"
-                      style={{ width: `${(result.intrinsicValue / result.price) * 100 || 0}%` }}
+                      style={{ width: `${result.price > 0 ? (result.intrinsicValue / result.price) * 100 : 0}%` }}
                     ></div>
                     <div
                       className="split-time"
-                      style={{ width: `${(result.timeValue / result.price) * 100 || 100}%` }}
+                      style={{ width: `${result.price > 0 ? (result.timeValue / result.price) * 100 : 100}%` }}
                     ></div>
                   </div>
                   <div className="split-labels">

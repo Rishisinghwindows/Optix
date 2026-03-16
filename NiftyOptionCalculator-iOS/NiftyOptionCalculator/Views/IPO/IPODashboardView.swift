@@ -66,24 +66,22 @@ struct IPODashboardView: View {
                 }
             }
         }
-        .sheet(isPresented: $viewModel.showAnalysisSheet) {
-            if let ipo = viewModel.selectedIPO {
-                IPODetailSheet(
-                    ipo: ipo,
-                    analysis: viewModel.analysisCache[ipo.slug],
-                    isAnalyzing: viewModel.analyzingIPO == ipo.slug,
-                    onAnalyze: {
-                        Task {
-                            await viewModel.getAnalysis(for: ipo)
-                        }
-                    },
-                    onRefresh: {
-                        Task {
-                            await viewModel.refreshAnalysis(for: ipo)
-                        }
+        .sheet(item: $viewModel.selectedIPO) { ipo in
+            IPODetailSheet(
+                ipo: ipo,
+                analysis: viewModel.analysisCache[ipo.slug],
+                isAnalyzing: viewModel.analyzingIPO == ipo.slug,
+                onAnalyze: {
+                    Task {
+                        await viewModel.getAnalysis(for: ipo)
                     }
-                )
-            }
+                },
+                onRefresh: {
+                    Task {
+                        await viewModel.refreshAnalysis(for: ipo)
+                    }
+                }
+            )
         }
     }
 
@@ -416,7 +414,7 @@ struct IPOCardView: View {
                 // Details Grid
                 HStack(spacing: 16) {
                     IPODetailItem(title: "Price Band", value: ipo.priceBandDisplay)
-                    IPODetailItem(title: "Lot Size", value: ipo.lotSize != nil ? "\(ipo.lotSize!)" : "-")
+                    IPODetailItem(title: "Lot Size", value: ipo.lotSize.map { "\($0)" } ?? "-")
                     IPODetailItem(title: "Min Invest", value: ipo.minInvestmentDisplay)
                 }
 
@@ -632,7 +630,7 @@ struct GMPCard: View {
                     Text("GMP")
                         .font(.system(size: 11))
                         .foregroundColor(Theme.textMuted)
-                    Text(gmp.gmpValue != nil ? (gmp.gmpValue! >= 0 ? "+₹\(Int(gmp.gmpValue!))" : "₹\(Int(gmp.gmpValue!))") : "-")
+                    Text(gmp.gmpValue.map { $0 >= 0 ? "+₹\(Int($0))" : "₹\(Int($0))" } ?? "-")
                         .font(.system(size: 24, weight: .bold))
                         .foregroundColor(gmp.isPositive ? Theme.profit : Theme.loss)
                 }
@@ -702,9 +700,9 @@ struct IPODetailsCard: View {
 
             VStack(spacing: 12) {
                 DetailRow(label: "Price Band", value: ipo.priceBandDisplay)
-                DetailRow(label: "Lot Size", value: ipo.lotSize != nil ? "\(ipo.lotSize!) shares" : "-")
+                DetailRow(label: "Lot Size", value: ipo.lotSize.map { "\($0) shares" } ?? "-")
                 DetailRow(label: "Min Investment", value: ipo.minInvestmentDisplay)
-                DetailRow(label: "Issue Size", value: ipo.issueSizeCr != nil ? "₹\(ipo.issueSizeCr!) Cr" : "-")
+                DetailRow(label: "Issue Size", value: ipo.issueSizeCr.map { "₹\($0) Cr" } ?? "-")
                 DetailRow(label: "Open Date", value: ipo.openDate ?? "-")
                 DetailRow(label: "Close Date", value: ipo.closeDate ?? "-")
                 DetailRow(label: "Listing Date", value: ipo.listingDate ?? "-")

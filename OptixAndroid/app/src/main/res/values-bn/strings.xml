@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Optix</string>
+    <string name="app_tagline">স্মার্ট অপশন ট্রেডিং</string>
+
+    <!-- Navigation -->
+    <string name="nav_chain">চেইন</string>
+    <string name="nav_ai">AI</string>
+    <string name="nav_trade">ট্রেড</string>
+    <string name="nav_alerts">অ্যালার্ট</string>
+    <string name="nav_settings">সেটিংস</string>
+
+    <!-- Option Chain -->
+    <string name="option_chain_title">অপশন চেইন</string>
+    <string name="select_index">সূচক নির্বাচন করুন</string>
+    <string name="select_expiry">মেয়াদ নির্বাচন করুন</string>
+    <string name="strike_price">স্ট্রাইক মূল্য</string>
+    <string name="call">কল</string>
+    <string name="put">পুট</string>
+    <string name="ltp">LTP</string>
+    <string name="change">পরিবর্তন</string>
+    <string name="oi">OI</string>
+    <string name="iv">IV</string>
+    <string name="volume">ভলিউম</string>
+    <string name="bid">বিড</string>
+    <string name="ask">আস্ক</string>
+
+    <!-- Greeks -->
+    <string name="delta">Delta</string>
+    <string name="gamma">Gamma</string>
+    <string name="theta">Theta</string>
+    <string name="vega">Vega</string>
+    <string name="rho">Rho</string>
+
+    <!-- AI Insights -->
+    <string name="ai_insights_title">AI ইনসাইটস</string>
+    <string name="trade_suggestions">ট্রেড সাজেশন</string>
+    <string name="market_sentiment">বাজার মনোভাব</string>
+    <string name="confidence">আস্থা</string>
+    <string name="high">উচ্চ</string>
+    <string name="medium">মাঝারি</string>
+    <string name="low">নিম্ন</string>
+
+    <!-- Paper Trading -->
+    <string name="paper_trading_title">পেপার ট্রেডিং</string>
+    <string name="positions">পজিশন</string>
+    <string name="history">ইতিহাস</string>
+    <string name="performance">পারফরম্যান্স</string>
+    <string name="buy">কেনা</string>
+    <string name="sell">বিক্রি</string>
+    <string name="entry_price">এন্ট্রি মূল্য</string>
+    <string name="current_price">বর্তমান মূল্য</string>
+    <string name="pnl">P&amp;L</string>
+    <string name="quantity">পরিমাণ</string>
+    <string name="close_position">পজিশন বন্ধ করুন</string>
+    <string name="no_positions">কোনো খোলা পজিশন নেই</string>
+
+    <!-- Alerts -->
+    <string name="alerts_title">মূল্য অ্যালার্ট</string>
+    <string name="create_alert">অ্যালার্ট তৈরি করুন</string>
+    <string name="new_alert">+ নতুন অ্যালার্ট</string>
+    <string name="alert_type">অ্যালার্ট ধরন</string>
+    <string name="spot_price">স্পট মূল্য</string>
+    <string name="option_premium">অপশন প্রিমিয়াম</string>
+    <string name="pcr">PCR</string>
+    <string name="condition">শর্ত</string>
+    <string name="goes_above">উপরে যায়</string>
+    <string name="goes_below">নিচে যায়</string>
+    <string name="crosses">অতিক্রম করে</string>
+    <string name="target_value">লক্ষ্য মান</string>
+    <string name="alert_name">অ্যালার্ট নাম</string>
+    <string name="note">নোট</string>
+    <string name="active">সক্রিয়</string>
+    <string name="triggered">ট্রিগার হয়েছে</string>
+    <string name="paused">বিরতি</string>
+    <string name="no_alerts">এখনো কোনো অ্যালার্ট নেই</string>
+    <string name="no_alerts_desc">দাম আপনার লক্ষ্যে পৌঁছালে বিজ্ঞপ্তি পেতে আপনার প্রথম অ্যালার্ট তৈরি করুন</string>
+
+    <!-- Calculator -->
+    <string name="calculator_title">অপশন ক্যালকুলেটর</string>
+    <string name="spot_price_label">স্পট মূল্য</string>
+    <string name="strike_price_label">স্ট্রাইক মূল্য</string>
+    <string name="time_to_expiry">মেয়াদ শেষ পর্যন্ত সময় (দিন)</string>
+    <string name="volatility">অস্থিরতা (%)</string>
+    <string name="risk_free_rate">ঝুঁকিমুক্ত হার (%)</string>
+    <string name="option_type">অপশনের ধরন</string>
+    <string name="calculate">গণনা করুন</string>
+    <string name="option_price">অপশন মূল্য</string>
+
+    <!-- Settings -->
+    <string name="settings_title">সেটিংস</string>
+    <string name="appearance">চেহারা</string>
+    <string name="theme">থিম</string>
+    <string name="theme_light">লাইট</string>
+    <string name="theme_dark">ডার্ক</string>
+    <string name="theme_system">সিস্টেম</string>
+    <string name="language">ভাষা</string>
+    <string name="account">অ্যাকাউন্ট</string>
+    <string name="login">লগইন</string>
+    <string name="logout">লগআউট</string>
+    <string name="about">সম্পর্কে</string>
+    <string name="version">সংস্করণ</string>
+    <string name="privacy_policy">গোপনীয়তা নীতি</string>
+    <string name="terms_of_service">সেবার শর্তাবলী</string>
+
+    <!-- Auth -->
+    <string name="login_title">Optix-এ লগইন করুন</string>
+    <string name="phone_number">ফোন নম্বর</string>
+    <string name="enter_otp">OTP লিখুন</string>
+    <string name="send_otp">OTP পাঠান</string>
+    <string name="verify_otp">OTP যাচাই করুন</string>
+    <string name="or">অথবা</string>
+    <string name="continue_with_google">Google দিয়ে চালিয়ে যান</string>
+    <string name="login_required">লগইন প্রয়োজন</string>
+    <string name="login_to_continue">চালিয়ে যেতে লগইন করুন</string>
+
+    <!-- Common -->
+    <string name="loading">লোড হচ্ছে…</string>
+    <string name="error">ত্রুটি</string>
+    <string name="retry">পুনরায় চেষ্টা করুন</string>
+    <string name="cancel">বাতিল</string>
+    <string name="save">সংরক্ষণ করুন</string>
+    <string name="delete">মুছুন</string>
+    <string name="confirm">নিশ্চিত করুন</string>
+    <string name="success">সফল</string>
+    <string name="not_authenticated">প্রমাণীকৃত নয়</string>
+    <string name="no_data">কোনো ডেটা উপলব্ধ নেই</string>
+    <string name="pull_to_refresh">রিফ্রেশ করতে টানুন</string>
+
+    <!-- Indices -->
+    <string name="nifty50">NIFTY 50</string>
+    <string name="banknifty">Bank Nifty</string>
+    <string name="finnifty">Fin Nifty</string>
+    <string name="midcpnifty">Midcap Nifty</string>
+    <string name="sensex">Sensex</string>
+    <string name="bankex">Bankex</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">লাইভ অপশন চেইন</string>
+    <string name="onboarding_desc_1">সমস্ত প্রধান সূচকের জন্য Greeks, IV এবং OI সহ রিয়েল-টাইম অপশন চেইন ডেটা</string>
+    <string name="onboarding_title_2">AI-চালিত ইনসাইটস</string>
+    <string name="onboarding_desc_2">আস্থার স্তর এবং বিস্তারিত যুক্তি সহ বুদ্ধিমান ট্রেড সাজেশন পান</string>
+    <string name="onboarding_title_3">পেপার ট্রেডিং</string>
+    <string name="onboarding_desc_3">ভার্চুয়াল অর্থ দিয়ে ট্রেডিং অনুশীলন করুন এবং আপনার পারফরম্যান্স ট্র্যাক করুন</string>
+    <string name="onboarding_title_4">মূল্য অ্যালার্ট</string>
+    <string name="onboarding_desc_4">রিয়েল-টাইম অ্যালার্ট দিয়ে দাম আপনার লক্ষ্যে পৌঁছালে বিজ্ঞপ্তি পান</string>
+    <string name="get_started">শুরু করুন</string>
+    <string name="next">পরবর্তী</string>
+    <string name="skip">এড়িয়ে যান</string>
+</resources>

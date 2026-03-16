@@ -99,7 +99,6 @@ final class IPOViewModel: ObservableObject {
 
     func selectIPO(_ ipo: IPOItem) {
         selectedIPO = ipo
-        showAnalysisSheet = true
     }
 
     func getAnalysis(for ipo: IPOItem) async {

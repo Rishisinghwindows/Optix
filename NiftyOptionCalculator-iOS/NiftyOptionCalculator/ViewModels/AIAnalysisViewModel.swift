@@ -97,6 +97,30 @@ class AIAnalysisViewModel: ObservableObject {
         aiAnalysis?.marketRegime
     }
 
+    var expectedMoveRange: (low: Double, high: Double)? {
+        guard spotPrice > 0 else { return nil }
+        let iv = atmIV ?? 15.0
+        let dte: Double
+        if let firstSuggestion = aiAnalysis?.topCallPicks.first ?? aiAnalysis?.topPutPicks.first {
+            dte = Double(firstSuggestion.score.option.daysToExpiry)
+        } else {
+            dte = 7.0
+        }
+        guard dte > 0 else { return nil }
+        let move = spotPrice * (iv / 100.0) * sqrt(dte / 365.0)
+        return (low: spotPrice - move, high: spotPrice + move)
+    }
+
+    var displayExpectedMoveRange: String? {
+        guard let range = expectedMoveRange else { return nil }
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        guard let low = formatter.string(from: NSNumber(value: range.low)),
+              let high = formatter.string(from: NSNumber(value: range.high)) else { return nil }
+        return "\(low) – \(high)"
+    }
+
     var marketInsights: [MarketInsight] {
         aiAnalysis?.marketInsights ?? []
     }

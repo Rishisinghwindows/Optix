@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Optix</string>
+    <string name="app_tagline">स्मार्ट ऑप्शन ट्रेडिंग</string>
+
+    <!-- Navigation -->
+    <string name="nav_chain">चेन</string>
+    <string name="nav_ai">AI</string>
+    <string name="nav_trade">ट्रेड</string>
+    <string name="nav_alerts">अलर्ट</string>
+    <string name="nav_settings">सेटिंग्स</string>
+
+    <!-- Option Chain -->
+    <string name="option_chain_title">ऑप्शन चेन</string>
+    <string name="select_index">इंडेक्स चुनें</string>
+    <string name="select_expiry">एक्सपायरी चुनें</string>
+    <string name="strike_price">स्ट्राइक प्राइस</string>
+    <string name="call">कॉल</string>
+    <string name="put">पुट</string>
+    <string name="ltp">LTP</string>
+    <string name="change">बदलाव</string>
+    <string name="oi">OI</string>
+    <string name="iv">IV</string>
+    <string name="volume">वॉल्यूम</string>
+    <string name="bid">बिड</string>
+    <string name="ask">आस्क</string>
+
+    <!-- Greeks -->
+    <string name="delta">डेल्टा</string>
+    <string name="gamma">गामा</string>
+    <string name="theta">थीटा</string>
+    <string name="vega">वेगा</string>
+    <string name="rho">रो</string>
+
+    <!-- AI Insights -->
+    <string name="ai_insights_title">AI इनसाइट्स</string>
+    <string name="trade_suggestions">ट्रेड सुझाव</string>
+    <string name="market_sentiment">मार्केट सेंटीमेंट</string>
+    <string name="confidence">विश्वास</string>
+    <string name="high">उच्च</string>
+    <string name="medium">मध्यम</string>
+    <string name="low">निम्न</string>
+
+    <!-- Paper Trading -->
+    <string name="paper_trading_title">पेपर ट्रेडिंग</string>
+    <string name="positions">पोजीशन</string>
+    <string name="history">इतिहास</string>
+    <string name="performance">प्रदर्शन</string>
+    <string name="buy">खरीदें</string>
+    <string name="sell">बेचें</string>
+    <string name="entry_price">एंट्री प्राइस</string>
+    <string name="current_price">वर्तमान प्राइस</string>
+    <string name="pnl">P&amp;L</string>
+    <string name="quantity">मात्रा</string>
+    <string name="close_position">पोजीशन बंद करें</string>
+    <string name="no_positions">कोई खुली पोजीशन नहीं</string>
+
+    <!-- Alerts -->
+    <string name="alerts_title">प्राइस अलर्ट</string>
+    <string name="create_alert">अलर्ट बनाएं</string>
+    <string name="new_alert">+ नया अलर्ट</string>
+    <string name="alert_type">अलर्ट प्रकार</string>
+    <string name="spot_price">स्पॉट प्राइस</string>
+    <string name="option_premium">ऑप्शन प्रीमियम</string>
+    <string name="pcr">PCR</string>
+    <string name="condition">शर्त</string>
+    <string name="goes_above">ऊपर जाता है</string>
+    <string name="goes_below">नीचे जाता है</string>
+    <string name="crosses">क्रॉस करता है</string>
+    <string name="target_value">लक्ष्य मूल्य</string>
+    <string name="alert_name">अलर्ट नाम</string>
+    <string name="note">नोट</string>
+    <string name="active">सक्रिय</string>
+    <string name="triggered">ट्रिगर्ड</string>
+    <string name="paused">रुका हुआ</string>
+    <string name="no_alerts">अभी तक कोई अलर्ट नहीं</string>
+    <string name="no_alerts_desc">जब प्राइस आपके टारगेट पर पहुंचे तो नोटिफाई होने के लिए अपना पहला अलर्ट बनाएं</string>
+
+    <!-- Calculator -->
+    <string name="calculator_title">ऑप्शन कैलकुलेटर</string>
+    <string name="spot_price_label">स्पॉट प्राइस</string>
+    <string name="strike_price_label">स्ट्राइक प्राइस</string>
+    <string name="time_to_expiry">एक्सपायरी तक का समय (दिन)</string>
+    <string name="volatility">वोलैटिलिटी (%)</string>
+    <string name="risk_free_rate">रिस्क-फ्री रेट (%)</string>
+    <string name="option_type">ऑप्शन प्रकार</string>
+    <string name="calculate">गणना करें</string>
+    <string name="option_price">ऑप्शन प्राइस</string>
+
+    <!-- Settings -->
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="appearance">दिखावट</string>
+    <string name="theme">थीम</string>
+    <string name="theme_light">लाइट</string>
+    <string name="theme_dark">डार्क</string>
+    <string name="theme_system">सिस्टम</string>
+    <string name="language">भाषा</string>
+    <string name="account">खाता</string>
+    <string name="login">लॉग इन</string>
+    <string name="logout">लॉग आउट</string>
+    <string name="about">के बारे में</string>
+    <string name="version">वर्जन</string>
+    <string name="privacy_policy">प्राइवेसी पॉलिसी</string>
+    <string name="terms_of_service">सेवा की शर्तें</string>
+
+    <!-- Auth -->
+    <string name="login_title">Optix में लॉग इन करें</string>
+    <string name="phone_number">फोन नंबर</string>
+    <string name="enter_otp">OTP दर्ज करें</string>
+    <string name="send_otp">OTP भेजें</string>
+    <string name="verify_otp">OTP सत्यापित करें</string>
+    <string name="or">या</string>
+    <string name="continue_with_google">Google से जारी रखें</string>
+    <string name="login_required">लॉग इन आवश्यक</string>
+    <string name="login_to_continue">जारी रखने के लिए लॉग इन करें</string>
+
+    <!-- Common -->
+    <string name="loading">लोड हो रहा है…</string>
+    <string name="error">त्रुटि</string>
+    <string name="retry">पुनः प्रयास करें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="save">सहेजें</string>
+    <string name="delete">हटाएं</string>
+    <string name="confirm">पुष्टि करें</string>
+    <string name="success">सफलता</string>
+    <string name="not_authenticated">प्रमाणित नहीं</string>
+    <string name="no_data">कोई डेटा उपलब्ध नहीं</string>
+    <string name="pull_to_refresh">रिफ्रेश करने के लिए खींचें</string>
+
+    <!-- Indices -->
+    <string name="nifty50">निफ्टी 50</string>
+    <string name="banknifty">बैंक निफ्टी</string>
+    <string name="finnifty">फिन निफ्टी</string>
+    <string name="midcpnifty">मिडकैप निफ्टी</string>
+    <string name="sensex">सेंसेक्स</string>
+    <string name="bankex">बैंकेक्स</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">लाइव ऑप्शन चेन</string>
+    <string name="onboarding_desc_1">सभी प्रमुख इंडेक्स के लिए Greeks, IV और OI के साथ रियल-टाइम ऑप्शन चेन डेटा</string>
+    <string name="onboarding_title_2">AI-संचालित इनसाइट्स</string>
+    <string name="onboarding_desc_2">विश्वास स्तर और विस्तृत तर्क के साथ बुद्धिमान ट्रेड सुझाव प्राप्त करें</string>
+    <string name="onboarding_title_3">पेपर ट्रेडिंग</string>
+    <string name="onboarding_desc_3">वर्चुअल मनी के साथ ट्रेडिंग का अभ्यास करें और अपने प्रदर्शन को ट्रैक करें</string>
+    <string name="onboarding_title_4">प्राइस अलर्ट</string>
+    <string name="onboarding_desc_4">जब प्राइस आपके टारगेट पर पहुंचे तो रियल-टाइम अलर्ट के साथ नोटिफाई हों</string>
+    <string name="get_started">शुरू करें</string>
+    <string name="next">अगला</string>
+    <string name="skip">छोड़ें</string>
+</resources>
