@@ -55,6 +55,9 @@ struct PnLSimulatorView: View {
             .background(Theme.background.ignoresSafeArea())
             .navigationTitle("P&L Simulator")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                AnalyticsService.logScreenView(screenName: "pnl_simulator", screenClass: "PnLSimulatorView")
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {

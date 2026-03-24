@@ -41,6 +41,8 @@ build/
 .env
 .env.*
 !.env.example
+**/firebase-service-account.json
+*-firebase-adminsdk-*.json
 
 # ==================== Android ====================
 *.apk

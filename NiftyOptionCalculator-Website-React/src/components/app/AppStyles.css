@@ -6748,3 +6748,209 @@
     padding: 2px 6px;
   }
 }
+
+/* ===== AI Scorecard ===== */
+.scorecard-card {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+
+.scorecard-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.scorecard-icon {
+  font-size: 18px;
+}
+
+.scorecard-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.scorecard-total {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  background: var(--bg-tertiary);
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+.scorecard-stats-row {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 14px;
+}
+
+.scorecard-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.scorecard-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.scorecard-stat-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.scorecard-outcome-bar {
+  display: flex;
+  height: 24px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  gap: 2px;
+}
+
+.outcome-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  min-width: 28px;
+}
+
+.outcome-segment.win {
+  background: #4ade80;
+}
+
+.outcome-segment.loss {
+  background: #f87171;
+}
+
+.outcome-segment.expired {
+  background: #6b7280;
+}
+
+.scorecard-active {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.active-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fbbf24;
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.scorecard-recent {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+.scorecard-recent-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.scorecard-pick-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.scorecard-pick-row + .scorecard-pick-row {
+  border-top: 1px solid var(--border);
+}
+
+.pick-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pick-strike {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pick-index {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  background: var(--bg-tertiary);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.pick-outcome-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pick-outcome-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pick-outcome-badge.win {
+  background: #4ade80;
+}
+
+.pick-outcome-badge.loss {
+  background: #f87171;
+}
+
+.pick-outcome-badge.expired {
+  background: #6b7280;
+}
+
+.pick-outcome-badge.active {
+  background: #fbbf24;
+}
+
+.pick-return {
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.pick-return.positive {
+  color: #4ade80;
+}
+
+.pick-return.negative {
+  color: #f87171;
+}

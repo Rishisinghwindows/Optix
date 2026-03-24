@@ -133,6 +133,7 @@ data class AIAnalysisResult(
     val ivPercentile: Double,
     val maxPain: Double,
     val indiaVix: Double? = null,
+    val vixChange: Double? = null,
     val timestamp: Long = System.currentTimeMillis()
 )
 

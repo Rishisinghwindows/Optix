@@ -1031,14 +1031,15 @@ class OptionScoringEngine @Inject constructor(
         val adjustedSLPercent = max(0.15, min(0.50, baseSLPercent * ivMultiplier))
 
         // Calculate prices based on action
+        // Cap target at 3x entry (max +200%) to prevent unrealistic targets for deep OTM
         return when (action) {
             TradeDirection.STRONG_BUY, TradeDirection.BUY, TradeDirection.HOLD -> {
-                val target = entryPrice * (1 + adjustedTargetPercent)
+                val target = min(entryPrice * (1 + adjustedTargetPercent), entryPrice * 3.0)
                 val sl = entryPrice * (1 - adjustedSLPercent)
                 Pair(target, sl)
             }
             TradeDirection.SELL, TradeDirection.STRONG_SELL -> {
-                val target = entryPrice * (1 - adjustedTargetPercent)
+                val target = max(entryPrice * (1 - adjustedTargetPercent), entryPrice * 0.01)
                 val sl = entryPrice * (1 + adjustedSLPercent)
                 Pair(target, sl)
             }

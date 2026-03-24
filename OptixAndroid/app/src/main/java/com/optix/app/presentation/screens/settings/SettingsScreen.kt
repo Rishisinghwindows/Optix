@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.optix.app.R
+import com.optix.app.core.util.AnalyticsHelper
 
 // iOS-like Colors
 private val AccentBlue = Color(0xFF007AFF)
@@ -98,8 +99,13 @@ fun SettingsScreen(
     onNavigateToIPO: () -> Unit = {},
     onNavigateToEducation: () -> Unit = {},
     onNavigateToCharts: () -> Unit = {},
+    onNavigateToSimulator: () -> Unit = {},
+    onNavigateToJournal: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
+    // Track screen view once on composition
+    LaunchedEffect(Unit) { AnalyticsHelper.logScreenView("settings") }
+
     val state by viewModel.state.collectAsState()
 
     // Settings values from ViewModel (persisted via DataStore)
@@ -179,7 +185,9 @@ fun SettingsScreen(
                 onOIAnalysisClick = onNavigateToOIAnalysis,
                 onChatClick = onNavigateToChat,
                 onIPOClick = onNavigateToIPO,
-                onChartsClick = onNavigateToCharts
+                onChartsClick = onNavigateToCharts,
+                onSimulatorClick = onNavigateToSimulator,
+                onJournalClick = onNavigateToJournal
             )
         }
 
@@ -495,7 +503,9 @@ private fun ToolsSection(
     onOIAnalysisClick: () -> Unit,
     onChatClick: () -> Unit,
     onIPOClick: () -> Unit,
-    onChartsClick: () -> Unit
+    onChartsClick: () -> Unit,
+    onSimulatorClick: () -> Unit = {},
+    onJournalClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier.padding(horizontal = 20.dp),
@@ -518,6 +528,14 @@ private fun ToolsSection(
         )
 
         FeatureCard(
+            title = "P&L Simulator",
+            subtitle = "Simulate option payoff scenarios",
+            icon = Icons.Default.TrendingUp,
+            gradient = OrangeGradient,
+            onClick = onSimulatorClick
+        )
+
+        FeatureCard(
             title = "OI Analysis",
             subtitle = "Open Interest heatmap & zones",
             icon = Icons.Default.Analytics,
@@ -531,6 +549,14 @@ private fun ToolsSection(
             icon = Icons.Default.AutoAwesome,
             gradient = PurpleGradient,
             onClick = onChatClick
+        )
+
+        FeatureCard(
+            title = "Trade Journal",
+            subtitle = "Record & review your trades",
+            icon = Icons.Default.MenuBook,
+            gradient = BlueGradient,
+            onClick = onJournalClick
         )
 
         FeatureCard(

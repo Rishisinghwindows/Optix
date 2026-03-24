@@ -30,7 +30,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import android.os.Bundle
 import com.optix.app.R
+import com.optix.app.core.util.AnalyticsHelper
 import com.optix.app.core.util.Resource
 import com.optix.app.domain.model.PaperPosition
 import com.optix.app.domain.model.TradingIndex
@@ -43,7 +45,23 @@ fun PaperTradingScreen(
     viewModel: PaperTradingViewModel = hiltViewModel(),
     onNavigateToLogin: () -> Unit = {}
 ) {
+    // Track screen view once on composition
+    LaunchedEffect(Unit) { AnalyticsHelper.logScreenView("paper_trading") }
+
     val state by viewModel.state.collectAsState()
+
+    // Log portfolio snapshot whenever login state or position count changes.
+    // Helps measure paper trading adoption and typical portfolio sizes.
+    LaunchedEffect(state.isLoggedIn, state.openPositionsCount) {
+        AnalyticsHelper.logEvent("paper_trading_view", Bundle().apply {
+            putBoolean("is_logged_in", state.isLoggedIn)
+            putInt("open_positions", state.openPositionsCount)
+            putDouble("portfolio_value", state.portfolioValue)
+            putDouble("total_pnl", state.totalPnL)
+            putDouble("total_pnl_percent", state.totalPnLPercent)
+            putDouble("available_margin", state.availableMargin)
+        })
+    }
     var selectedTab by remember { mutableIntStateOf(0) }
 
     Box(

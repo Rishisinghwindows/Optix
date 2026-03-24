@@ -4,7 +4,9 @@ Device Token API Router — FCM token registration for push notifications
 
 import logging
 from datetime import datetime
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Optional
+from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -22,14 +24,39 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/devices", tags=["Devices"])
 
+# Optional auth — returns user if authenticated, None otherwise
+_optional_bearer = HTTPBearer(auto_error=False)
+
+
+async def get_optional_user(
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(_optional_bearer),
+    db: AsyncSession = Depends(get_db),
+) -> Optional[User]:
+    """Return current user if valid token provided, else None."""
+    if not credentials:
+        return None
+    try:
+        from app.services.jwt_service import JWTService
+        jwt_service = JWTService()
+        payload = jwt_service.decode_token(credentials.credentials)
+        user_id = payload.get("sub")
+        if not user_id:
+            return None
+        result = await db.execute(select(User).where(User.id == user_id))
+        return result.scalar_one_or_none()
+    except Exception:
+        return None
+
 
 @router.post("/register", response_model=DeviceResponse)
 async def register_device(
     data: DeviceRegister,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: Optional[User] = Depends(get_optional_user),
 ):
-    """Register or update an FCM device token"""
+    """Register or update an FCM device token (works with or without auth)"""
+    user_id = current_user.id if current_user else None
+
     # Check if token already exists
     result = await db.execute(
         select(DeviceToken).where(DeviceToken.token == data.token)
@@ -37,8 +64,9 @@ async def register_device(
     existing = result.scalar_one_or_none()
 
     if existing:
-        # Update ownership if different user or reactivate
-        existing.user_id = current_user.id
+        # Update ownership if user is authenticated
+        if user_id:
+            existing.user_id = user_id
         existing.platform = data.platform.value
         existing.device_name = data.device_name
         existing.is_active = True
@@ -46,12 +74,12 @@ async def register_device(
         existing.updated_at = datetime.utcnow()
         await db.commit()
         await db.refresh(existing)
-        logger.info(f"Device token updated: {existing.id} for user {current_user.id}")
+        logger.info(f"Device token updated: {existing.id} for user {user_id or 'anonymous'}")
         return DeviceResponse.model_validate(existing)
 
     # Create new token
     device = DeviceToken(
-        user_id=current_user.id,
+        user_id=user_id,
         platform=data.platform.value,
         token=data.token,
         device_name=data.device_name,
@@ -62,7 +90,7 @@ async def register_device(
     await db.commit()
     await db.refresh(device)
 
-    logger.info(f"Device token registered: {device.id} ({data.platform.value}) for user {current_user.id}")
+    logger.info(f"Device token registered: {device.id} ({data.platform.value}) for user {user_id or 'anonymous'}")
     return DeviceResponse.model_validate(device)
 
 

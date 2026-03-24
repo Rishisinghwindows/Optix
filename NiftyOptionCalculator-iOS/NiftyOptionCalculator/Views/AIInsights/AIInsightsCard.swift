@@ -979,8 +979,8 @@ struct AIExplanationCard: View {
             }
 
             // Disclaimer
-            Text("AI analysis is for educational purposes only. Always do your own research.")
-                .font(.system(size: 10))
+            Text("⚠️ Not investment advice. AI analysis is for educational purposes only. Investment in securities market is subject to market risks. Consult a SEBI-registered advisor.")
+                .font(.system(size: 9))
                 .foregroundColor(Theme.textMuted)
                 .padding(.top, 4)
         }

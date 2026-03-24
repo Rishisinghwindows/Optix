@@ -1328,6 +1328,7 @@ struct AIAnalysisResult: Identifiable {
     let atmStrike: Double?
     let technicalAnalysis: TechnicalAnalysisResult?
     let indiaVix: Double?
+    let vixChange: Double?
 
     // NEW: Professional features
     let unusualActivities: [UnusualActivity]
@@ -1337,7 +1338,7 @@ struct AIAnalysisResult: Identifiable {
     init(marketBias: MarketBias, topCallPicks: [AITradeSuggestion], topPutPicks: [AITradeSuggestion],
          avoidList: [OptionScore], marketInsights: [MarketInsight], spotPrice: Double,
          putCallRatio: Double, maxPainStrike: Double?, atmStrike: Double?,
-         technicalAnalysis: TechnicalAnalysisResult? = nil, indiaVix: Double? = nil,
+         technicalAnalysis: TechnicalAnalysisResult? = nil, indiaVix: Double? = nil, vixChange: Double? = nil,
          unusualActivities: [UnusualActivity] = [], strategySuggestions: [StrategySuggestion] = [],
          marketRegime: MarketRegime? = nil) {
         self.id = UUID()
@@ -1353,6 +1354,7 @@ struct AIAnalysisResult: Identifiable {
         self.atmStrike = atmStrike
         self.technicalAnalysis = technicalAnalysis
         self.indiaVix = indiaVix
+        self.vixChange = vixChange
         self.unusualActivities = unusualActivities
         self.strategySuggestions = strategySuggestions
         self.marketRegime = marketRegime
@@ -1431,5 +1433,81 @@ struct AIAnalysisResult: Identifiable {
 
     var topStrategy: StrategySuggestion? {
         strategySuggestions.first
+    }
+}
+
+// MARK: - AI Scorecard
+
+enum PickOutcome: String, Codable {
+    case active = "Active"
+    case win = "Win"
+    case loss = "Loss"
+    case expired = "Expired"
+
+    var color: Color {
+        switch self {
+        case .active: return Color(hex: "007AFF")
+        case .win: return Color(hex: "00C805")
+        case .loss: return Color(hex: "FF3B30")
+        case .expired: return Color(hex: "8E8E93")
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .active: return "clock.fill"
+        case .win: return "checkmark.circle.fill"
+        case .loss: return "xmark.circle.fill"
+        case .expired: return "calendar.badge.clock"
+        }
+    }
+}
+
+struct TrackedPick: Codable, Identifiable {
+    let id: String
+    let indexName: String
+    let strikePrice: Double
+    let optionType: String  // "CE" or "PE"
+    let entryPrice: Double
+    let targetPrice: Double
+    let stopLossPrice: Double
+    let score: Double
+    let tier: String  // "topPick" or "worthWatching"
+    let createdAt: Date
+    let expiryDate: String
+    var outcome: PickOutcome
+    var exitPrice: Double?
+    var returnPct: Double?
+    var highWaterMark: Double?
+    var resolvedAt: Date?
+
+    static func compositeKey(indexName: String, strike: Double, optionType: String, expiry: String) -> String {
+        "\(indexName)_\(Int(strike))_\(optionType)_\(expiry)"
+    }
+
+    static func from(suggestion: AITradeSuggestion, indexName: String) -> TrackedPick {
+        let optType = suggestion.option.optionType == .call ? "CE" : "PE"
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MMM-yyyy"
+        let expiryString = formatter.string(from: suggestion.option.expiryDate)
+        let key = compositeKey(indexName: indexName, strike: suggestion.option.strikePrice, optionType: optType, expiry: expiryString)
+        return TrackedPick(
+            id: key,
+            indexName: indexName,
+            strikePrice: suggestion.option.strikePrice,
+            optionType: optType,
+            entryPrice: suggestion.entryPrice,
+            targetPrice: suggestion.targetPrice,
+            stopLossPrice: suggestion.stopLossPrice,
+            score: suggestion.score.overallScore,
+            tier: suggestion.tier == .topPick ? "topPick" : "worthWatching",
+            createdAt: Date(),
+            expiryDate: expiryString,
+            outcome: .active,
+            exitPrice: nil,
+            returnPct: nil,
+            highWaterMark: suggestion.entryPrice,
+            resolvedAt: nil
+        )
     }
 }

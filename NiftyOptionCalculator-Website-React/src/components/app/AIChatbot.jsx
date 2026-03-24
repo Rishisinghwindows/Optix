@@ -326,7 +326,7 @@ function AIChatbot({ isOpen, onClose, embedded = false, marketContext = null }) 
           </button>
         </div>
         <div className="chatbot-disclaimer">
-          AI responses are for educational purposes only, not financial advice.
+          ⚠️ AI responses are not investment advice. Investment in securities market is subject to market risks. Consult a SEBI-registered advisor.
         </div>
       </div>
     </>

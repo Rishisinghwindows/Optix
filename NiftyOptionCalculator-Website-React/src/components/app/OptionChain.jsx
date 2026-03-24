@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { marketAPI } from '../../services/marketAPI'
 import { paperTradingAPI } from '../../services/paperTradingAPI'
 import { useAuth } from '../../context/AuthContext'
+import { logScreenView, logEvent } from '../../services/analytics'
 import TradeModal from './TradeModal'
 import { AdBanner } from '../ads'
 import { ADS_CONFIG } from '../../config/adsConfig'
@@ -217,6 +218,22 @@ function OptionChain() {
   const [portfolio, setPortfolio] = useState(null)
   const [positions, setPositions] = useState([])
   const refreshIntervalRef = useRef(null)
+
+  // Firebase screen_view — fired once when the component mounts
+  useEffect(() => { logScreenView('option_chain'); }, [])
+
+  // Fire a detailed analytics event each time the user switches index/expiry
+  // or when spot price first loads, so we can see which chains are most viewed.
+  useEffect(() => {
+    if (spotPrice) {
+      logEvent('option_chain_view', {
+        index: selectedIndex,
+        expiry: expiries[selectedExpiry]?.value || '',
+        spot_price: Math.round(spotPrice),
+        is_live: dataSource.includes('live') || dataSource.includes('upstox'),
+      });
+    }
+  }, [selectedIndex, selectedExpiry, spotPrice]);
 
   // Fetch portfolio data
   const fetchPortfolio = useCallback(async () => {

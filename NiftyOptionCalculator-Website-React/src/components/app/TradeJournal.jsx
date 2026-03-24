@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { logScreenView, logEvent } from '../../services/analytics'
 import {
   getJournalEntries,
   createJournalEntry,
@@ -23,6 +24,9 @@ function TradeJournal() {
   const { isAuthenticated } = useAuth()
   const navigate = useNavigate()
 
+  // Firebase screen_view on mount
+  useEffect(() => { logScreenView('trade_journal'); }, [])
+
   const [entries, setEntries] = useState([])
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -39,6 +43,16 @@ function TradeJournal() {
     expiry_date: '', title: '', notes: '', tags: '',
     market_condition: '', mood: '', outcome: '',
   })
+
+  // Log journal usage after entries load — helps measure feature adoption
+  useEffect(() => {
+    if (!loading) {
+      logEvent('trade_journal_view', {
+        is_authenticated: isAuthenticated,
+        entries_count: entries?.length || 0,
+      });
+    }
+  }, [loading, isAuthenticated]);
 
   const loadEntries = useCallback(async () => {
     try {

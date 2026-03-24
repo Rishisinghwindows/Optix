@@ -738,7 +738,11 @@ final class OptionChainViewModel: ObservableObject {
             spotChange = quote.change
             spotChangePercent = quote.changePercent
             updatePreviousClose(quote.previousClose)
-            print("📊 [Data] Spot: \(spotPrice), Change: \(spotChange) (\(spotChangePercent)%)")
+
+            // Fetch India VIX
+            if let vixResult = try? await UpstoxAPIService.shared.fetchIndiaVix() {
+                indiaVix = vixResult.value
+            }
 
             // Fetch option chain for selected expiry
             if let expiry = selectedExpiry {
@@ -866,6 +870,11 @@ final class OptionChainViewModel: ObservableObject {
             updatePreviousClose(spotResult.previousClose)
         } catch {
             print("❌ [Guest] Error loading spot price: \(error.localizedDescription)")
+        }
+
+        // Fetch India VIX
+        if let vixResult = try? await guestService.fetchIndiaVix() {
+            indiaVix = vixResult.value
         }
 
         // Fetch option chain with full-chain totals

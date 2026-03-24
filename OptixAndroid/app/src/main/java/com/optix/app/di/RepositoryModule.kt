@@ -53,4 +53,10 @@ abstract class RepositoryModule {
     abstract fun bindChatRepository(
         impl: ChatRepositoryImpl
     ): ChatRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindJournalRepository(
+        impl: JournalRepositoryImpl
+    ): JournalRepository
 }

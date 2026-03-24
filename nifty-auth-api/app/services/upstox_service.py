@@ -536,10 +536,10 @@ class UpstoxService:
                     strikes_map[strike][opt_type] = contract
                     instrument_keys.append(inst_key)
 
-            # Fetch market quotes for ALL instruments (for full-chain OI totals + display)
+            # Fetch market quotes for displayed instruments
             quotes_map = {}
             quotes_ok = True
-            keys_to_fetch = all_instrument_keys if all_instrument_keys else instrument_keys
+            keys_to_fetch = instrument_keys
             if keys_to_fetch:
                 # Upstox allows up to 500 instruments per request
                 for i in range(0, len(keys_to_fetch), 100):
@@ -581,12 +581,12 @@ class UpstoxService:
                     return cached_live
                 raise Exception("Live data unavailable")
 
-            # Compute full-chain OI totals from ALL strikes (for accurate PCR)
+            # Compute OI totals from displayed strikes (matches Upstox PCR)
             total_call_oi = 0
             total_put_oi = 0
             total_call_volume = 0
             total_put_volume = 0
-            for inst_key in all_instrument_keys:
+            for inst_key in instrument_keys:
                 quote = quotes_map.get(inst_key, {})
                 contract_info = all_contracts_map.get(inst_key, {})
                 oi = quote.get("oi", 0) or 0
@@ -708,18 +708,11 @@ class UpstoxService:
         processed_data = []
         all_strikes = set()
 
-        # Compute full-chain totals from ALL strikes (for accurate PCR)
+        # Compute OI totals from displayed strikes only (matches Upstox PCR)
         total_call_oi = 0
         total_put_oi = 0
         total_call_volume = 0
         total_put_volume = 0
-        for item in chain_data:
-            ce_md = item.get("call_options", {}).get("market_data", {})
-            pe_md = item.get("put_options", {}).get("market_data", {})
-            total_call_oi += ce_md.get("oi", 0) or 0
-            total_put_oi += pe_md.get("oi", 0) or 0
-            total_call_volume += ce_md.get("volume", 0) or 0
-            total_put_volume += pe_md.get("volume", 0) or 0
 
         for item in chain_data:
             strike = item.get("strike_price", 0)
@@ -728,6 +721,12 @@ class UpstoxService:
 
                 ce_data = item.get("call_options", {}).get("market_data", {})
                 pe_data = item.get("put_options", {}).get("market_data", {})
+
+                # Accumulate OI totals for displayed strikes
+                total_call_oi += (ce_data.get("oi", 0) or 0)
+                total_put_oi += (pe_data.get("oi", 0) or 0)
+                total_call_volume += (ce_data.get("volume", 0) or 0)
+                total_put_volume += (pe_data.get("volume", 0) or 0)
 
                 processed_data.append({
                     "strikePrice": strike,

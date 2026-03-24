@@ -869,13 +869,21 @@ class AIAnalysisService {
 
     // OI-wall based smart targets
     const spot = context.spotPrice || context.atmStrike;
+    const formulaTarget = targetPrice;
+    const formulaSL = stopLossPrice;
     const oiWalls = this.calculateOIWallTargets(option, optionType, context, optionChain);
     if (oiWalls) {
       const wallDelta = Math.abs(option.delta || 0.5);
       const spotMoveTarget = oiWalls.targetSpot - spot;
-      const oiTargetPrice = entryPrice + (spotMoveTarget * wallDelta);
+      let oiTargetPrice = entryPrice + (spotMoveTarget * wallDelta);
       const spotMoveSL = oiWalls.supportSpot - spot;
-      const oiStopPrice = entryPrice + (spotMoveSL * wallDelta);
+      let oiStopPrice = entryPrice + (spotMoveSL * wallDelta);
+
+      // Cap OI-wall target at 2x formula target to prevent absurd values for deep OTM
+      oiTargetPrice = Math.min(oiTargetPrice, formulaTarget * 2.0);
+      // Cap OI-wall SL — don't go below 2x the formula SL distance
+      const minOISL = entryPrice - (entryPrice - formulaSL) * 2.0;
+      oiStopPrice = Math.max(oiStopPrice, minOISL);
 
       // Blend: 60% OI-wall, 40% IV-formula
       if (oiTargetPrice > entryPrice * 1.05) {
@@ -891,6 +899,8 @@ class AIAnalysisService {
         targetPrice = parseFloat((entryPrice + (entryPrice - stopLossPrice) * 1.5).toFixed(2));
       }
     }
+    // Final cap: target must not exceed 3x entry (300% gain is already extreme)
+    targetPrice = Math.min(targetPrice, entryPrice * 3.0);
 
     const riskReward = (targetPrice - entryPrice) / Math.max(0.01, (entryPrice - stopLossPrice));
 

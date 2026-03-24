@@ -31,7 +31,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import android.os.Bundle
 import com.optix.app.R
+import com.optix.app.core.util.AnalyticsHelper
 import com.optix.app.core.util.Resource
 import com.optix.app.domain.model.ExpiryDate
 import com.optix.app.domain.model.OptionChain
@@ -47,9 +49,29 @@ fun OptionChainScreen(
     onNavigateToOIAnalysis: () -> Unit = {},
     onNavigateToStrategy: () -> Unit = {},
     onNavigateToCharts: () -> Unit = {},
+    onNavigateToScreener: () -> Unit = {},
     viewModel: OptionChainViewModel = hiltViewModel()
 ) {
+    // Track screen view once on composition
+    LaunchedEffect(Unit) { AnalyticsHelper.logScreenView("option_chain") }
+
     val state by viewModel.state.collectAsState()
+
+    // Log detailed chain context (index, expiry, spot, VIX) each time a new spot price loads.
+    // Guards against firing on the initial zero/null state.
+    LaunchedEffect(state.spotPrice) {
+        val spot = state.spotPrice
+        if (spot != null && spot > 0) {
+            AnalyticsHelper.logEvent("option_chain_view", Bundle().apply {
+                putString("index", state.selectedIndex.symbol)
+                putString("expiry", state.selectedExpiry ?: "none")
+                putDouble("spot_price", spot)
+                putBoolean("is_live", state.isLiveConnected)
+                putString("connection_status", state.connectionStatus)
+                state.indiaVix?.let { putDouble("india_vix", it) }
+            })
+        }
+    }
     var showIndexPicker by remember { mutableStateOf(false) }
 
     // Get days to expiry from selected expiry
@@ -80,7 +102,7 @@ fun OptionChainScreen(
             // Quick Stats Bar
             state.optionChainState.let { chainState ->
                 if (chainState is Resource.Success && chainState.data != null) {
-                    QuickStatsBar(chain = chainState.data)
+                    QuickStatsBar(chain = chainState.data, indiaVix = state.indiaVix)
                 }
             }
 
@@ -151,7 +173,8 @@ fun OptionChainScreen(
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 16.dp),
                 onNavigateToOIAnalysis = onNavigateToOIAnalysis,
-                onNavigateToStrategyBuilder = onNavigateToStrategy
+                onNavigateToStrategyBuilder = onNavigateToStrategy,
+                onNavigateToScreener = onNavigateToScreener
             )
         }
     }
@@ -546,7 +569,8 @@ private fun calculateMaxPain(chain: OptionChain): Double {
 
 @Composable
 fun QuickStatsBar(
-    chain: OptionChain
+    chain: OptionChain,
+    indiaVix: Double? = null
 ) {
     val stats = rememberQuickStats(chain)
 
@@ -591,6 +615,19 @@ fun QuickStatsBar(
                 value = if (stats.atmIV > 0) String.format("%.1f%%", stats.atmIV) else "--",
                 color = ivColor
             )
+        }
+        if (indiaVix != null && indiaVix > 0) {
+            item {
+                StatChip(
+                    label = "India VIX",
+                    value = String.format("%.1f", indiaVix),
+                    color = when {
+                        indiaVix > 20 -> ErrorRed
+                        indiaVix > 15 -> WarningOrange
+                        else -> PrimaryGreen
+                    }
+                )
+            }
         }
         item {
             StatChip(
@@ -1023,78 +1060,116 @@ fun IOSStyleOptionChainRow(
 fun FloatingActionButtons(
     modifier: Modifier = Modifier,
     onNavigateToOIAnalysis: () -> Unit = {},
-    onNavigateToStrategyBuilder: () -> Unit = {}
+    onNavigateToStrategyBuilder: () -> Unit = {},
+    onNavigateToScreener: () -> Unit = {}
 ) {
-    Row(
-        modifier = modifier
-            .padding(horizontal = 24.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // OI Analysis Button
-        Surface(
+        // Screener FAB (iOS-style orange gradient pill)
+        Box(
             modifier = Modifier
-                .weight(1f)
                 .clip(RoundedCornerShape(24.dp))
-                .clickable { onNavigateToOIAnalysis() },
-            color = Color(0xFF2D2D2D),
-            shadowElevation = 8.dp
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(AccentOrange, ErrorRed)
+                    )
+                )
+                .clickable { onNavigateToScreener() }
         ) {
             Row(
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.BarChart,
+                    imageVector = Icons.Default.FilterList,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(16.dp)
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "OI Analysis",
-                    style = MaterialTheme.typography.labelLarge,
+                    text = "Screener",
+                    style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White
                 )
             }
         }
 
-        // Build Strategy Button (Gradient)
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .clip(RoundedCornerShape(24.dp))
-                .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            Color(0xFF8B5CF6),
-                            Color(0xFF06B6D4)
+        Row(
+            modifier = Modifier.padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // OI Analysis Button
+            Surface(
+                modifier = Modifier
+                    .weight(1f)
+                    .clip(RoundedCornerShape(24.dp))
+                    .clickable { onNavigateToOIAnalysis() },
+                color = Color(0xFF2D2D2D),
+                shadowElevation = 8.dp
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.BarChart,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "OI Analysis",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
+                    )
+                }
+            }
+
+            // Build Strategy Button (Gradient)
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFF8B5CF6),
+                                Color(0xFF06B6D4)
+                            )
                         )
                     )
-                )
-                .clickable { onNavigateToStrategyBuilder() }
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 14.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                    .clickable { onNavigateToStrategyBuilder() }
             ) {
-                Icon(
-                    imageVector = Icons.Default.Layers,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(18.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Build Strategy",
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Layers,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Build Strategy",
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
+                    )
+                }
             }
         }
     }

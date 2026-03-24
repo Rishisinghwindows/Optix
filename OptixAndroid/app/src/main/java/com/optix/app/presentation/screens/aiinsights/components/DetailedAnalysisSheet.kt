@@ -323,6 +323,22 @@ fun DetailedAnalysisSheet(
                 askAIError = askAIError
             )
 
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // SEBI Disclaimer
+            Text(
+                text = "⚠️ Not investment advice. AI analysis is for educational purposes only. Investment in securities market is subject to market risks. Consult a SEBI-registered advisor.",
+                style = MaterialTheme.typography.bodySmall.copy(fontSize = 9.sp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(8.dp)
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider()
             Spacer(modifier = Modifier.height(16.dp))

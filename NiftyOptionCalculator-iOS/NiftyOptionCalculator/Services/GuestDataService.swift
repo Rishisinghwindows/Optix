@@ -265,15 +265,16 @@ class GuestDataService: ObservableObject, DataProvider {
     }
 
     /// Fetch India VIX from backend market API (no broker login required).
-    func fetchIndiaVix() async throws -> Double? {
+    func fetchIndiaVix() async throws -> (value: Double, change: Double?)? {
         let cacheKey = "india_vix"
 
         if let cached = cache[cacheKey], cached.isValid,
-           let vix = cached.data as? Double {
-            return vix
+           let vix = cached.data as? (Double, Double?) {
+            return (value: vix.0, change: vix.1)
         }
 
-        guard let url = URL(string: "\(baseURL)/india-vix") else {
+        // Use the spot price endpoint which supports INDIAVIX
+        guard let url = URL(string: "\(baseURL)/spot/INDIAVIX") else {
             throw ProviderError.apiError("Invalid VIX URL")
         }
 
@@ -286,13 +287,17 @@ class GuestDataService: ObservableObject, DataProvider {
             throw ProviderError.apiError("Failed to fetch VIX: HTTP \(httpResponse.statusCode)")
         }
 
-        let decoded = try JSONDecoder().decode(IndiaVixResponse.self, from: data)
-        let vixValue = decoded.value
+        struct VixSpotResponse: Codable {
+            let lastPrice: Double
+            let pChange: Double?
+        }
 
-        cache[cacheKey] = CachedData(data: vixValue, timestamp: Date())
+        let decoded = try JSONDecoder().decode(VixSpotResponse.self, from: data)
+
+        cache[cacheKey] = CachedData(data: (decoded.lastPrice, decoded.pChange) as Any, timestamp: Date())
         lastFetchTime = Date()
 
-        return vixValue
+        return (value: decoded.lastPrice, change: decoded.pChange)
     }
 
     // MARK: - Helper Methods

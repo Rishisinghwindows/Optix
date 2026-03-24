@@ -18,6 +18,7 @@ struct AIInsightsView: View {
 
     private let autoRefreshTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     private let countdownTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    private let vixRefreshTimer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ZStack {
@@ -90,6 +91,12 @@ struct AIInsightsView: View {
                                 .padding(.horizontal, 16)
                             }
 
+                            // AI Scorecard
+                            if let stats = viewModel.scorecardStats {
+                                AIScorecardCard(stats: stats)
+                                    .padding(.horizontal, 16)
+                            }
+
                             // Disclaimer
                             DisclaimerView()
                                 .padding(.horizontal, 16)
@@ -107,6 +114,17 @@ struct AIInsightsView: View {
             }
         }
         .onAppear {
+            // Screen-level tracking for Firebase screen flow
+            AnalyticsService.logScreenView(screenName: "ai_insights", screenClass: "AIInsightsView")
+            // Capture AI tab state on entry to measure suggestion engagement and PCR context
+            AnalyticsService.logEvent("ai_insights_view", parameters: [
+                "index": selectedIndex.rawValue,
+                "suggestion_count": viewModel.currentSuggestions.count,
+                "selected_tab": viewModel.selectedTab.rawValue,
+                "spot_price": viewModel.spotPrice,
+                "pcr": viewModel.putCallRatio,
+                "auto_refresh": autoRefreshEnabled
+            ])
             initializeFromOptionChain()
         }
         .onChange(of: optionChainViewModel.optionChain.count) { _, _ in
@@ -133,6 +151,10 @@ struct AIInsightsView: View {
         .onReceive(countdownTimer) { _ in
             guard autoRefreshEnabled else { return }
             nextRefreshSeconds = max(0, nextRefreshSeconds - 1)
+        }
+        .onReceive(vixRefreshTimer) { _ in
+            guard autoRefreshEnabled else { return }
+            Task { await viewModel.refreshVix() }
         }
         .sheet(isPresented: $showIndexPicker) {
             AIIndexPickerView(
@@ -162,6 +184,7 @@ struct AIInsightsView: View {
         availableExpiries = optionChainViewModel.expiryDates
         selectedExpiry = optionChainViewModel.selectedExpiry
 
+        viewModel.updateScorecard()
         viewModel.updateData(from: optionChainViewModel)
         if !viewModel.optionChain.isEmpty {
             viewModel.runAnalysis()
@@ -819,7 +842,8 @@ struct MarketBiasRiskCard: View {
                         title: "India VIX",
                         value: String(format: "%.1f", vix),
                         icon: "waveform.path.ecg",
-                        color: vix > 20 ? Theme.loss : (vix > 15 ? Theme.accentOrange : Theme.profit)
+                        color: vix > 20 ? Theme.loss : (vix > 15 ? Theme.accentOrange : Theme.profit),
+                        changePercent: viewModel.vixChange
                     )
                 }
             }
@@ -987,6 +1011,7 @@ struct QuickStatItem: View {
     let value: String
     let icon: String
     let color: Color
+    var changePercent: Double? = nil
 
     var body: some View {
         VStack(spacing: 3) {
@@ -994,9 +1019,17 @@ struct QuickStatItem: View {
                 .font(.system(size: 14))
                 .foregroundColor(color)
 
-            Text(value)
-                .font(.system(size: 13, weight: .bold, design: .monospaced))
-                .foregroundColor(Theme.textPrimary)
+            HStack(spacing: 2) {
+                Text(value)
+                    .font(.system(size: 13, weight: .bold, design: .monospaced))
+                    .foregroundColor(Theme.textPrimary)
+
+                if let change = changePercent {
+                    Text("\(change >= 0 ? "▲" : "▼")\(String(format: "%.1f", abs(change)))%")
+                        .font(.system(size: 8, weight: .semibold, design: .monospaced))
+                        .foregroundColor(change >= 0 ? Theme.loss : Theme.profit)
+                }
+            }
 
             Text(title)
                 .font(.system(size: 9))
@@ -2154,19 +2187,28 @@ struct MarketInsightCard: View {
 
 struct DisclaimerView: View {
     var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 14))
-                .foregroundColor(Theme.accentOrange)
-
-            Text("AI suggestions are based on technical analysis and should not be considered financial advice. Always do your own research.")
-                .font(.system(size: 11))
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 8) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 14))
+                    .foregroundColor(Theme.accentOrange)
+                Text("SEBI Disclaimer")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(Theme.accentOrange)
+            }
+            Text("Investment in securities market is subject to market risks. AI-generated suggestions are for informational and educational purposes only and do not constitute investment advice, financial advice, or trading advice. Past performance does not guarantee future results. Consult a SEBI-registered investment advisor before making any trading decisions. The developers of this app are not SEBI-registered advisors and shall not be held liable for any losses.")
+                .font(.system(size: 10))
                 .foregroundColor(Theme.textMuted)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(12)
         .background {
             RoundedRectangle(cornerRadius: 10)
                 .fill(Theme.accentOrange.opacity(0.1))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Theme.accentOrange.opacity(0.2), lineWidth: 1)
+                }
         }
     }
 }

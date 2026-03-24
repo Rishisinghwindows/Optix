@@ -9,6 +9,7 @@ import com.optix.app.domain.model.ExpiryDate
 import com.optix.app.domain.model.OptionChain
 import com.optix.app.domain.model.OptionData
 import com.optix.app.domain.model.TradingIndex
+import com.optix.app.data.remote.api.OptixApiService
 import com.optix.app.domain.repository.OptionChainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -27,6 +28,7 @@ data class OptionChainState(
     val priceChange: Double? = null,
     val priceChangePercent: Double? = null,
     val optionChainState: Resource<OptionChain> = Resource.Loading(),
+    val indiaVix: Double? = null,
     // WebSocket connection state
     val isLiveConnected: Boolean = false,
     val connectionStatus: String = "Disconnected"
@@ -34,7 +36,8 @@ data class OptionChainState(
 
 @HiltViewModel
 class OptionChainViewModel @Inject constructor(
-    private val repository: OptionChainRepository
+    private val repository: OptionChainRepository,
+    private val apiService: OptixApiService
 ) : ViewModel() {
 
     companion object {
@@ -266,6 +269,14 @@ class OptionChainViewModel @Inject constructor(
                                 priceChangePercent = chain.priceChangePercent
                             )
                         }
+
+                        // Fetch India VIX
+                        try {
+                            val vixResponse = apiService.getIndiaVix()
+                            if (vixResponse.isSuccessful) {
+                                _state.update { it.copy(indiaVix = vixResponse.body()?.value) }
+                            }
+                        } catch (_: Exception) { }
 
                         // Connect to WebSocket for live updates after initial load
                         connectToLiveUpdates()

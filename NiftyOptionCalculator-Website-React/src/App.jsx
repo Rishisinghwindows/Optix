@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import { initAnalytics, trackPageView } from './services/analytics'
+import { initAnalytics, trackPageView, logScreenView } from './services/analytics'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Calculator from './components/Calculator'
@@ -33,6 +33,11 @@ import TradeJournal from './components/app/TradeJournal'
 import LoginPage from './components/app/LoginPage'
 import GamesHub from './components/games/GamesHub'
 
+// Legal Pages
+import PrivacyPolicy from './components/legal/PrivacyPolicy'
+import TermsOfService from './components/legal/TermsOfService'
+import Disclaimer from './components/legal/Disclaimer'
+
 // Auth
 import { AuthProvider } from './context/AuthContext'
 
@@ -41,21 +46,26 @@ import { AdProvider } from './context/AdContext'
 import { AdBanner, AnchorAd } from './components/ads'
 import { ADS_CONFIG } from './config/adsConfig'
 
-// Analytics tracker component
+/**
+ * Invisible component that wires React Router navigation to analytics.
+ * Placed inside <BrowserRouter> so it can access useLocation().
+ * - On mount: bootstraps both custom + Firebase analytics (initAnalytics).
+ * - On every route change: sends a custom visit event and a Firebase screen_view.
+ */
 function AnalyticsTracker() {
   const location = useLocation();
 
   useEffect(() => {
-    // Initialize analytics on first load
     initAnalytics();
   }, []);
 
   useEffect(() => {
-    // Track page views on route change
+    // Dual-track: custom backend visit + Firebase screen_view
     trackPageView(location.pathname, document.title);
+    logScreenView(location.pathname);
   }, [location]);
 
-  return null;
+  return null; // renders nothing — purely side-effect driven
 }
 
 function LandingPage() {
@@ -102,6 +112,9 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/games" element={<GamesHub />} />
           <Route path="/support" element={<><Navbar /><Support /><Footer /></>} />
+          <Route path="/legal/privacy" element={<><Navbar /><PrivacyPolicy /><Footer /></>} />
+          <Route path="/legal/terms" element={<><Navbar /><TermsOfService /><Footer /></>} />
+          <Route path="/legal/disclaimer" element={<><Navbar /><Disclaimer /><Footer /></>} />
           <Route path="/app" element={<AppLayout />}>
             <Route index element={<OptionChain />} />
             <Route path="chain" element={<OptionChain />} />

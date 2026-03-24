@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { paperTradingAPI } from '../../services/paperTradingAPI'
+import { logScreenView, logEvent } from '../../services/analytics'
 import { NativeAd } from '../ads'
 import { ADS_CONFIG } from '../../config/adsConfig'
 
@@ -60,6 +61,22 @@ function PaperTrading() {
   const [error, setError] = useState(null)
   const [showResetModal, setShowResetModal] = useState(false)
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+
+  // Firebase screen_view on mount
+  useEffect(() => { logScreenView('paper_trading'); }, [])
+
+  // Once portfolio data finishes loading, log a snapshot event with key
+  // portfolio metrics so we can track user engagement and portfolio health.
+  useEffect(() => {
+    if (!loading) {
+      logEvent('paper_trading_view', {
+        is_authenticated: isAuthenticated,
+        positions_count: positions?.length || 0,
+        cash_balance: Math.round(cashBalance),
+        portfolio_value: Math.round(portfolioValue),
+      });
+    }
+  }, [loading, isAuthenticated]);
 
   // Load data on mount - only for authenticated users
   useEffect(() => {

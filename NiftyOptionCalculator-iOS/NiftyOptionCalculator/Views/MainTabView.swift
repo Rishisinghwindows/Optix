@@ -9,6 +9,8 @@ struct MainTabView: View {
     @ObservedObject private var localization = LocalizationManager.shared
     @State private var selectedTab = 0
     @State private var lastCalculatedSpotPrice: Double = 0
+    @State private var showNotificationCenter = false
+    @ObservedObject private var signalStore = MarketSignalStore.shared
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -47,9 +49,32 @@ struct MainTabView: View {
 
             // Floating AI Chat Button (draggable)
             FloatingChatButton()
+
+            // Notification Bell Button (top-right)
+            NotificationBellButton(
+                unreadCount: signalStore.unreadCount + alertManager.unreadCount,
+                action: { showNotificationCenter = true }
+            )
         }
         .overlay(alignment: .top) {
             AlertBannerOverlay(alertManager: alertManager)
+        }
+        .sheet(isPresented: $showNotificationCenter) {
+            NavigationStack {
+                NotificationCenterView()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button("Done") { showNotificationCenter = false }
+                                .foregroundColor(Theme.primaryBlue)
+                        }
+                    }
+            }
+        }
+        .onChange(of: selectedTab) { _, newTab in
+            let screenNames = ["option_chain", "ai_insights", "paper_trading", "ipo_dashboard", "settings"]
+            if newTab >= 0 && newTab < screenNames.count {
+                AnalyticsService.logScreenView(screenName: screenNames[newTab], screenClass: "MainTabView")
+            }
         }
         .onChange(of: optionChainVM.spotPrice) { _, newPrice in
             guard newPrice > 0 else { return }

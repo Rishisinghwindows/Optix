@@ -315,9 +315,17 @@ struct ChatView: View {
                 .animation(.spring(response: 0.3), value: viewModel.inputText.isEmpty)
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 14)
-            .background(Theme.backgroundSecondary)
+            .padding(.vertical, 10)
+
+            // SEBI Disclaimer
+            Text("⚠️ AI responses are not investment advice. Investment in securities market is subject to market risks. Consult a SEBI-registered advisor.")
+                .font(.system(size: 9))
+                .foregroundColor(Theme.textMuted)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 6)
         }
+        .background(Theme.backgroundSecondary)
     }
 }
 

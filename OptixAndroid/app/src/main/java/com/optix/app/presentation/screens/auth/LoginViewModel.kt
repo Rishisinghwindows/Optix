@@ -13,9 +13,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class LoginState(
-    val phoneNumber: String = "",
-    val otp: String = "",
-    val otpSent: Boolean = false,
     val isLoading: Boolean = false,
     val isLoggedIn: Boolean = false,
     val error: String? = null
@@ -28,68 +25,6 @@ class LoginViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(LoginState())
     val state: StateFlow<LoginState> = _state.asStateFlow()
-
-    fun updatePhoneNumber(number: String) {
-        if (number.length <= 10 && number.all { it.isDigit() }) {
-            _state.update { it.copy(phoneNumber = number, error = null) }
-        }
-    }
-
-    fun updateOtp(otp: String) {
-        if (otp.all { it.isDigit() }) {
-            _state.update { it.copy(otp = otp, error = null) }
-        }
-    }
-
-    fun sendOtp() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
-
-            when (val result = authRepository.sendOtp("+91${_state.value.phoneNumber}")) {
-                is Resource.Success -> {
-                    _state.update { it.copy(isLoading = false, otpSent = true) }
-                }
-                is Resource.Error -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            error = result.message ?: "Failed to send OTP"
-                        )
-                    }
-                }
-                is Resource.Loading -> {}
-            }
-        }
-    }
-
-    fun resendOtp() {
-        _state.update { it.copy(otp = "") }
-        sendOtp()
-    }
-
-    fun verifyOtp() {
-        viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
-
-            when (val result = authRepository.verifyOtp(
-                phoneNumber = "+91${_state.value.phoneNumber}",
-                otp = _state.value.otp
-            )) {
-                is Resource.Success -> {
-                    _state.update { it.copy(isLoading = false, isLoggedIn = true) }
-                }
-                is Resource.Error -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            error = result.message ?: "Invalid OTP"
-                        )
-                    }
-                }
-                is Resource.Loading -> {}
-            }
-        }
-    }
 
     fun setError(message: String) {
         _state.update { it.copy(error = message, isLoading = false) }

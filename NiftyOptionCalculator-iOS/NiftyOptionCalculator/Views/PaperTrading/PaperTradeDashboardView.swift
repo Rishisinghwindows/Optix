@@ -54,6 +54,13 @@ struct PaperTradeDashboardView: View {
         }
 
         .onAppear {
+            // Track screen for Firebase screen flow + custom event with portfolio snapshot
+            AnalyticsService.logScreenView(screenName: "paper_trading", screenClass: "PaperTradeDashboardView")
+            AnalyticsService.logEvent("paper_trading_view", parameters: [
+                "is_logged_in": authManager.isLoggedIn,
+                "open_positions": viewModel.openPositionsCount,
+                "has_positions": viewModel.hasOpenPositions
+            ])
             // Update position prices from option chain
             viewModel.updatePositionPrices(
                 from: optionChainVM.optionChain,

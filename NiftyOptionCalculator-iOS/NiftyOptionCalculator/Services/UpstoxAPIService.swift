@@ -554,7 +554,7 @@ class UpstoxAPIService: ObservableObject, DataProvider {
     }
 
     /// Fetch India VIX value
-    func fetchIndiaVix() async throws -> Double? {
+    func fetchIndiaVix() async throws -> (value: Double, change: Double?)? {
         guard let token = accessToken else {
             throw UpstoxAPIError.notAuthenticated
         }
@@ -565,7 +565,6 @@ class UpstoxAPIService: ObservableObject, DataProvider {
         }
 
         let urlString = "\(UpstoxConfig.baseURL)/market-quote/quotes?instrument_key=\(encodedInstrument)"
-        print("🔍 [API] India VIX URL: \(urlString)")
 
         guard let url = URL(string: urlString) else {
             throw UpstoxAPIError.invalidURL
@@ -578,10 +577,6 @@ class UpstoxAPIService: ObservableObject, DataProvider {
 
         do {
             let (data, response) = try await session.data(for: request)
-
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("🔍 [API] India VIX response: \(jsonString.prefix(500))...")
-            }
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw UpstoxAPIError.invalidResponse
@@ -600,8 +595,7 @@ class UpstoxAPIService: ObservableObject, DataProvider {
 
             if let quoteData = quoteResponse.data?.values.first,
                let ltp = quoteData.lastPrice {
-                print("📊 [API] India VIX: \(ltp)")
-                return ltp
+                return (value: ltp, change: quoteData.percentageChange)
             }
 
             return nil
@@ -609,8 +603,7 @@ class UpstoxAPIService: ObservableObject, DataProvider {
         } catch let error as UpstoxAPIError {
             throw error
         } catch {
-            print("🔍 [API] VIX fetch error: \(error)")
-            return nil  // Return nil instead of throwing for VIX
+            return nil
         }
     }
 

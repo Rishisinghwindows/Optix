@@ -30,9 +30,9 @@ function Footer() {
             </div>
             <div className="footer-column">
               <h4>{t('footer.legal')}</h4>
-              <a href="#">{t('footer.links.privacyPolicy')}</a>
-              <a href="#">{t('footer.links.termsOfService')}</a>
-              <a href="#">{t('footer.links.disclaimer')}</a>
+              <a href="/legal/privacy">{t('footer.links.privacyPolicy')}</a>
+              <a href="/legal/terms">{t('footer.links.termsOfService')}</a>
+              <a href="/legal/disclaimer">{t('footer.links.disclaimer')}</a>
             </div>
             <div className="footer-column">
               <h4>{t('footer.support')}</h4>

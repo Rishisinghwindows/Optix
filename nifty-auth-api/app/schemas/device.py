@@ -24,7 +24,7 @@ class DeviceRegister(BaseModel):
 class DeviceResponse(BaseModel):
     """Schema for device token response"""
     id: str
-    user_id: str
+    user_id: Optional[str] = None
     platform: str
     token: str
     device_name: Optional[str] = None

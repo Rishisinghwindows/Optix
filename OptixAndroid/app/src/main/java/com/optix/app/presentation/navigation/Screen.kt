@@ -57,6 +57,13 @@ sealed class Screen(
         Icons.Filled.Settings
     )
 
+    data object TradeJournal : Screen(
+        "trade_journal",
+        "Journal",
+        Icons.Outlined.MenuBook,
+        Icons.Filled.MenuBook
+    )
+
     // Secondary Screens
     data object Calculator : Screen("calculator/{spotPrice}/{strikePrice}/{ltp}/{isCall}/{daysToExpiry}", "Calculator") {
         const val simpleRoute = "calculator_simple"
@@ -76,6 +83,9 @@ sealed class Screen(
     data object Education : Screen("education", "Learn")
     data object Chat : Screen("chat", "Chat")
     data object Charts : Screen("charts", "Charts")
+    data object PnLSimulator : Screen("pnl_simulator", "P&L Simulator")
+    data object Notifications : Screen("notifications", "Notifications")
+    data object OptionScreener : Screen("option_screener", "Screener")
 
     companion object {
         val bottomNavItems = listOf(

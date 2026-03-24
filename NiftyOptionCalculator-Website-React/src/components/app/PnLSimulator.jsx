@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { calculateBlackScholes } from '../../utils/blackScholes'
+import { logScreenView } from '../../services/analytics'
 import {
   AreaChart,
   Area,
@@ -81,6 +82,8 @@ function generatePayoffData(legs, spotPrice, daysElapsed, ivChange) {
 function PnLSimulator() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+
+  useEffect(() => { logScreenView('pnl_simulator'); }, [])
 
   // Parse initial values from URL params
   const parseLegs = useCallback(() => {

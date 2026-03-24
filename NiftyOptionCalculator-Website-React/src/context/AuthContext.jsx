@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { authAPI } from '../services/authAPI';
+import { setAnalyticsUserId, setAnalyticsUserProperties, logLogin } from '../services/analytics';
 
 const AuthContext = createContext(null);
 
@@ -7,6 +8,14 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Sync Firebase user-property 'auth_state' whenever login status changes.
+  // This lets us segment analytics reports by logged-in vs guest users.
+  useEffect(() => {
+    setAnalyticsUserProperties({
+      auth_state: isAuthenticated ? 'logged_in' : 'guest',
+    });
+  }, [isAuthenticated]);
 
   // Check auth status on mount
   useEffect(() => {
@@ -46,6 +55,9 @@ export function AuthProvider({ children }) {
     const response = await authAPI.verifyOTP(phone, otp);
     setUser(response.user);
     setIsAuthenticated(true);
+    // Bind Firebase Analytics to this user so all subsequent events are attributed
+    if (response.user?.id) setAnalyticsUserId(String(response.user.id));
+    logLogin('otp'); // Firebase standard 'login' event with method param
     return response;
   }, []);
 
@@ -54,6 +66,8 @@ export function AuthProvider({ children }) {
     const response = await authAPI.loginWithGoogle(idToken);
     setUser(response.user);
     setIsAuthenticated(true);
+    if (response.user?.id) setAnalyticsUserId(String(response.user.id));
+    logLogin('google');
     return response;
   }, []);
 
@@ -62,6 +76,8 @@ export function AuthProvider({ children }) {
     const response = await authAPI.loginWithFacebook(accessToken);
     setUser(response.user);
     setIsAuthenticated(true);
+    if (response.user?.id) setAnalyticsUserId(String(response.user.id));
+    logLogin('facebook');
     return response;
   }, []);
 

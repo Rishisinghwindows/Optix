@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		NC0001000100010001NC01 /* MarketSignalStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = NC0002000200020002NC02 /* MarketSignalStore.swift */; };
+		NC0003000300030003NC03 /* NotificationCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NC0004000400040004NC04 /* NotificationCenterView.swift */; };
+		NC0005000500050005NC05 /* NotificationBellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = NC0006000600060006NC06 /* NotificationBellButton.swift */; };
 		04C4FDB0A681EE32C37A7CE2 /* StrikeAnalysisSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CA39FCAB058B37CA4040BA /* StrikeAnalysisSheet.swift */; };
 		056CCFEBB05944CFD713BCFB /* OIAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC709A1BE2A75CE4F3086D6 /* OIAnalysis.swift */; };
 		074EF763BBADB51DA6200F1B /* StrategyTypeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79D75F63F1B2F91B516BEA2A /* StrategyTypeSelectorView.swift */; };
@@ -22,6 +25,8 @@
 		4B7C0CBA1AFBDCBE0F451E86 /* IVSurfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94CC270CB1F414A74ED5CC17 /* IVSurfaceView.swift */; };
 		4E33FD7F07545E5E57B254A8 /* OptionChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8D335529096260274BB768 /* OptionChartView.swift */; };
 		503F40C8E310796D5684EC12 /* AIInsightsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E6103379EC3E5D34B8FB15 /* AIInsightsCard.swift */; };
+		A1B2C3D4E5F60001ABCD0001 /* AIScorecardCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002ABCD0001 /* AIScorecardCard.swift */; };
+		A1B2C3D4E5F60001ABCD0002 /* AIScorecardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002ABCD0002 /* AIScorecardService.swift */; };
 		5060F97CFBE85163E8B70204 /* LegsBuilderCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D67533BE59DD90D8466027 /* LegsBuilderCard.swift */; };
 		5961B51141750B830B22E71C /* FloatingChatButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2B9DB6AA342A33A83D08E2 /* FloatingChatButton.swift */; };
 		5A4EEAF1CB418DE69793FB4C /* GuestWebSocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E348E5E91B4C4021303D38 /* GuestWebSocketService.swift */; };
@@ -84,6 +89,7 @@
 		DA7EB8DDB02590DB127CF8DB /* LoginSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E62FB2E2F946D538080D3D /* LoginSheetView.swift */; };
 		DCF6D0E6D38B1BD7D15146C0 /* FeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00DA2205C39D127633CDEE6 /* FeatureTests.swift */; };
 		A1B2C3D4E5F6071829304050 /* StrategyEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6071829304051 /* StrategyEngineTests.swift */; };
+		PN000001 /* PushNotificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = PN000002 /* PushNotificationTests.swift */; };
 		DDA4511AEC193103E002DFE8 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19E74001AB2ADFA112B7707 /* ChartData.swift */; };
 		DE2094A74F069A8E09FDAAB0 /* AIInsight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC74DC089FD973DE67B8649 /* AIInsight.swift */; };
 		E67A17B0C24F870A4B119C07 /* DhanAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABE6FC4A76898699191F8CFA /* DhanAPIService.swift */; };
@@ -135,6 +141,10 @@
 		PT107107107107PT107 /* PaperPerformanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = PT007007007007PT007 /* PaperPerformanceView.swift */; };
 		PT108108108108PT108 /* TradeExecutionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = PT008008008008PT008 /* TradeExecutionSheet.swift */; };
 		TVC001001001001TVC001 /* TradingViewChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = TVC002002002002TVC002 /* TradingViewChart.swift */; };
+		CR0001000100010001CR01 /* CrashlyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CR0002000200020002CR02 /* CrashlyticsService.swift */; };
+		AN0001000100010001AN01 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AN0002000200020002AN02 /* AnalyticsService.swift */; };
+		CR0003000300030003CR03 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CR0004000400040004CR04 /* FirebaseCrashlytics */; };
+		FA0001000100010001FA01 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = FA0002000200020002FA02 /* FirebaseAnalytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +158,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		NC0002000200020002NC02 /* MarketSignalStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketSignalStore.swift; sourceTree = "<group>"; };
+		NC0004000400040004NC04 /* NotificationCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterView.swift; sourceTree = "<group>"; };
+		NC0006000600060006NC06 /* NotificationBellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBellButton.swift; sourceTree = "<group>"; };
 		02C8FD50CB8ADC590DF74BD4 /* OIAnalysisViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OIAnalysisViewModel.swift; sourceTree = "<group>"; };
 		1A14793629FCC3D408446B6B /* ChatService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
 		1AC709A1BE2A75CE4F3086D6 /* OIAnalysis.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OIAnalysis.swift; sourceTree = "<group>"; };
@@ -169,6 +182,7 @@
 		5F9161848207908B13E35669 /* PaperTradingAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaperTradingAPIService.swift; sourceTree = "<group>"; };
 		6918EE070806ABA1EF33F927 /* ChartData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChartData.swift; path = NiftyOptionCalculator/Models/ChartData.swift; sourceTree = "<group>"; };
 		6F7E60D43975A1DD21C9E8F3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		PN100001 /* NiftyOptionCalculator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NiftyOptionCalculator.entitlements; sourceTree = "<group>"; };
 		72EC4717D722955D0D658045 /* AIAnalysisViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIAnalysisViewModel.swift; sourceTree = "<group>"; };
 		79D75F63F1B2F91B516BEA2A /* StrategyTypeSelectorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StrategyTypeSelectorView.swift; path = NiftyOptionCalculator/Views/Strategy/StrategyTypeSelectorView.swift; sourceTree = "<group>"; };
 		7ABD4D0C222ED36FAC5CBFC0 /* AuthModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthModels.swift; sourceTree = "<group>"; };
@@ -178,6 +192,8 @@
 		87E348E5E91B4C4021303D38 /* GuestWebSocketService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GuestWebSocketService.swift; sourceTree = "<group>"; };
 		8907BF7F03A6466FF4A573F7 /* AngelOneAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AngelOneAPIService.swift; sourceTree = "<group>"; };
 		89E6103379EC3E5D34B8FB15 /* AIInsightsCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIInsightsCard.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60002ABCD0001 /* AIScorecardCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIScorecardCard.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F60002ABCD0002 /* AIScorecardService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AIScorecardService.swift; sourceTree = "<group>"; };
 		8B3015D7BE141A3616E32A8B /* AuthAPIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthAPIService.swift; sourceTree = "<group>"; };
 		8C38311B2ADF40124C3F0EE3 /* ChatSessionsListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatSessionsListView.swift; sourceTree = "<group>"; };
 		8E45B46DF9B6AD1B8E1C82A2 /* ChatModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
@@ -212,6 +228,7 @@
 		BD5A1F682423E4490F0B45F1 /* OIHeatmapView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OIHeatmapView.swift; path = OIAnalysis/OIHeatmapView.swift; sourceTree = "<group>"; };
 		C00DA2205C39D127633CDEE6 /* FeatureTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FeatureTests.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6071829304051 /* StrategyEngineTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StrategyEngineTests.swift; sourceTree = "<group>"; };
+		PN000002 /* PushNotificationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PushNotificationTests.swift; sourceTree = "<group>"; };
 		C300D69A0F5A06AF79F0978E /* GuestDataService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GuestDataService.swift; sourceTree = "<group>"; };
 		C3623F7E3FC6E70D02D74679 /* SmartMoneyActivityView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SmartMoneyActivityView.swift; path = OIAnalysis/SmartMoneyActivityView.swift; sourceTree = "<group>"; };
 		C5D67533BE59DD90D8466027 /* LegsBuilderCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LegsBuilderCard.swift; path = NiftyOptionCalculator/Views/Strategy/LegsBuilderCard.swift; sourceTree = "<group>"; };
@@ -219,6 +236,8 @@
 		CBE5299334373BB2402D4F66 /* StrategyBuilderViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StrategyBuilderViewModel.swift; path = NiftyOptionCalculator/ViewModels/StrategyBuilderViewModel.swift; sourceTree = "<group>"; };
 		CD78131EFCFB7B47B88645EC /* ChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		CDSP002002002002CDSP002 /* CandlestickPatternService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CandlestickPatternService.swift; path = NiftyOptionCalculator/Services/CandlestickPatternService.swift; sourceTree = SOURCE_ROOT; };
+		CR0002000200020002CR02 /* CrashlyticsService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CrashlyticsService.swift; path = NiftyOptionCalculator/Services/CrashlyticsService.swift; sourceTree = SOURCE_ROOT; };
+		AN0002000200020002AN02 /* AnalyticsService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnalyticsService.swift; path = NiftyOptionCalculator/Services/AnalyticsService.swift; sourceTree = SOURCE_ROOT; };
 		CLD002002002002CLD002 /* ClaudeAIService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ClaudeAIService.swift; sourceTree = "<group>"; };
 		D0503670894DB579EA553ECA /* LegRowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LegRowView.swift; path = NiftyOptionCalculator/Views/Strategy/LegRowView.swift; sourceTree = "<group>"; };
 		DC672C7ACE5EB5A05CE20E43 /* OIAnalysisDashboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OIAnalysisDashboardView.swift; path = OIAnalysis/OIAnalysisDashboardView.swift; sourceTree = "<group>"; };
@@ -287,6 +306,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5B2DDFFA2F2E906E00CB52B6 /* GoogleSignIn in Frameworks */,
+				CR0003000300030003CR03 /* FirebaseCrashlytics in Frameworks */,
+				FA0001000100010001FA01 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,6 +415,7 @@
 				A1000025229F002500000001 /* Resources */,
 				A1000026229F002600000001 /* Preview Content */,
 				6F7E60D43975A1DD21C9E8F3 /* GoogleService-Info.plist */,
+				PN100001 /* NiftyOptionCalculator.entitlements */,
 			);
 			path = NiftyOptionCalculator;
 			sourceTree = "<group>";
@@ -459,6 +481,7 @@
 				2E3F2FA7AB26AA5EFA7A732B /* PnLSimulatorView.swift */,
 				F6356B3EAF3EA5C2B5A11E3D /* TradeJournalAPIService.swift */,
 				F693F2633669937A357532F0 /* AIAnalysisService.swift */,
+				A1B2C3D4E5F60002ABCD0002 /* AIScorecardService.swift */,
 				CLD002002002002CLD002 /* ClaudeAIService.swift */,
 				C6905A5B6DF058F32E246490 /* MLOptionPredictor.swift */,
 				FE2D96E3C2E509CF1AF014E8 /* OIAnalysisEngine.swift */,
@@ -474,6 +497,9 @@
 				IPO002002002002IPO002 /* IPOService.swift */,
 				SA0004000400040004SA04 /* MarketAlertService.swift */,
 				SA0006000600060006SA06 /* AlertManager.swift */,
+				NC0002000200020002NC02 /* MarketSignalStore.swift */,
+				CR0002000200020002CR02 /* CrashlyticsService.swift */,
+				AN0002000200020002AN02 /* AnalyticsService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -509,6 +535,7 @@
 				0193DE71CF6DABA3A7B30EB8 /* Chat */,
 				IPO201201201201IPO201 /* IPO */,
 				SA0020002000200020SA20 /* Alerts */,
+				NC0020002000200020NC20 /* Notifications */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -570,6 +597,7 @@
 			children = (
 				49366C838C5B8FAD9E2B07B0 /* AIInsightsView.swift */,
 				89E6103379EC3E5D34B8FB15 /* AIInsightsCard.swift */,
+				A1B2C3D4E5F60002ABCD0001 /* AIScorecardCard.swift */,
 				21CA39FCAB058B37CA4040BA /* StrikeAnalysisSheet.swift */,
 			);
 			path = AIInsights;
@@ -601,6 +629,7 @@
 			children = (
 				C00DA2205C39D127633CDEE6 /* FeatureTests.swift */,
 				A1B2C3D4E5F6071829304051 /* StrategyEngineTests.swift */,
+				PN000002 /* PushNotificationTests.swift */,
 			);
 			path = NiftyOptionCalculatorTests;
 			sourceTree = "<group>";
@@ -629,6 +658,15 @@
 				SA0012001200120012SA12 /* AlertHistoryView.swift */,
 			);
 			path = Alerts;
+			sourceTree = "<group>";
+		};
+		NC0020002000200020NC20 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				NC0004000400040004NC04 /* NotificationCenterView.swift */,
+				NC0006000600060006NC06 /* NotificationBellButton.swift */,
+			);
+			path = Notifications;
 			sourceTree = "<group>";
 		};
 		LOC027027027027LOC027 /* Localization */ = {
@@ -681,6 +719,7 @@
 				A100002B229F002B00000001 /* Sources */,
 				A100001C229F001C00000001 /* Frameworks */,
 				A100002C229F002C00000001 /* Resources */,
+				CR0005000500050005CR05 /* Upload Crashlytics dSYMs */,
 			);
 			buildRules = (
 			);
@@ -689,6 +728,9 @@
 			name = NiftyOptionCalculator;
 			packageProductDependencies = (
 				9D230D404CBDAA3B4C61C204 /* GoogleSignIn */,
+				FB0001000100010001FB01 /* FirebaseMessaging */,
+				CR0004000400040004CR04 /* FirebaseCrashlytics */,
+				FA0002000200020002FA02 /* FirebaseAnalytics */,
 			);
 			productName = NiftyOptionCalculator;
 			productReference = A100001B229F001B00000001 /* NiftyOptionCalculator.app */;
@@ -738,6 +780,7 @@
 			mainGroup = A100001D229F001D00000001;
 			packageReferences = (
 				BCFA0ACF1DA66EDC5813BBB4 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				FB0002000200020002FB02 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = A100001F229F001F00000001 /* Products */;
 			projectDirPath = "";
@@ -769,6 +812,32 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		CR0005000500050005CR05 /* Upload Crashlytics dSYMs */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(DWARF_DSYM_FOLDER_PATH)/$(DWARF_DSYM_FILE_NAME)",
+				"$(DWARF_DSYM_FOLDER_PATH)/$(DWARF_DSYM_FILE_NAME)/Contents/Resources/DWARF/$(TARGET_NAME)",
+				"$(DWARF_DSYM_FOLDER_PATH)/$(DWARF_DSYM_FILE_NAME)/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+				"$(TARGET_BUILD_DIR)/$(PRODUCT_NAME).app/GoogleService-Info.plist",
+			);
+			name = "Upload Crashlytics dSYMs";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\" --build-phase\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		75CECF0DD2E0D7D0CA696ED4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -776,6 +845,7 @@
 			files = (
 				DCF6D0E6D38B1BD7D15146C0 /* FeatureTests.swift in Sources */,
 				A1B2C3D4E5F6071829304050 /* StrategyEngineTests.swift in Sources */,
+				PN000001 /* PushNotificationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,6 +891,11 @@
 				974C352698E6446E54A9CE9F /* AIAnalysisViewModel.swift in Sources */,
 				78B9F25E8B2B0D432ABFC5DC /* AIInsightsView.swift in Sources */,
 				503F40C8E310796D5684EC12 /* AIInsightsCard.swift in Sources */,
+				A1B2C3D4E5F60001ABCD0001 /* AIScorecardCard.swift in Sources */,
+				A1B2C3D4E5F60001ABCD0002 /* AIScorecardService.swift in Sources */,
+				NC0001000100010001NC01 /* MarketSignalStore.swift in Sources */,
+				NC0003000300030003NC03 /* NotificationCenterView.swift in Sources */,
+				NC0005000500050005NC05 /* NotificationBellButton.swift in Sources */,
 				42B30963943614A222B3BBBB /* MLOptionPredictor.swift in Sources */,
 				04C4FDB0A681EE32C37A7CE2 /* StrikeAnalysisSheet.swift in Sources */,
 				78C432ED4F8E81BF5DE4EC64 /* IndexChartView.swift in Sources */,
@@ -904,6 +979,8 @@
 				SA0007000700070007SA07 /* AlertBannerView.swift in Sources */,
 				SA0009000900090009SA09 /* AlertSettingsView.swift in Sources */,
 				SA0011001100110011SA11 /* AlertHistoryView.swift in Sources */,
+				CR0001000100010001CR01 /* CrashlyticsService.swift in Sources */,
+				AN0001000100010001AN01 /* AnalyticsService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1063,8 +1140,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = NiftyOptionCalculator/NiftyOptionCalculator.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_ASSET_PATHS = "\"NiftyOptionCalculator/Preview Content\"";
 				DEVELOPMENT_TEAM = 9YG7G7YB2J;
 				ENABLE_PREVIEWS = YES;
@@ -1094,9 +1172,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = NiftyOptionCalculator/NiftyOptionCalculator.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 26;
 				DEVELOPMENT_ASSET_PATHS = "\"NiftyOptionCalculator/Preview Content\"";
 				DEVELOPMENT_TEAM = 9YG7G7YB2J;
 				ENABLE_PREVIEWS = YES;
@@ -1184,6 +1263,14 @@
 				minimumVersion = 8.0.0;
 			};
 		};
+		FB0002000200020002FB02 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1191,6 +1278,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BCFA0ACF1DA66EDC5813BBB4 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignIn;
+		};
+		FB0001000100010001FB01 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB0002000200020002FB02 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		CR0004000400040004CR04 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB0002000200020002FB02 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		FA0002000200020002FA02 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB0002000200020002FB02 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

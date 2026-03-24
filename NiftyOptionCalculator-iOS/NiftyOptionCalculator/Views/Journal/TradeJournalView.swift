@@ -35,6 +35,15 @@ struct TradeJournalView: View {
         }
         .navigationTitle("Trade Journal")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            // Screen view + journal state snapshot for retention/engagement analysis
+            AnalyticsService.logScreenView(screenName: "trade_journal", screenClass: "TradeJournalView")
+            AnalyticsService.logEvent("trade_journal_view", parameters: [
+                "is_logged_in": authManager.isLoggedIn,
+                "entries_count": viewModel.entries.count,
+                "active_tab": viewModel.activeTab.rawValue
+            ])
+        }
         .toolbar {
             if authManager.isLoggedIn {
                 ToolbarItem(placement: .navigationBarTrailing) {

@@ -108,6 +108,21 @@ struct OptionChainView: View {
             }
         }
         .onAppear {
+            // Track screen view for Firebase's built-in screen flow reports
+            AnalyticsService.logScreenView(screenName: "option_chain", screenClass: "OptionChainView")
+            // Custom event captures market context (DTE, VIX, live vs demo) for funnel analysis
+            let dte: Int = {
+                guard let expiry = viewModel.selectedExpiry else { return -1 }
+                return Calendar.current.dateComponents([.day], from: Date(), to: expiry.date).day ?? -1
+            }()
+            AnalyticsService.logEvent("option_chain_view", parameters: [
+                "index": viewModel.selectedIndex.rawValue,
+                "expiry": viewModel.selectedExpiry?.displayString ?? "none",
+                "days_to_expiry": dte,
+                "spot_price": viewModel.spotPrice,
+                "is_live": viewModel.dataSource.isLive,
+                "india_vix": viewModel.indiaVix ?? 0.0
+            ])
             // Set ATM strike on initial load
             if selectedStrike == nil && !viewModel.optionChain.isEmpty, let atm = viewModel.atmStrike {
                 selectedStrike = atm
@@ -730,6 +745,15 @@ struct QuickStatsBar: View {
                         value: viewModel.atmIV != nil ? String(format: "%.1f%%", viewModel.atmIV! * 100) : "--",
                         color: Theme.accentPurple
                     )
+
+                    // India VIX
+                    if let vix = viewModel.indiaVix {
+                        StatChip(
+                            label: "India VIX",
+                            value: String(format: "%.1f", vix),
+                            color: vix > 20 ? Theme.loss : (vix > 15 ? Theme.accentOrange : Theme.profit)
+                        )
+                    }
 
                     // Support
                     let analysis = viewModel.getOIAnalysis()

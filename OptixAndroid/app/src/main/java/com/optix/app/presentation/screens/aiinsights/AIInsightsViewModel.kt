@@ -3,6 +3,7 @@ package com.optix.app.presentation.screens.aiinsights
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.optix.app.core.util.Resource
+import com.optix.app.data.local.AIScorecardDataStore
 import com.optix.app.data.local.datastore.AIPreferencesDataStore
 import com.optix.app.data.remote.api.OptixApiService
 import com.optix.app.data.remote.dto.AnalyzeTradeRequest
@@ -22,6 +23,7 @@ import com.optix.app.domain.model.MarketRegime
 import com.optix.app.domain.model.OptionChain
 import com.optix.app.domain.model.OptionsHeatmapData
 import com.optix.app.domain.model.PersonalizedAITradeSuggestion
+import com.optix.app.domain.model.ScorecardStats
 import com.optix.app.domain.model.SmartMoneySignal
 import com.optix.app.domain.model.StrategyRecommendation
 import com.optix.app.domain.model.TradeDirection
@@ -97,7 +99,10 @@ data class AIInsightsUiState(
     // Ask AI state
     val isAskingAI: Boolean = false,
     val aiExplanation: AIExplanation? = null,
-    val askAIError: String? = null
+    val askAIError: String? = null,
+
+    // Scorecard
+    val scorecardStats: ScorecardStats? = null
 )
 
 /**
@@ -120,7 +125,8 @@ class AIInsightsViewModel @Inject constructor(
     private val webSocketService: AIInsightsWebSocketService,
     private val notificationService: AINotificationService,
     private val preferencesDataStore: AIPreferencesDataStore,
-    private val apiService: OptixApiService
+    private val apiService: OptixApiService,
+    private val scorecardDataStore: AIScorecardDataStore
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AIInsightsUiState())
@@ -149,6 +155,9 @@ class AIInsightsViewModel @Inject constructor(
 
         // Listen to WebSocket updates
         setupWebSocketListeners()
+
+        // Load initial scorecard stats
+        _uiState.value = _uiState.value.copy(scorecardStats = scorecardDataStore.getStats())
 
         // Initial load
         loadInsights()
@@ -211,12 +220,14 @@ class AIInsightsViewModel @Inject constructor(
                 loadOptionChainIfNeeded(symbol)
 
                 // Fetch India VIX in parallel
-                val indiaVix = try {
+                val vixBody = try {
                     val vixResponse = apiService.getIndiaVix()
-                    if (vixResponse.isSuccessful) vixResponse.body()?.value else null
+                    if (vixResponse.isSuccessful) vixResponse.body() else null
                 } catch (e: Exception) {
                     null
                 }
+                val indiaVix = vixBody?.value
+                val vixChange = vixBody?.changePercent
 
                 // Get enhanced AI insights
                 aiAnalysisRepository.getEnhancedAIInsights(
@@ -228,17 +239,44 @@ class AIInsightsViewModel @Inject constructor(
                         is Resource.Success -> {
                             result.data?.let { enhanced ->
                                 // Merge India VIX into analysis result
-                                val analysisWithVix = enhanced.baseAnalysis.copy(indiaVix = indiaVix)
+                                val analysisWithVix = enhanced.baseAnalysis.copy(indiaVix = indiaVix, vixChange = vixChange)
 
                                 // Personalize suggestions
                                 val personalized = personalizeSuggestions(analysisWithVix.suggestions)
+
+                                // Resolve existing picks against current prices
+                                currentOptionChain?.let { chain ->
+                                    val priceMap = mutableMapOf<String, Double>()
+                                    for (row in chain.rows) {
+                                        val strike = row.strikePrice
+                                        row.callData?.let { cd ->
+                                            if (cd.lastPrice > 0) {
+                                                val key = "${analysisWithVix.symbol}_${strike.toInt()}_CE_${cd.expiry}"
+                                                priceMap[key] = cd.lastPrice
+                                            }
+                                        }
+                                        row.putData?.let { pd ->
+                                            if (pd.lastPrice > 0) {
+                                                val key = "${analysisWithVix.symbol}_${strike.toInt()}_PE_${pd.expiry}"
+                                                priceMap[key] = pd.lastPrice
+                                            }
+                                        }
+                                    }
+                                    if (priceMap.isNotEmpty()) {
+                                        scorecardDataStore.resolveOutcomes(priceMap)
+                                    }
+                                }
+                                // Track new suggestions in scorecard
+                                scorecardDataStore.trackSuggestions(analysisWithVix.suggestions, analysisWithVix.symbol)
+                                val stats = scorecardDataStore.getStats()
 
                                 _uiState.value = _uiState.value.copy(
                                     isLoading = false,
                                     isRefreshing = false,
                                     analysisResult = analysisWithVix,
                                     enhancedResult = enhanced,
-                                    personalizedSuggestions = personalized
+                                    personalizedSuggestions = personalized,
+                                    scorecardStats = stats
                                 )
 
                                 // Connect to WebSocket for real-time updates

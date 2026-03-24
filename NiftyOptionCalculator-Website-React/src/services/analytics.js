@@ -1,11 +1,35 @@
 /**
- * Visitor Analytics Service
- * Tracks visitors and page views for admin analytics dashboard
+ * @file analytics.js — Unified analytics service for Optix Web.
+ *
+ * Two tracking channels:
+ *  1. Custom visitor tracking — POST /api/v1/track/visit to our backend
+ *     (powers the admin analytics dashboard, identified by a canvas-fingerprint visitor ID).
+ *  2. Firebase Analytics — standard Google Analytics events (screen_view, login, feature_used, etc.)
+ *     enriched with PLATFORM_PARAMS so web events can be distinguished in the Firebase console.
+ *
+ * All public functions are safe to call before Firebase is ready — they silently no-op.
  */
+
+import { getAnalytics, logEvent as firebaseLogEvent, setUserId, setUserProperties } from 'firebase/analytics';
+import { app as firebaseApp } from './firebase';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.optix.d23ai.in';
 
-// Generate a unique visitor ID (stored in localStorage)
+// Firebase Analytics instance
+let analyticsInstance = null;
+
+// Platform params injected into every event
+const PLATFORM_PARAMS = {
+  platform: 'web',
+  app_version: import.meta.env.VITE_APP_VERSION || '1.0.0',
+};
+
+// ============== Custom Visitor Tracking ==============
+
+/**
+ * Generate a semi-stable visitor ID using canvas fingerprinting + random salt.
+ * Persisted in localStorage so the same browser gets the same ID across sessions.
+ */
 function getVisitorId() {
   let visitorId = localStorage.getItem('optix_visitor_id');
   if (!visitorId) {
@@ -40,7 +64,7 @@ function getVisitorId() {
   return visitorId;
 }
 
-// Get or create session ID
+/** Session-scoped ID (sessionStorage) — new tab/restart = new session. */
 function getSessionId() {
   let sessionId = sessionStorage.getItem('optix_session_id');
   if (!sessionId) {
@@ -50,7 +74,7 @@ function getSessionId() {
   return sessionId;
 }
 
-// Track a page visit
+/** Fire-and-forget POST to the backend visitor tracking endpoint. */
 export async function trackVisit(pageUrl = null, pageTitle = null) {
   try {
     const visitorId = getVisitorId();
@@ -81,21 +105,121 @@ export async function trackVisit(pageUrl = null, pageTitle = null) {
   }
 }
 
-// Track page view (can be called on route changes)
+/** Convenience alias for trackVisit — called on React Router route changes. */
 export function trackPageView(pageUrl, pageTitle) {
   trackVisit(pageUrl, pageTitle);
 }
 
-// Initialize tracking on page load
+/**
+ * Bootstrap both tracking channels. Must be called once (typically in AnalyticsTracker).
+ * - Sends the first custom visit event
+ * - Lazily initialises the Firebase Analytics SDK
+ */
 export function initAnalytics() {
-  // Track initial page load
   if (typeof window !== 'undefined') {
     trackVisit();
 
-    // Track when user leaves (for time spent calculation in future)
-    window.addEventListener('beforeunload', () => {
-      // Could send time spent data here
-    });
+    // Firebase Analytics — may fail in dev/ad-blocked environments
+    try {
+      analyticsInstance = getAnalytics(firebaseApp);
+    } catch (e) {
+      console.warn('Firebase Analytics not available:', e.message);
+    }
+
+    // Placeholder: could send session-duration data on unload
+    window.addEventListener('beforeunload', () => {});
+  }
+}
+
+// ============== Firebase Analytics Functions ==============
+
+/**
+ * Log a custom event to Firebase Analytics
+ * @param {string} eventName - Event name (e.g. 'button_click', 'feature_used')
+ * @param {object} params - Optional event parameters
+ */
+export function logEvent(eventName, params = {}) {
+  if (analyticsInstance) {
+    try {
+      firebaseLogEvent(analyticsInstance, eventName, { ...PLATFORM_PARAMS, ...params });
+    } catch (e) {
+      console.debug('Firebase logEvent failed:', e.message);
+    }
+  }
+}
+
+/**
+ * Set the user ID for Firebase Analytics
+ * @param {string} userId
+ */
+export function setAnalyticsUserId(userId) {
+  if (analyticsInstance) {
+    try {
+      setUserId(analyticsInstance, userId);
+      setUserProperties(analyticsInstance, { platform: 'web' });
+    } catch (e) {
+      console.debug('Firebase setUserId failed:', e.message);
+    }
+  }
+}
+
+/**
+ * Set user properties for Firebase Analytics (e.g. auth state)
+ * @param {object} properties - Key-value pairs of user properties
+ */
+export function setAnalyticsUserProperties(properties) {
+  if (analyticsInstance) {
+    try {
+      setUserProperties(analyticsInstance, properties);
+    } catch (e) {
+      console.debug('Firebase setUserProperties failed:', e.message);
+    }
+  }
+}
+
+/**
+ * Log a screen/page view to Firebase Analytics
+ * @param {string} screenName
+ */
+export function logScreenView(screenName) {
+  if (analyticsInstance) {
+    try {
+      firebaseLogEvent(analyticsInstance, 'screen_view', {
+        ...PLATFORM_PARAMS,
+        firebase_screen: screenName,
+        firebase_screen_class: screenName,
+      });
+    } catch (e) {
+      console.debug('Firebase screen_view failed:', e.message);
+    }
+  }
+}
+
+/**
+ * Log a login event to Firebase Analytics
+ * @param {string} method - Login method (e.g. 'google', 'facebook', 'otp')
+ */
+export function logLogin(method) {
+  if (analyticsInstance) {
+    try {
+      firebaseLogEvent(analyticsInstance, 'login', { ...PLATFORM_PARAMS, method });
+    } catch (e) {
+      console.debug('Firebase login event failed:', e.message);
+    }
+  }
+}
+
+/**
+ * Log a feature usage event to Firebase Analytics
+ * @param {string} feature - Feature name
+ */
+export function logFeatureUsed(feature) {
+  if (analyticsInstance) {
+    try {
+      firebaseLogEvent(analyticsInstance, 'feature_used', { ...PLATFORM_PARAMS, feature_name: feature });
+    } catch (e) {
+      console.debug('Firebase feature_used event failed:', e.message);
+    }
   }
 }
 
@@ -104,5 +228,11 @@ export default {
   trackPageView,
   initAnalytics,
   getVisitorId,
-  getSessionId
+  getSessionId,
+  logEvent,
+  setAnalyticsUserId,
+  setAnalyticsUserProperties,
+  logScreenView,
+  logLogin,
+  logFeatureUsed,
 };

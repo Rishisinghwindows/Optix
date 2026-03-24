@@ -885,6 +885,17 @@ private fun ChatInputView(
                 }
             }
         }
+
+        // SEBI Disclaimer
+        Text(
+            text = "⚠️ AI responses are not investment advice. Investment in securities market is subject to market risks. Consult a SEBI-registered advisor.",
+            style = MaterialTheme.typography.bodySmall.copy(fontSize = 9.sp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp)
+        )
     }
 }
 

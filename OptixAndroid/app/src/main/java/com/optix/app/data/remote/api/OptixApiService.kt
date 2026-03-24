@@ -141,6 +141,33 @@ interface OptixApiService {
     @GET("api/v1/ipo/{id}")
     suspend fun getIPODetail(@Path("id") id: String): Response<IPODetailResponse>
 
+    // ============== Trade Journal ==============
+
+    @GET("api/v1/journal")
+    suspend fun getJournalEntries(
+        @Query("outcome") outcome: String? = null,
+        @Query("symbol") symbol: String? = null,
+        @Query("tag") tag: String? = null,
+        @Query("mood") mood: String? = null,
+        @Query("limit") limit: Int = 100,
+        @Query("offset") offset: Int = 0
+    ): Response<JournalListResponse>
+
+    @GET("api/v1/journal/stats")
+    suspend fun getJournalStats(): Response<JournalStatsDto>
+
+    @POST("api/v1/journal")
+    suspend fun createJournalEntry(@Body request: JournalCreateRequest): Response<JournalEntryDto>
+
+    @PUT("api/v1/journal/{entryId}")
+    suspend fun updateJournalEntry(
+        @Path("entryId") entryId: String,
+        @Body request: JournalUpdateRequest
+    ): Response<JournalEntryDto>
+
+    @DELETE("api/v1/journal/{entryId}")
+    suspend fun deleteJournalEntry(@Path("entryId") entryId: String): Response<JournalDeleteResponse>
+
     // ============== Chat ==============
 
     @POST("api/v1/chatbot/quick")

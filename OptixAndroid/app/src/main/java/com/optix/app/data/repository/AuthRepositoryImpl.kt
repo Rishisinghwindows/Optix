@@ -4,6 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.optix.app.core.util.AnalyticsHelper
+import com.optix.app.core.util.CrashlyticsHelper
 import com.optix.app.core.util.Resource
 import com.optix.app.data.remote.api.OptixApiService
 import com.optix.app.data.remote.dto.GoogleSignInRequestDto
@@ -92,6 +94,10 @@ class AuthRepositoryImpl @Inject constructor(
                     saveUser(user)
                     _currentUser = user
                     _authState.value = AuthState.Authenticated(user)
+                    CrashlyticsHelper.setUser(user.id)
+                    // Bind analytics identity so all future events are attributed to this user
+                    AnalyticsHelper.setUserId(user.id)
+                    AnalyticsHelper.logLogin("otp")
 
                     Resource.Success(user)
                 } else {
@@ -127,6 +133,9 @@ class AuthRepositoryImpl @Inject constructor(
                     saveUser(user)
                     _currentUser = user
                     _authState.value = AuthState.Authenticated(user)
+                    CrashlyticsHelper.setUser(user.id)
+                    AnalyticsHelper.setUserId(user.id)
+                    AnalyticsHelper.logLogin("google")
 
                     Resource.Success(user)
                 } else {
@@ -165,12 +174,18 @@ class AuthRepositoryImpl @Inject constructor(
             clearTokens()
             _currentUser = null
             _authState.value = AuthState.Unauthenticated
+            CrashlyticsHelper.setUser(null)
+            // Clear analytics identity so post-logout events are anonymous
+            AnalyticsHelper.setUserId(null)
             Resource.Success(true)
         } catch (e: Exception) {
+            // Even if the server-side logout fails, clear local state to avoid stale sessions
             clearTokens()
             _currentUser = null
             _authState.value = AuthState.Unauthenticated
-            Resource.Success(true) // Still clear tokens even if API call fails
+            CrashlyticsHelper.setUser(null)
+            AnalyticsHelper.setUserId(null)
+            Resource.Success(true)
         }
     }
 
@@ -204,6 +219,7 @@ class AuthRepositoryImpl @Inject constructor(
             if (token != null && user != null) {
                 _currentUser = user
                 _authState.value = AuthState.Authenticated(user)
+                CrashlyticsHelper.setUser(user.id)
                 Resource.Success(user)
             } else {
                 _authState.value = AuthState.Unauthenticated

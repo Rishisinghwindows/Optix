@@ -38,6 +38,9 @@ struct StrikeAnalysisSheet: View {
 
                             // Greeks Analysis
                             GreeksAnalysisCard(option: option)
+
+                            // SEBI Disclaimer
+                            DisclaimerView()
                         }
                         .padding(16)
                         .padding(.bottom, 40)

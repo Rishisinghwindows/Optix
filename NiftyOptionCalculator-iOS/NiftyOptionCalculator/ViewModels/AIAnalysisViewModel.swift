@@ -44,6 +44,7 @@ class AIAnalysisViewModel: ObservableObject {
     @Published var selectedTab: InsightTab = .calls
     @Published var error: String?
     @Published var lastAnalysisTime: Date?
+    @Published var scorecardStats: ScorecardStats?
 
     // Data from Option Chain
     @Published var optionChain: [OptionChainRow] = []
@@ -55,6 +56,7 @@ class AIAnalysisViewModel: ObservableObject {
     @Published var totalCallOI: Int = 0
     @Published var totalPutOI: Int = 0
     @Published var previousClose: Double = 0  // For intraday movement detection
+    @Published var vixChange: Double?  // VIX percentage change
     var selectedIndex: TradingIndex = .nifty50
 
     // Technical Analysis
@@ -262,17 +264,22 @@ class AIAnalysisViewModel: ObservableObject {
 
             // Fetch India VIX for volatility-based strategy selection
             var indiaVix: Double? = nil
+            var fetchedVixChange: Double? = nil
             if UpstoxAPIService.shared.isAuthenticated {
                 do {
-                    indiaVix = try await UpstoxAPIService.shared.fetchIndiaVix()
-                    // VIX fetched successfully
+                    if let vixResult = try await UpstoxAPIService.shared.fetchIndiaVix() {
+                        indiaVix = vixResult.value
+                        fetchedVixChange = vixResult.change
+                    }
                 } catch {
                     // VIX fetch failed, continuing without it
                 }
             } else {
                 do {
-                    indiaVix = try await GuestDataService.shared.fetchIndiaVix()
-                    // Guest VIX fetched successfully
+                    if let vixResult = try await GuestDataService.shared.fetchIndiaVix() {
+                        indiaVix = vixResult.value
+                        fetchedVixChange = vixResult.change
+                    }
                 } catch {
                     // Guest VIX fetch failed, continuing without it
                 }
@@ -305,12 +312,57 @@ class AIAnalysisViewModel: ObservableObject {
             await MainActor.run {
                 self.technicalAnalysis = techAnalysis
                 self.aiAnalysis = result
+                self.vixChange = fetchedVixChange
                 self.isAnalyzing = false
                 self.lastAnalysisTime = Date()
                 // Keep user's current tab selection - don't auto-switch
                 // Default is already .calls (set in property declaration)
+
+                // Resolve existing picks against current prices, then track new ones
+                AIScorecardService.shared.resolveFromOptionChain(
+                    self.optionChain,
+                    indexName: self.selectedIndex.displayName
+                )
+                AIScorecardService.shared.trackSuggestions(
+                    calls: result.topCallPicks,
+                    puts: result.topPutPicks,
+                    indexName: self.selectedIndex.displayName
+                )
+                self.updateScorecard()
             }
         }
+    }
+
+    /// Refresh India VIX independently (called by timer)
+    func refreshVix() async {
+        let vixResult: (value: Double, change: Double?)?
+        if UpstoxAPIService.shared.isAuthenticated {
+            vixResult = try? await UpstoxAPIService.shared.fetchIndiaVix()
+        } else {
+            vixResult = try? await GuestDataService.shared.fetchIndiaVix()
+        }
+        guard let result = vixResult else { return }
+        // Update VIX in the existing analysis result
+        if var analysis = aiAnalysis {
+            analysis = AIAnalysisResult(
+                marketBias: analysis.marketBias,
+                topCallPicks: analysis.topCallPicks,
+                topPutPicks: analysis.topPutPicks,
+                avoidList: analysis.avoidList,
+                marketInsights: analysis.marketInsights,
+                spotPrice: analysis.spotPrice,
+                putCallRatio: analysis.putCallRatio,
+                maxPainStrike: analysis.maxPainStrike,
+                atmStrike: analysis.atmStrike,
+                technicalAnalysis: analysis.technicalAnalysis,
+                indiaVix: result.value,
+                unusualActivities: analysis.unusualActivities,
+                strategySuggestions: analysis.strategySuggestions,
+                marketRegime: analysis.marketRegime
+            )
+            aiAnalysis = analysis
+        }
+        vixChange = result.change
     }
 
     /// Fetch historical candle data for technical analysis
@@ -370,6 +422,10 @@ class AIAnalysisViewModel: ObservableObject {
 
     func refresh() {
         runAnalysis()
+    }
+
+    func updateScorecard() {
+        scorecardStats = AIScorecardService.shared.getStats()
     }
 
     // MARK: - Helper Methods

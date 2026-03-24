@@ -4,6 +4,9 @@ import os.log
 #if canImport(GoogleSignIn)
 import GoogleSignIn
 #endif
+import FirebaseCore
+import FirebaseCrashlytics
+import FirebaseMessaging
 
 @main
 struct OptixApp: App {
@@ -46,6 +49,26 @@ struct OptixApp: App {
                     // Set up push notification service (delegate + permission request)
                     PushNotificationService.shared.setup()
                     PushNotificationService.shared.requestPermission()
+
+                    // --- Analytics bootstrap ---
+                    // Tie all future analytics events and crash reports to the current user (nil for guests).
+                    CrashlyticsService.setUser(authManager.currentUser?.id)
+                    AnalyticsService.setUserID(authManager.currentUser?.id)
+
+                    // User properties enable Firebase audience segmentation (e.g. "premium" vs "free")
+                    AnalyticsService.setUserProperty(authManager.isLoggedIn ? "logged_in" : "guest", forName: "auth_state")
+                    AnalyticsService.setUserProperty(authManager.currentUser?.isPremium == true ? "premium" : "free", forName: "subscription")
+                }
+                .onChange(of: authManager.isLoggedIn) { _, isLoggedIn in
+                    // Re-bind analytics/crash user ID whenever auth state changes (login or logout)
+                    CrashlyticsService.setUser(authManager.currentUser?.id)
+                    AnalyticsService.setUserID(authManager.currentUser?.id)
+                    if isLoggedIn {
+                        // "app_restore" distinguishes a session-resume login from an explicit sign-in
+                        AnalyticsService.logLogin(method: "app_restore")
+                        // Re-register FCM token with auth credentials so backend links token to user
+                        PushNotificationService.shared.reRegisterTokenIfNeeded()
+                    }
                 }
         }
     }
@@ -102,16 +125,38 @@ struct RootView: View {
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(
         _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        // Configure Firebase
+        FirebaseApp.configure()
+
+        // Disable Crashlytics collection in DEBUG builds to avoid noise during development
+        #if DEBUG
+        Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(false)
+        #endif
+
+        // Set messaging delegate to get FCM tokens
+        Messaging.messaging().delegate = PushNotificationService.shared
+        return true
+    }
+
+    func application(
+        _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
-        PushNotificationService.shared.registerToken(deviceToken)
+        // Pass APNs token to Firebase with correct environment type
+        // TestFlight/App Store = .prod, Xcode debug = .sandbox
+        #if DEBUG
+        Messaging.messaging().setAPNSToken(deviceToken, type: .sandbox)
+        #else
+        Messaging.messaging().setAPNSToken(deviceToken, type: .prod)
+        #endif
     }
 
     func application(
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: Error
     ) {
-        // Log the failure but don't crash - push is optional
         let logger = os.Logger(subsystem: "com.optix.app", category: "AppDelegate")
         logger.error("Failed to register for remote notifications: \(error.localizedDescription)")
     }

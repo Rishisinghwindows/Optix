@@ -2025,11 +2025,18 @@ final class AIAnalysisService {
         // Use support/resistance levels (highest OI strikes) as natural targets
         // Project option price at OI-wall spot using delta approximation
         // Blend 60% OI-wall + 40% formula for more market-anchored targets
+        // Cap OI-wall target to max 2x the formula target to prevent absurd values
+        // for deep OTM options where delta is not valid for large spot moves
+        let formulaTarget = targetPrice
+        let formulaSL = stopLossPrice
         if let oiTargetSpot = isCall ? context.resistanceLevel : context.supportLevel {
             let spotMoveToTarget = isCall ? (oiTargetSpot - currentSpot) : (currentSpot - oiTargetSpot)
             if spotMoveToTarget > 0 {
-                let oiTargetPrice = entryPrice + (spotMoveToTarget * absDelta)
-                if oiTargetPrice > entryPrice * 1.05 {  // Only if meaningful
+                var oiTargetPrice = entryPrice + (spotMoveToTarget * absDelta)
+                // Cap OI-wall target at 2x the formula target to prevent lottery-ticket targets
+                let maxOITarget = formulaTarget * 2.0
+                oiTargetPrice = min(oiTargetPrice, maxOITarget)
+                if oiTargetPrice > entryPrice * 1.05 {
                     targetPrice = oiTargetPrice * 0.6 + targetPrice * 0.4
                 }
             }
@@ -2037,12 +2044,17 @@ final class AIAnalysisService {
         if let oiSLSpot = isCall ? context.supportLevel : context.resistanceLevel {
             let spotMoveToSL = isCall ? (currentSpot - oiSLSpot) : (oiSLSpot - currentSpot)
             if spotMoveToSL > 0 {
-                let oiSLPrice = entryPrice - (spotMoveToSL * absDelta)
-                if oiSLPrice > 0 && oiSLPrice < entryPrice * 0.95 {  // Only if meaningful
+                var oiSLPrice = entryPrice - (spotMoveToSL * absDelta)
+                // Cap OI-wall SL — don't go below 2x the formula SL distance
+                let minOISL = entryPrice - (entryPrice - formulaSL) * 2.0
+                oiSLPrice = max(oiSLPrice, minOISL)
+                if oiSLPrice > 0 && oiSLPrice < entryPrice * 0.95 {
                     stopLossPrice = oiSLPrice * 0.6 + stopLossPrice * 0.4
                 }
             }
         }
+        // Final cap: target must not exceed 3x entry (300% gain is already extreme)
+        targetPrice = min(targetPrice, entryPrice * 3.0)
 
         // Ensure minimum R:R (DTE-aware — match Web engine)
         let effectiveMinRR: Double

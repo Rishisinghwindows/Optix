@@ -1263,12 +1263,21 @@ private fun DisclaimerBanner() {
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Text(
-                "AI suggestions are based on technical analysis and should not be considered financial advice. Always do your own research.",
-                fontSize = 13.sp,
-                color = Color.DarkGray,
-                lineHeight = 18.sp
-            )
+            Column {
+                Text(
+                    "SEBI Disclaimer",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = AIOrange
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    "Investment in securities market is subject to market risks. AI-generated suggestions are for informational and educational purposes only and do not constitute investment advice. Past performance does not guarantee future results. Consult a SEBI-registered investment advisor before making any trading decisions.",
+                    fontSize = 11.sp,
+                    color = Color.DarkGray,
+                    lineHeight = 16.sp
+                )
+            }
         }
     }
 }

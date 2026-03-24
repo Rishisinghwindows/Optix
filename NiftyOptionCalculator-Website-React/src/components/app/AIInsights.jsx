@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import marketAPI from '../../services/marketAPI'
 import aiAnalysisService from '../../services/aiAnalysisService'
+import { trackSuggestions, resolveFromOptionChain, getStats } from '../../services/aiScorecardService'
+import { logScreenView, logEvent } from '../../services/analytics'
 
 function AIInsights() {
   const [selectedIndex, setSelectedIndex] = useState('NIFTY')
@@ -19,6 +21,10 @@ function AIInsights() {
   const [strategies, setStrategies] = useState([])
   const [expandedStrategy, setExpandedStrategy] = useState(null)
   const [uaExpanded, setUAExpanded] = useState(false)
+  const [scorecardStats, setScorecardStats] = useState(null)
+
+  // Firebase screen_view on mount
+  useEffect(() => { logScreenView('ai_insights'); }, [])
 
   // Unusual activity detection
   const unusualActivities = useMemo(() => {
@@ -41,6 +47,11 @@ function AIInsights() {
     }
     return activities.slice(0, 5);
   }, [optionChain]);
+
+  // Load scorecard stats on mount
+  useEffect(() => {
+    setScorecardStats(getStats())
+  }, [])
 
   // Fetch expiry dates
   useEffect(() => {
@@ -77,9 +88,11 @@ function AIInsights() {
       }
 
       // Fetch India VIX for volatility context
+      let vixChange = null
       try {
         const vixData = await marketAPI.getSpotPrice('INDIAVIX')
         indiaVix = vixData?.price || vixData?.lastPrice || null
+        vixChange = vixData?.pChange ?? vixData?.change ?? null
       } catch (e) {
         // VIX fetch failed; continue without VIX data
       }
@@ -131,6 +144,7 @@ function AIInsights() {
           pChange: intradayChange,  // Alias for compatibility
           indiaVix,  // VIX for volatility context
           vix: indiaVix,  // Alias
+          vixChange,  // VIX percentage change
         }
 
         // Generate suggestions (may annotate context with no-trade reason)
@@ -140,6 +154,26 @@ function AIInsights() {
         )
         setMarketContext({ ...context })
         setSuggestions(generatedSuggestions)
+
+        // Log a rich analytics event after AI suggestions are generated.
+        // Includes market snapshot so we can correlate suggestion quality with conditions.
+        logEvent('ai_insights_view', {
+          index: selectedIndex,
+          expiry: selectedExpiry || '',
+          suggestion_count: generatedSuggestions?.length || 0,
+          spot_price: Math.round(context.spotPrice || 0),
+          pcr: parseFloat((context.pcr || 0).toFixed(2)),
+          vix: context.indiaVix ? parseFloat(context.indiaVix.toFixed(2)) : null,
+          market_bias: context.marketBias || 'unknown',
+          days_to_expiry: context.daysToExpiry ?? null,
+        });
+
+        // Resolve existing picks against current prices, then track new ones
+        resolveFromOptionChain(chainData.data, selectedIndex, selectedExpiry || '')
+        if (generatedSuggestions?.length > 0) {
+          trackSuggestions(generatedSuggestions, selectedIndex, selectedExpiry || '')
+        }
+        setScorecardStats(getStats())
 
         // Generate multi-leg strategy suggestions
         const generatedStrategies = aiAnalysisService.generateStrategySuggestions(
@@ -309,7 +343,14 @@ function AIInsights() {
                 {marketContext.vix > 0 && (
                   <div className="stat">
                     <span className="stat-icon" style={{ color: marketContext.vix > 20 ? '#FF3B30' : marketContext.vix > 15 ? '#FF9500' : '#34C759' }}>⚡</span>
-                    <span className="stat-value" style={{ color: marketContext.vix > 20 ? '#FF3B30' : marketContext.vix > 15 ? '#FF9500' : '#34C759' }}>{marketContext.vix.toFixed(1)}</span>
+                    <span className="stat-value" style={{ color: marketContext.vix > 20 ? '#FF3B30' : marketContext.vix > 15 ? '#FF9500' : '#34C759' }}>
+                      {marketContext.vix.toFixed(1)}
+                      {marketContext.vixChange != null && (
+                        <span style={{ fontSize: '10px', marginLeft: '3px', color: marketContext.vixChange >= 0 ? '#FF3B30' : '#34C759' }}>
+                          {marketContext.vixChange >= 0 ? '▲' : '▼'}{Math.abs(marketContext.vixChange).toFixed(1)}%
+                        </span>
+                      )}
+                    </span>
                     <span className="stat-label">India VIX</span>
                   </div>
                 )}
@@ -835,11 +876,105 @@ function AIInsights() {
             )}
           </div>}
 
-          {/* Disclaimer */}
-          <div className="ai-disclaimer">
+          {/* AI Scorecard */}
+          {scorecardStats && scorecardStats.totalPicks > 0 && (
+            <div className="scorecard-card">
+              <div className="scorecard-header">
+                <span className="scorecard-icon">🎯</span>
+                <span className="scorecard-title">AI Scorecard</span>
+                <span className="scorecard-total">{scorecardStats.totalPicks} picks tracked</span>
+              </div>
+
+              <div className="scorecard-stats-row">
+                <div className="scorecard-stat">
+                  <span className="scorecard-stat-value" style={{ color: scorecardStats.winRate >= 50 ? '#4ade80' : '#f87171' }}>
+                    {scorecardStats.winRate.toFixed(0)}%
+                  </span>
+                  <span className="scorecard-stat-label">Win Rate</span>
+                </div>
+                <div className="scorecard-stat">
+                  <span className="scorecard-stat-value" style={{ color: scorecardStats.avgReturn >= 0 ? '#4ade80' : '#f87171' }}>
+                    {scorecardStats.avgReturn >= 0 ? '+' : ''}{scorecardStats.avgReturn.toFixed(1)}%
+                  </span>
+                  <span className="scorecard-stat-label">Avg Return</span>
+                </div>
+                <div className="scorecard-stat">
+                  <span className="scorecard-stat-value" style={{ color: scorecardStats.topPickWinRate >= 50 ? '#4ade80' : '#fbbf24' }}>
+                    {scorecardStats.topPickWinRate.toFixed(0)}%
+                  </span>
+                  <span className="scorecard-stat-label">Top Pick WR</span>
+                </div>
+              </div>
+
+              {/* Outcome Bar */}
+              {(scorecardStats.wins + scorecardStats.losses + scorecardStats.expired) > 0 && (
+                <div className="scorecard-outcome-bar">
+                  {scorecardStats.wins > 0 && (
+                    <div
+                      className="outcome-segment win"
+                      style={{ flex: scorecardStats.wins }}
+                      title={`${scorecardStats.wins} wins`}
+                    >{scorecardStats.wins}W</div>
+                  )}
+                  {scorecardStats.losses > 0 && (
+                    <div
+                      className="outcome-segment loss"
+                      style={{ flex: scorecardStats.losses }}
+                      title={`${scorecardStats.losses} losses`}
+                    >{scorecardStats.losses}L</div>
+                  )}
+                  {scorecardStats.expired > 0 && (
+                    <div
+                      className="outcome-segment expired"
+                      style={{ flex: scorecardStats.expired }}
+                      title={`${scorecardStats.expired} expired`}
+                    >{scorecardStats.expired}E</div>
+                  )}
+                </div>
+              )}
+
+              {scorecardStats.activePicks > 0 && (
+                <div className="scorecard-active">
+                  <span className="active-dot"></span>
+                  {scorecardStats.activePicks} active pick{scorecardStats.activePicks !== 1 ? 's' : ''} being tracked
+                </div>
+              )}
+
+              {/* Recent Picks */}
+              {scorecardStats.recentPicks.length > 0 && (
+                <div className="scorecard-recent">
+                  <span className="scorecard-recent-title">Recent Picks</span>
+                  {scorecardStats.recentPicks.slice(0, 5).map((pick) => (
+                    <div key={pick.id} className="scorecard-pick-row">
+                      <div className="pick-info">
+                        <span className="pick-strike">{Math.round(pick.strikePrice)} {pick.optionType}</span>
+                        <span className="pick-index">{pick.indexName}</span>
+                      </div>
+                      <div className="pick-outcome-info">
+                        <span className={`pick-outcome-badge ${pick.outcome}`}>
+                          {pick.outcome === 'win' ? 'W' : pick.outcome === 'loss' ? 'L' : pick.outcome === 'expired' ? 'E' : 'A'}
+                        </span>
+                        {pick.returnPct != null && (
+                          <span className={`pick-return ${pick.returnPct >= 0 ? 'positive' : 'negative'}`}>
+                            {pick.returnPct >= 0 ? '+' : ''}{pick.returnPct.toFixed(1)}%
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* SEBI Disclaimer */}
+          <div className="ai-disclaimer sebi-disclaimer">
             <p>
-              <strong>Disclaimer:</strong> AI insights are for educational purposes only.
-              Always do your own research before trading. Past performance doesn't guarantee future results.
+              <strong>⚠️ SEBI Disclaimer:</strong> Investment in securities market is subject to market risks.
+              AI-generated suggestions are for informational and educational purposes only and do not constitute
+              investment advice, financial advice, or trading advice. Past performance does not guarantee future results.
+              Consult a SEBI-registered investment advisor before making any trading decisions.
+              The developers of this app are not SEBI-registered advisors and shall not be held liable for any losses.
             </p>
           </div>
 

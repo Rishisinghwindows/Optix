@@ -25,6 +25,10 @@ import com.optix.app.presentation.screens.strategy.StrategyDetailScreen
 import com.optix.app.presentation.screens.trade.PaperTradingScreen
 import com.optix.app.domain.model.*
 import com.optix.app.presentation.screens.charts.ChartsScreen
+import com.optix.app.presentation.screens.journal.TradeJournalScreen
+import com.optix.app.presentation.screens.notifications.NotificationsScreen
+import com.optix.app.presentation.screens.screener.OptionScreenerScreen
+import com.optix.app.presentation.screens.simulator.PnLSimulatorScreen
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 
@@ -113,6 +117,9 @@ fun NavGraph(
                 },
                 onNavigateToCharts = {
                     navController.navigate(Screen.Charts.route)
+                },
+                onNavigateToScreener = {
+                    navController.navigate(Screen.OptionScreener.route)
                 }
             )
         }
@@ -157,6 +164,12 @@ fun NavGraph(
                 },
                 onNavigateToCharts = {
                     navController.navigate(Screen.Charts.route)
+                },
+                onNavigateToSimulator = {
+                    navController.navigate(Screen.PnLSimulator.route)
+                },
+                onNavigateToJournal = {
+                    navController.navigate(Screen.TradeJournal.route)
                 }
             )
         }
@@ -260,6 +273,32 @@ fun NavGraph(
         composable(Screen.Charts.route) {
             ChartsScreen(
                 onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.Notifications.route) {
+            NotificationsScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.OptionScreener.route) {
+            OptionScreenerScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.PnLSimulator.route) {
+            PnLSimulatorScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.TradeJournal.route) {
+            TradeJournalScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Screen.Login.route)
+                }
             )
         }
     }

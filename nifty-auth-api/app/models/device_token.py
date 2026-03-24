@@ -29,10 +29,10 @@ class DeviceToken(Base):
         default=lambda: str(uuid.uuid4()),
     )
 
-    user_id: Mapped[str] = mapped_column(
+    user_id: Mapped[Optional[str]] = mapped_column(
         String(36),
         ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
+        nullable=True,
         index=True,
     )
 

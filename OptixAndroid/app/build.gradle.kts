@@ -5,6 +5,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     jacoco
 }
 
@@ -129,6 +130,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-messaging-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
 
     // Accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")

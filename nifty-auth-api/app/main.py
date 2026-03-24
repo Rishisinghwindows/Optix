@@ -19,9 +19,11 @@ from app.routers.websocket import router as websocket_router
 from app.routers.algo_trading import router as algo_trading_router
 from app.routers.trade_journal import router as trade_journal_router
 from app.routers.device import router as device_router
+from app.routers.market_monitor import router as market_monitor_router
 from app.workers.position_monitor import position_monitor
 from app.services.ai_chatbot_service import chatbot_service
 from app.services.alert_service import alert_checker_service
+from app.services.market_monitor_service import market_monitor_service
 from app.services.nse_service import nse_service
 
 logger = logging.getLogger(__name__)
@@ -78,6 +80,14 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.error(f"Alert checker service failed to start: {e}")
 
+    # Start market monitor service (push notifications for significant changes)
+    if settings.enable_market_monitor:
+        try:
+            await market_monitor_service.start()
+            logger.info("Market monitor service started")
+        except Exception as e:
+            logger.error(f"Market monitor service failed to start: {e}")
+
     # Start position monitor (for algo trading)
     if settings.enable_position_monitor:
         try:
@@ -97,6 +107,12 @@ async def lifespan(app: FastAPI):
             await position_monitor.stop()
         except Exception as e:
             logger.error(f"Error stopping position monitor: {e}")
+
+    if settings.enable_market_monitor:
+        try:
+            await market_monitor_service.stop()
+        except Exception as e:
+            logger.error(f"Error stopping market monitor: {e}")
 
     if settings.enable_alerts:
         try:
@@ -152,6 +168,7 @@ app.include_router(alerts_router, prefix="/api/v1")  # Price Alerts endpoints
 app.include_router(algo_trading_router)  # Algo Trading endpoints
 app.include_router(trade_journal_router, prefix="/api/v1")  # Trade Journal endpoints
 app.include_router(device_router, prefix="/api/v1")  # Device token registration (push notifications)
+app.include_router(market_monitor_router, prefix="/api/v1")  # Market monitor signals
 
 # Serve static files
 static_dir = os.path.join(os.path.dirname(__file__), "static")

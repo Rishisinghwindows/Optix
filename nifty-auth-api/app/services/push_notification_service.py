@@ -28,22 +28,30 @@ def _init_firebase():
         import firebase_admin
         from firebase_admin import credentials
 
-        # Check if already initialized
+        # Resolve credentials path
+        import os
+        from app.config import settings
+        cred_path = settings.firebase_credentials_path or os.getenv("FIREBASE_CREDENTIALS_PATH")
+        if cred_path and not os.path.isabs(cred_path):
+            project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            cred_path = os.path.join(project_root, cred_path)
+
+        # Check if already initialized with valid credentials
         try:
-            firebase_admin.get_app()
-            _firebase_initialized = True
-            return True
-        except ValueError:
+            app = firebase_admin.get_app()
+            # Verify the app has a project ID (properly configured)
+            if app.project_id:
+                _firebase_initialized = True
+                return True
+            # App exists but without project ID — delete and reinitialize
+            firebase_admin.delete_app(app)
+        except (ValueError, AttributeError):
             pass
 
-        # Try to initialize with default credentials or service account
-        import os
-        cred_path = os.getenv("FIREBASE_CREDENTIALS_PATH")
         if cred_path and os.path.exists(cred_path):
             cred = credentials.Certificate(cred_path)
             firebase_admin.initialize_app(cred)
         else:
-            # Try Application Default Credentials
             try:
                 firebase_admin.initialize_app()
             except Exception:
@@ -206,6 +214,52 @@ class PushNotificationService:
             else:
                 logger.error(f"FCM send error for token {token[:20]}...: {e}")
                 return False
+
+    async def send_to_all(
+        self,
+        title: str,
+        body: str,
+        data: Optional[dict] = None,
+    ) -> dict:
+        """
+        Broadcast push notification to ALL active device tokens.
+        Used for market-wide alerts (VIX spikes, OI changes, etc.)
+        """
+        async with AsyncSessionLocal() as db:
+            result = await db.execute(
+                select(DeviceToken).where(DeviceToken.is_active == True)
+            )
+            tokens = result.scalars().all()
+
+        if not tokens:
+            logger.debug("No active devices for broadcast")
+            return {"sent_count": 0, "failed_count": 0}
+
+        sent = 0
+        failed = 0
+        invalid_tokens = []
+
+        for device in tokens:
+            success = await self._send_to_device(
+                token=device.token,
+                title=title,
+                body=body,
+                data=data,
+                platform=device.platform,
+            )
+            if success:
+                sent += 1
+            else:
+                failed += 1
+                invalid_tokens.append(device.id)
+
+        if invalid_tokens:
+            await self._deactivate_tokens(invalid_tokens)
+
+        logger.info(
+            f"Broadcast push notification: sent={sent}, failed={failed}, title='{title}'"
+        )
+        return {"sent_count": sent, "failed_count": failed}
 
     async def _deactivate_tokens(self, device_ids: list):
         """Deactivate invalid device tokens."""

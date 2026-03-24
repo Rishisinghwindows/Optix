@@ -77,9 +77,13 @@ class Settings(BaseSettings):
     algo_market_end: str = "15:15"
     algo_paper_mode: bool = True  # Default to paper trading
 
+    # Firebase (Push Notifications)
+    firebase_credentials_path: Optional[str] = None
+
     # Background services
     enable_alerts: bool = True
     enable_position_monitor: bool = True
+    enable_market_monitor: bool = True
 
     class Config:
         env_file = ".env"

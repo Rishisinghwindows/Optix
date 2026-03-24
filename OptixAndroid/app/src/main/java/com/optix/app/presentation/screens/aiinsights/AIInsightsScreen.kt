@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -67,12 +68,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import android.os.Bundle
+import com.optix.app.core.util.AnalyticsHelper
 import com.optix.app.domain.model.AITradeSuggestion
 import com.optix.app.domain.model.ConfidenceLevel
 import com.optix.app.domain.model.MarketSentiment
 import com.optix.app.domain.model.OptionType
 import com.optix.app.domain.model.PersonalizedAITradeSuggestion
 import com.optix.app.domain.model.TradeDirection
+import com.optix.app.domain.model.ScorecardStats
+import com.optix.app.presentation.screens.aiinsights.components.AIScorecardCard
 import com.optix.app.presentation.screens.aiinsights.components.DetailedAnalysisSheet
 import com.optix.app.presentation.screens.aiinsights.components.SuggestionListLoadingSkeleton
 import kotlinx.coroutines.flow.collectLatest
@@ -99,7 +104,31 @@ fun AIInsightsScreen(
     onNavigateToSettings: () -> Unit = {},
     viewModel: AIInsightsViewModel = hiltViewModel()
 ) {
+    // Track screen view once on composition
+    LaunchedEffect(Unit) { AnalyticsHelper.logScreenView("ai_insights") }
+
     val uiState by viewModel.uiState.collectAsState()
+
+    // Log a rich event when the Gemini analysis result arrives. Captures market
+    // context (sentiment, PCR, IV percentile, VIX) alongside suggestion count so
+    // we can correlate market conditions with user engagement in dashboards.
+    LaunchedEffect(uiState.analysisResult) {
+        val result = uiState.analysisResult
+        if (result != null) {
+            AnalyticsHelper.logEvent("ai_insights_loaded", Bundle().apply {
+                putString("symbol", uiState.selectedSymbol)
+                putInt("suggestion_count", uiState.personalizedSuggestions.size)
+                putDouble("spot_price", result.spotPrice)
+                putString("market_sentiment", result.marketSentiment.name)
+                putDouble("pcr", result.pcr)
+                putDouble("iv_percentile", result.ivPercentile)
+                putDouble("max_pain", result.maxPain)
+                result.indiaVix?.let { putDouble("india_vix", it) }
+                result.vixChange?.let { putDouble("vix_change", it) }
+                putBoolean("has_scorecard", uiState.scorecardStats != null)
+            })
+        }
+    }
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
@@ -156,6 +185,7 @@ fun AIInsightsScreen(
                     AIInsightsContent(
                         uiState = uiState,
                         filteredSuggestions = viewModel.getFilteredSuggestions(),
+                        scorecardStats = uiState.scorecardStats,
                         onOptionTypeFilterSelect = { viewModel.setOptionTypeFilter(it) },
                         onSuggestionClick = { viewModel.selectSuggestion(it) }
                     )
@@ -343,6 +373,7 @@ private fun ErrorContent(
 private fun AIInsightsContent(
     uiState: AIInsightsUiState,
     filteredSuggestions: List<PersonalizedAITradeSuggestion>,
+    scorecardStats: ScorecardStats?,
     onOptionTypeFilterSelect: (String?) -> Unit,
     onSuggestionClick: (PersonalizedAITradeSuggestion) -> Unit
 ) {
@@ -366,7 +397,8 @@ private fun AIInsightsContent(
                     ivPercentile = result.ivPercentile,
                     maxPain = result.maxPain,
                     spotPrice = result.spotPrice,
-                    indiaVix = result.indiaVix
+                    indiaVix = result.indiaVix,
+                    vixChange = result.vixChange
                 )
             }
         }
@@ -422,9 +454,54 @@ private fun AIInsightsContent(
             }
         }
 
+        // AI Scorecard
+        if (scorecardStats != null) {
+            item {
+                AIScorecardCard(stats = scorecardStats)
+            }
+        }
+
+        // SEBI Disclaimer
+        item {
+            SebiDisclaimerBanner()
+        }
+
         // Bottom spacing
         item {
             Spacer(modifier = Modifier.height(80.dp))
+        }
+    }
+}
+
+@Composable
+private fun SebiDisclaimerBanner() {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        color = AmberPrimary.copy(alpha = 0.08f),
+        border = androidx.compose.foundation.BorderStroke(1.dp, AmberPrimary.copy(alpha = 0.2f))
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = null,
+                    tint = AmberPrimary,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = "SEBI Disclaimer",
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                    color = AmberPrimary
+                )
+            }
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Investment in securities market is subject to market risks. AI-generated suggestions are for informational and educational purposes only and do not constitute investment advice. Past performance does not guarantee future results. Consult a SEBI-registered investment advisor before making any trading decisions. The developers of this app are not SEBI-registered advisors and shall not be held liable for any losses.",
+                style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
@@ -483,7 +560,8 @@ private fun MarketMetricsCard(
     ivPercentile: Double,
     maxPain: Double,
     spotPrice: Double,
-    indiaVix: Double? = null
+    indiaVix: Double? = null,
+    vixChange: Double? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -531,7 +609,8 @@ private fun MarketMetricsCard(
                 MetricItem(
                     label = "India VIX",
                     value = String.format("%.1f", indiaVix),
-                    valueColor = if (indiaVix > 20) RedPrimary else if (indiaVix > 15) AmberPrimary else GreenPrimary
+                    valueColor = if (indiaVix > 20) RedPrimary else if (indiaVix > 15) AmberPrimary else GreenPrimary,
+                    changePercent = vixChange
                 )
             }
         }
@@ -542,7 +621,8 @@ private fun MarketMetricsCard(
 private fun MetricItem(
     label: String,
     value: String,
-    valueColor: Color = MaterialTheme.colorScheme.onSurface
+    valueColor: Color = MaterialTheme.colorScheme.onSurface,
+    changePercent: Double? = null
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -553,11 +633,27 @@ private fun MetricItem(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-            color = valueColor
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                color = valueColor
+            )
+            if (changePercent != null) {
+                Spacer(modifier = Modifier.width(2.dp))
+                Text(
+                    text = "${if (changePercent >= 0) "▲" else "▼"}${String.format("%.1f", kotlin.math.abs(changePercent))}%",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 8.sp
+                    ),
+                    color = if (changePercent >= 0) RedPrimary else GreenPrimary
+                )
+            }
+        }
     }
 }
 
