@@ -16,6 +16,10 @@ struct AIInsightsView: View {
     @State private var selectedExpiry: ExpiryDate?
     @State private var availableExpiries: [ExpiryDate] = []
 
+    // AI data consent (App Store guidelines 5.1.1/5.1.2)
+    @AppStorage("aiDataConsentGiven") private var aiDataConsentGiven = false
+    @State private var showConsentAlert = false
+
     private let autoRefreshTimer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     private let countdownTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private let vixRefreshTimer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
@@ -125,7 +129,22 @@ struct AIInsightsView: View {
                 "pcr": viewModel.putCallRatio,
                 "auto_refresh": autoRefreshEnabled
             ])
-            initializeFromOptionChain()
+
+            // Show AI data consent on first use (App Store guidelines 5.1.1/5.1.2)
+            if !aiDataConsentGiven {
+                showConsentAlert = true
+            } else {
+                initializeFromOptionChain()
+            }
+        }
+        .alert("AI Data Usage", isPresented: $showConsentAlert) {
+            Button("I Agree") {
+                aiDataConsentGiven = true
+                initializeFromOptionChain()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("AI Insights sends anonymized market data (option chain prices, open interest, Greeks, spot price) to our server, which uses Google Gemini AI for analysis.\n\nNo personal information (name, email, phone) is shared with the AI service.\n\nBy continuing, you consent to this data processing.")
         }
         .onChange(of: optionChainViewModel.optionChain.count) { _, _ in
             // Only auto-update if we're on the same index/expiry as option chain

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var themeConfig: ThemeConfiguration
+    @EnvironmentObject var authManager: AuthManager
     @ObservedObject var viewModel: OptionChainViewModel
     @ObservedObject private var localization = LocalizationManager.shared
 
@@ -9,6 +10,10 @@ struct SettingsView: View {
     @AppStorage("optionChainInterval") private var optionChainInterval: Double = 5.0
     @AppStorage("defaultIndex") private var defaultIndex: String = TradingIndex.nifty50.rawValue
     @AppStorage("hapticFeedbackEnabled") private var hapticFeedbackEnabled: Bool = true
+
+    @State private var showDeleteConfirmation = false
+    @State private var isDeletingAccount = false
+    @State private var deleteError: String?
 
     var body: some View {
         NavigationView {
@@ -41,8 +46,16 @@ struct SettingsView: View {
                     // Theme Selection (existing)
                     themeSection
 
+                    // Privacy & AI Data Section
+                    privacySection
+
                     // About Section (existing + developer attribution)
                     aboutSection
+
+                    // Account Deletion (App Store guideline 5.1.1v)
+                    if authManager.isLoggedIn {
+                        accountDeletionSection
+                    }
 
                     // Disclaimer Section
                     disclaimerSection
@@ -697,6 +710,170 @@ struct SettingsView: View {
                             .stroke(Color.white.opacity(0.05), lineWidth: 1)
                     }
             }
+        }
+    }
+
+    // MARK: - Privacy & AI Data Section (App Store guidelines 5.1.1/5.1.2)
+
+    private var privacySection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("PRIVACY & AI DATA")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(Theme.textMuted)
+                .padding(.horizontal, 4)
+
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 8) {
+                    Image(systemName: "brain.head.profile")
+                        .font(.system(size: 14))
+                        .foregroundColor(Theme.accentPurple)
+                    Text("AI Analysis Data Disclosure")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(Theme.textPrimary)
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("When you use AI Insights, the following **market data** is sent to our server for analysis:")
+                        .font(.system(size: 12))
+                        .foregroundColor(Theme.textSecondary)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        DisclaimerPoint(text: "Option chain data (strike prices, premiums, open interest, volume)")
+                        DisclaimerPoint(text: "Market indicators (spot price, PCR, VIX, Greeks)")
+                        DisclaimerPoint(text: "Index name and expiry date")
+                    }
+
+                    Text("Our server uses **Google Gemini AI** to generate trade suggestions. **No personal data** (name, email, phone, device ID) is sent to the AI service — only anonymized market data.")
+                        .font(.system(size: 12))
+                        .foregroundColor(Theme.textSecondary)
+
+                    Text("By using AI Insights, you consent to this data processing. You can use the app without AI features at any time.")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(Theme.textPrimary)
+                }
+
+                Divider().background(Color.white.opacity(0.06))
+
+                // Privacy Policy link
+                Link(destination: URL(string: "https://optix.d23ai.in/privacy")!) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "lock.shield.fill")
+                            .font(.system(size: 14))
+                            .foregroundColor(Theme.primaryBlue)
+                        Text("Privacy Policy")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(Theme.primaryBlue)
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.system(size: 12))
+                            .foregroundColor(Theme.textMuted)
+                    }
+                }
+
+                Link(destination: URL(string: "https://optix.d23ai.in/terms")!) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "doc.text.fill")
+                            .font(.system(size: 14))
+                            .foregroundColor(Theme.primaryBlue)
+                        Text("Terms of Service")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(Theme.primaryBlue)
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.system(size: 12))
+                            .foregroundColor(Theme.textMuted)
+                    }
+                }
+            }
+            .padding(16)
+            .background {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Theme.surface)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Theme.accentPurple.opacity(0.2), lineWidth: 1)
+                    }
+            }
+        }
+    }
+
+    // MARK: - Account Deletion Section (App Store guideline 5.1.1v)
+
+    private var accountDeletionSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("DANGER ZONE")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundColor(Theme.loss)
+                .padding(.horizontal, 4)
+
+            VStack(spacing: 0) {
+                Button {
+                    showDeleteConfirmation = true
+                } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "trash.fill")
+                            .font(.system(size: 16))
+                            .foregroundColor(Theme.loss)
+                            .frame(width: 30)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Delete Account")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(Theme.loss)
+                            Text("Permanently delete your account and all data")
+                                .font(.system(size: 12))
+                                .foregroundColor(Theme.textSecondary)
+                        }
+
+                        Spacer()
+
+                        if isDeletingAccount {
+                            ProgressView()
+                                .tint(Theme.loss)
+                        } else {
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundColor(Theme.textMuted)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 14)
+                }
+                .disabled(isDeletingAccount)
+            }
+            .background {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Theme.surface)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Theme.loss.opacity(0.3), lineWidth: 1)
+                    }
+            }
+
+            if let error = deleteError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundColor(Theme.loss)
+                    .padding(.horizontal, 4)
+            }
+        }
+        .alert("Delete Account", isPresented: $showDeleteConfirmation) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete Permanently", role: .destructive) {
+                Task {
+                    isDeletingAccount = true
+                    deleteError = nil
+                    do {
+                        try await authManager.deleteAccount()
+                        isDeletingAccount = false
+                    } catch {
+                        deleteError = error.localizedDescription
+                        isDeletingAccount = false
+                    }
+                }
+            }
+        } message: {
+            Text("This will permanently delete your account, trade journal entries, paper trading history, and all associated data. This action cannot be undone.")
         }
     }
 

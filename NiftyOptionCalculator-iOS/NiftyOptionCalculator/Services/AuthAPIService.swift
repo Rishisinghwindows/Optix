@@ -118,6 +118,14 @@ actor AuthAPIService {
         )
     }
 
+    /// Permanently delete the user's account (App Store guideline 5.1.1v)
+    func deleteAccount(accessToken: String) async throws {
+        let _: EmptyResponse = try await delete(
+            endpoint: "/user/me",
+            accessToken: accessToken
+        )
+    }
+
     // MARK: - Private Helpers
 
     private func get<T: Decodable>(

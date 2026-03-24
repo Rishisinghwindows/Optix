@@ -33,8 +33,19 @@ struct LoginSheetView: View {
 
                 Spacer()
 
-                // Google Sign In
-                VStack(spacing: 16) {
+                // Sign in buttons
+                VStack(spacing: 12) {
+                    // Sign in with Apple (required by App Store guideline 4.8)
+                    SignInWithAppleButton(.signIn) { request in
+                        request.requestedScopes = [.fullName, .email]
+                    } onCompletion: { result in
+                        handleAppleSignIn(result: result)
+                    }
+                    .signInWithAppleButtonStyle(.whiteOutline)
+                    .frame(height: 52)
+                    .cornerRadius(12)
+
+                    // Google Sign In
                     Button(action: handleGoogleSignIn) {
                         HStack(spacing: 12) {
                             GoogleLogoView()
@@ -54,7 +65,7 @@ struct LoginSheetView: View {
                     }
                     .foregroundColor(.primary)
 
-                    Text("Sign in securely with your Google account")
+                    Text("Sign in securely with your Apple or Google account")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -102,6 +113,34 @@ struct LoginSheetView: View {
     }
 
     // MARK: - Actions
+
+    private func handleAppleSignIn(result: Result<ASAuthorization, Error>) {
+        switch result {
+        case .success(let authorization):
+            isLoading = true
+            errorMessage = nil
+            Task {
+                do {
+                    try await authManager.loginWithApple(authorization: authorization)
+                    AnalyticsService.logLogin(method: "apple")
+                    isLoading = false
+                    await authManager.onLoginSuccess()
+                    dismiss()
+                } catch let error as AuthError {
+                    errorMessage = error.errorDescription
+                    isLoading = false
+                } catch {
+                    errorMessage = error.localizedDescription
+                    isLoading = false
+                }
+            }
+        case .failure(let error):
+            // User cancelled or Apple Sign-In failed
+            if (error as NSError).code != ASAuthorizationError.canceled.rawValue {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
 
     private func handleGoogleSignIn() {
         #if canImport(GoogleSignIn)

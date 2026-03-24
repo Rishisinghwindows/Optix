@@ -170,6 +170,25 @@ final class AuthManager: ObservableObject {
         await logout()
     }
 
+    /// Permanently delete the user's account and clear all local state
+    func deleteAccount() async throws {
+        guard let token = accessToken else {
+            throw AuthError.notAuthenticated
+        }
+
+        try await api.deleteAccount(accessToken: token)
+
+        // Clear all local state
+        accessToken = nil
+        refreshToken = nil
+        tokenExpiresAt = nil
+        currentUser = nil
+        isLoggedIn = false
+
+        // Clear analytics identity
+        AnalyticsService.setUserID(nil)
+    }
+
     // MARK: - Trade Guard
 
     /// Call this before any action that requires authentication.
